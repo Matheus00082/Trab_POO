@@ -2,23 +2,25 @@ package src.auxiliares;
 
 import src.pessoas.*;
 import src.organizacao.Lar;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Tarefa {
     public String idTarefa, dataInicio;
     public int prazoDias, parcelas;
-    public Compra[] compras;
+    public List<Compra> compras;
     public Lar lar;
-    public PessoaFisica trabalhadorFisico;
-    public PessoaJuridica trabalhadorJuridico;
+    public Pessoa trabalhador;
+    public Double valorTotal;
 
-    public Tarefa(String idTarefa, String dataInicio, int prazoDias, int parcelas, Compra[] compras, Lar lar, PessoaFisica trabalhadorFisico, PessoaJuridica trabalhadorJuridico) {
+    public Tarefa(String idTarefa, String dataInicio, int prazoDias, int parcelas, Double valor,Lar lar, Pessoa trabalhador) {
         this.idTarefa = idTarefa;
         this.dataInicio = dataInicio;
         this.prazoDias = prazoDias;
         this.parcelas = parcelas;
-        this.compras = compras;
+        this.compras = new ArrayList<Compra>();
         this.lar = lar;
-        this.trabalhadorFisico = trabalhadorFisico;
-        this.trabalhadorJuridico = trabalhadorJuridico;
+        this.trabalhador = trabalhador;
+        this.valorTotal = valor;
     }
 }

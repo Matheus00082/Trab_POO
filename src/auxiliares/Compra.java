@@ -3,14 +3,13 @@ package src.auxiliares;
 import src.pessoas.Loja;
 
 public class Compra {
-    public String idCompra, idTarefa, nomeProduto;
+    public String idCompra, nomeProduto;
     public Loja loja;
     public int quantidade, parcelas;
-    public Float preco;
+    public Double preco;
 
-    public Compra(String idCompra, String idTarefa, String nomeProduto, Loja loja, int quantidade, int parcelas, Float preco) {
+    public Compra(String idCompra, String nomeProduto, Loja loja, int quantidade, int parcelas, Double preco) {
         this.idCompra = idCompra;
-        this.idTarefa = idTarefa;
         this.nomeProduto = nomeProduto;
         this.loja = loja;
         this.quantidade = quantidade;
