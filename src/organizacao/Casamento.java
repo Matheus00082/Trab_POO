@@ -6,14 +6,13 @@ import src.pessoas.PessoaFisica;
 
 public class Casamento {
     public String idCasamento;
-    public PessoaFisica conjuge1, conjuge2;
+    public Casal casal;
     public String data, hora, local;
     public Festa festa;
 
     public Casamento(String idCasamento, PessoaFisica conjuge1, PessoaFisica conjuge2, String data, String hora, String local) {
         this.idCasamento = idCasamento;
-        this.conjuge1 = conjuge1;
-        this.conjuge2 = conjuge2;
+        this.casal = new Casal(conjuge1, conjuge2);
         this.data = data;
         this.hora = hora;
         this.local = local;
@@ -24,7 +23,7 @@ public class Casamento {
         int num = 0;
 
         for (Casamento casamento : casamentos) {
-            if (casamento.festa.casalFoiConvidado(casal)) {
+            if (casamento.casal != casal && casamento.festa.casalFoiConvidado(casal)) {
                 num++;
             }
         }

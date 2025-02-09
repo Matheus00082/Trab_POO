@@ -27,12 +27,12 @@ public class LeitorCVS {
                 String tipo = partes[1];
 
                 if (tipo.equals("F")) {
-                    pessoas.add(new PessoaFisica(partes[2], partes[3], partes[4], partes[0], partes[5], partes[6],
+                    pessoas.add(new PessoaFisica(partes[2], partes[4], partes[3], partes[0], partes[5], partes[6],
                             Double.parseDouble(partes[7].replace(",", ".")),
                             Double.parseDouble(partes[8].replace(",", ".")),
                             Double.parseDouble(partes[9].replace(",", "."))));
                 } else if (tipo.equals("J")) {
-                    pessoas.add(new PessoaJuridica(partes[2], partes[3], partes[4], partes[0], partes[5]));
+                    pessoas.add(new PessoaJuridica(partes[2], partes[4], partes[3], partes[0], partes[5]));
                 } else if (tipo.equals("L")) {
                     pessoas.add(new Loja(partes[2], partes[4], partes[3], partes[0], partes[5]));
                 }
