@@ -13,5 +13,10 @@ public class PessoaFisica extends Pessoa{
         this.gastoMensal = gastoMensal;
         this.juros = 0.05;
     }
+
+    public static boolean ehIgualCpf(PessoaFisica p, String cpf) {
+        if (p.CPF == cpf) return true;
+        else return false;
+    }
     
 }

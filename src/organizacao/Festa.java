@@ -17,4 +17,17 @@ public class Festa {
         this.parcelas = parcelas;
     }
 
+    public boolean casalFoiConvidado(Casal casal) {
+        int cont = 0;
+
+        for (String convidado : this.convidados) {
+            if (casal.conjuge1.nome == convidado || casal.conjuge2.nome == convidado) {
+                cont++;
+            }
+        }
+
+        if (cont == 2) return true;
+        else return false;
+    }
+
 }

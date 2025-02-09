@@ -1,5 +1,7 @@
 package src.organizacao;
 
+import java.util.List;
+
 import src.pessoas.PessoaFisica;
 
 public class Casamento {
@@ -18,4 +20,15 @@ public class Casamento {
         this.festa = null;
     }
 
+    public static int calculaNumCasamentos(List<Casamento> casamentos, Casal casal) {
+        int num = 0;
+
+        for (Casamento casamento : casamentos) {
+            if (casamento.festa.casalFoiConvidado(casal)) {
+                num++;
+            }
+        }
+        
+        return num;
+    }
 }
