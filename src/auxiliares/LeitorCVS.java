@@ -69,7 +69,8 @@ public class LeitorCVS {
         return lares;
     }
 
-    public static void lerTarefas(String caminhoArquivo, List<Pessoa> pessoas, List<Lar> lares) throws IOException {
+    public static List<Tarefa> lerTarefas(String caminhoArquivo, List<Pessoa> pessoas, List<Lar> lares) throws IOException {
+        List<Tarefa> tarefas = new ArrayList<>();    
 
         try (BufferedReader leitor = new BufferedReader(
                 new InputStreamReader(new FileInputStream(caminhoArquivo), StandardCharsets.UTF_8))) {
@@ -94,12 +95,16 @@ public class LeitorCVS {
                     }
                 }
 
-                lar.tarefas
-                        .add(new Tarefa(partes[0], partes[3], Integer.parseInt(partes[4]), Integer.parseInt(partes[6]),
-                                Double.parseDouble((partes[5].replace(".", "")).replace(",", ".")), trabalhador));
+                Tarefa t = new Tarefa(partes[0], partes[3], Integer.parseInt(partes[4]), Integer.parseInt(partes[6]),
+                Double.parseDouble((partes[5].replace(".", "")).replace(",", ".")), trabalhador);
 
+                lar.tarefas.add(t);
+
+                tarefas.add(t);
             }
         }
+
+        return tarefas;
     }
 
     public static List<Casamento> lerCasamentos(String caminhoArquivo, List<Lar> lares) throws IOException {

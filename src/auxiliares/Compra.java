@@ -12,6 +12,7 @@ public class Compra {
         this.idCompra = idCompra;
         this.nomeProduto = nomeProduto;
         this.loja = loja;
+        this.loja.lucro += (preco * quantidade);
         this.quantidade = quantidade;
         this.parcelas = parcelas;
         this.preco = preco;

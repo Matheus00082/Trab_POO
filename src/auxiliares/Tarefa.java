@@ -9,7 +9,6 @@ public class Tarefa {
     public int prazoDias, parcelas;
     public List<Compra> compras;
     public Pessoa trabalhador;
-    public Double valorTotal;
 
     public Tarefa(String idTarefa, String dataInicio, int prazoDias, int parcelas, Double valor, Pessoa trabalhador) {
         this.idTarefa = idTarefa;
@@ -18,16 +17,16 @@ public class Tarefa {
         this.parcelas = parcelas;
         this.compras = new ArrayList<Compra>();
         this.trabalhador = trabalhador;
-        this.valorTotal = valor;
+        this.trabalhador.lucro = valor;
     }
 
     public Double calculaValorTotal() {
         Double valorTotal = 0.0;
 
         for (Compra compra : compras) {
-            valorTotal += compra.preco * compra.quantidade;
+            valorTotal += compra.loja.lucro;
         }
 
-        return (valorTotal + this.valorTotal);
+        return (valorTotal + this.trabalhador.lucro);
     } 
 }

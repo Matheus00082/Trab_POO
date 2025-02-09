@@ -4,17 +4,17 @@ import src.organizacao.*;
 import src.pessoas.*;
 import src.relatorios.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) {
-        List<Pessoa> pessoas = new ArrayList<>();
-        List<Lar> lares = new ArrayList<>();
-        List<Casamento> casamentos = new ArrayList<>();
+        List<Pessoa> pessoas = null;
+        List<Lar> lares = null;
+        List<Casamento> casamentos = null;
 
-        String caminho = "./01/";
+
+        String caminho = args[0];
 
         try {
             pessoas = LeitorCVS.lerPessoas(caminho + "pessoas.csv");
@@ -28,6 +28,8 @@ public class Main {
             e.printStackTrace();
         }
 
+        RelatorioPrestadores.geraRelatorioPrestadores(pessoas);
+        System.out.println("//////////////////////////////////////////////////////");
         RelatorioCasais.geraRelatorioCasais(casamentos, lares);
     }
 }
