@@ -17,7 +17,7 @@ public class LeitorCVS {
         List<Pessoa> pessoas = new ArrayList<>();
 
         try (BufferedReader leitor = new BufferedReader(
-                new InputStreamReader(new FileInputStream(caminhoArquivo), StandardCharsets.ISO_8859_1))) {
+                new InputStreamReader(new FileInputStream(caminhoArquivo), StandardCharsets.UTF_8))) {
 
             String linha;
 
@@ -45,7 +45,7 @@ public class LeitorCVS {
         List<Lar> lares = new ArrayList<>();
 
         try (BufferedReader leitor = new BufferedReader(
-                new InputStreamReader(new FileInputStream(caminhoArquivo), StandardCharsets.ISO_8859_1))) {
+                new InputStreamReader(new FileInputStream(caminhoArquivo), StandardCharsets.UTF_8))) {
 
             String linha;
 
@@ -74,7 +74,7 @@ public class LeitorCVS {
         List<Tarefa> tarefas = new ArrayList<>();
 
         try (BufferedReader leitor = new BufferedReader(
-                new InputStreamReader(new FileInputStream(caminhoArquivo), StandardCharsets.ISO_8859_1))) {
+                new InputStreamReader(new FileInputStream(caminhoArquivo), StandardCharsets.UTF_8))) {
 
             String linha;
 
@@ -107,7 +107,7 @@ public class LeitorCVS {
         List<Casamento> casamentos = new ArrayList<>();
 
         try (BufferedReader leitor = new BufferedReader(
-                new InputStreamReader(new FileInputStream(caminhoArquivo), StandardCharsets.ISO_8859_1))) {
+                new InputStreamReader(new FileInputStream(caminhoArquivo), StandardCharsets.UTF_8))) {
 
             String linha;
 
@@ -134,7 +134,7 @@ public class LeitorCVS {
     public static void lerFestas(String caminhoArquivo, List<Casamento> casamentos) throws IOException {
 
         try (BufferedReader leitor = new BufferedReader(
-                new InputStreamReader(new FileInputStream(caminhoArquivo), StandardCharsets.ISO_8859_1))) {
+                new InputStreamReader(new FileInputStream(caminhoArquivo), StandardCharsets.UTF_8))) {
 
             String linha;
 
@@ -166,7 +166,7 @@ public class LeitorCVS {
             throws IOException {
 
         try (BufferedReader leitor = new BufferedReader(
-                new InputStreamReader(new FileInputStream(caminhoArquivo), StandardCharsets.ISO_8859_1))) {
+                new InputStreamReader(new FileInputStream(caminhoArquivo), StandardCharsets.UTF_8))) {
 
             String linha;
 
