@@ -12,24 +12,22 @@ public class Main {
     public static void main(String[] args) {
         List<Pessoa> pessoas = new ArrayList<>();
         List<Lar> lares = new ArrayList<>();
-        List<Tarefa> tarefas = new ArrayList<>();
         List<Casamento> casamentos = new ArrayList<>();
 
-        String caminho = args[0];
+        String caminho = "./01/";
 
         try {
             pessoas = LeitorCVS.lerPessoas(caminho + "pessoas.csv");
             lares = LeitorCVS.lerLares(caminho + "lares.csv", pessoas);
-            tarefas = LeitorCVS.lerTarefas(caminho + "tarefas.csv", pessoas, lares);
-            casamentos = LeitorCVS.lerCasamentos(caminho + "casamentos.csv", pessoas);
-            LeitorCVS.lerFestas(caminho + "festas.csv", casamentos);
-            LeitorCVS.lerCompras(caminho + "compras.csv", tarefas, pessoas);
+            LeitorCVS.lerTarefas(caminho + "tarefas.csv", pessoas, lares);
+            casamentos = LeitorCVS.lerCasamentos(caminho + "casamentos.csv", lares);
+            LeitorCVS.lerFestas(caminho + "festas.csv", lares);
+            LeitorCVS.lerCompras(caminho + "compras.csv", lares, pessoas);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        RelatorioCasais.geraRelatorioCasais(casamentos, lares, tarefas);
-
+        RelatorioCasais.geraRelatorioCasais(casamentos, lares);
     }
 }

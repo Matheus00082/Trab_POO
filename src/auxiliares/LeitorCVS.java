@@ -69,9 +69,7 @@ public class LeitorCVS {
         return lares;
     }
 
-    public static List<Tarefa> lerTarefas(String caminhoArquivo, List<Pessoa> pessoas, List<Lar> lares)
-            throws IOException {
-        List<Tarefa> tarefas = new ArrayList<>();
+    public static void lerTarefas(String caminhoArquivo, List<Pessoa> pessoas, List<Lar> lares) throws IOException {
 
         try (BufferedReader leitor = new BufferedReader(
                 new InputStreamReader(new FileInputStream(caminhoArquivo), StandardCharsets.UTF_8))) {
@@ -85,7 +83,7 @@ public class LeitorCVS {
                 Lar lar = null;
 
                 for (Pessoa pessoa : pessoas) {
-                    if (pessoa.id.equals(partes[2])) {
+                    if (pessoa.id.equals(partes[2])) { // talvez seja bom confirmar se é PF OU PJ
                         trabalhador = pessoa;
                     }
                 }
@@ -96,14 +94,15 @@ public class LeitorCVS {
                     }
                 }
 
-                tarefas.add(new Tarefa(partes[0], partes[3], Integer.parseInt(partes[4]), Integer.parseInt(partes[6]),
-                        Double.parseDouble((partes[5].replace(".", "")).replace(",", ".")), lar, trabalhador));
+                lar.tarefas
+                        .add(new Tarefa(partes[0], partes[3], Integer.parseInt(partes[4]), Integer.parseInt(partes[6]),
+                                Double.parseDouble((partes[5].replace(".", "")).replace(",", ".")), trabalhador));
+
             }
         }
-        return tarefas;
     }
 
-    public static List<Casamento> lerCasamentos(String caminhoArquivo, List<Pessoa> pessoas) throws IOException {
+    public static List<Casamento> lerCasamentos(String caminhoArquivo, List<Lar> lares) throws IOException {
         List<Casamento> casamentos = new ArrayList<>();
 
         try (BufferedReader leitor = new BufferedReader(
@@ -114,24 +113,21 @@ public class LeitorCVS {
             while ((linha = leitor.readLine()) != null) {
                 String[] partes = linha.split(";");
 
-                PessoaFisica conjuge1 = null;
-                PessoaFisica conjuge2 = null;
-
-                for (Pessoa pessoa : pessoas) {
-                    if (pessoa.id.equals(partes[1])) {
-                        conjuge1 = (PessoaFisica) pessoa;
-                    } else if (pessoa.id.equals(partes[2])) {
-                        conjuge2 = (PessoaFisica) pessoa;
+                for (Lar lar : lares) {
+                    if (lar.casal.conjuge1.id.equals(partes[1]) && lar.casal.conjuge2.id.equals(partes[2]) ||
+                            lar.casal.conjuge1.id.equals(partes[2]) && lar.casal.conjuge2.id.equals(partes[1])) {
+                        lar.casamento = new Casamento(partes[0], partes[1], partes[2], partes[3], partes[4], partes[5]);
+                        casamentos.add(lar.casamento);
                     }
-                }
 
-                casamentos.add(new Casamento(partes[0], conjuge1, conjuge2, partes[3], partes[4], partes[5]));
+                }
             }
         }
+
         return casamentos;
     }
 
-    public static void lerFestas(String caminhoArquivo, List<Casamento> casamentos) throws IOException {
+    public static void lerFestas(String caminhoArquivo, List<Lar> lares) throws IOException {
 
         try (BufferedReader leitor = new BufferedReader(
                 new InputStreamReader(new FileInputStream(caminhoArquivo), StandardCharsets.UTF_8))) {
@@ -142,19 +138,21 @@ public class LeitorCVS {
 
                 String[] partes = linha.split(";");
 
-                for (Casamento casamento : casamentos) {
-                    if (casamento.idCasamento.equals(partes[1])) {
+                for (Lar lar : lares) {
+                    if (lar.casamento != null) {
+                        if (lar.casamento.idCasamento.equals(partes[1])) {
 
-                        int numConvidados = Integer.parseInt(partes[7]);
-                        String[] convidados = new String[numConvidados];
+                            int numConvidados = Integer.parseInt(partes[7]);
+                            String[] convidados = new String[numConvidados];
 
-                        for (int i = 0; i < numConvidados; i++) {
-                            convidados[i] = partes[8 + i];
+                            for (int i = 0; i < numConvidados; i++) {
+                                convidados[i] = partes[8 + i];
+                            }
+
+                            lar.casamento.festa = new Festa(partes[0], partes[2], partes[3], partes[4],
+                                    Double.parseDouble((partes[5].replace(".", "")).replace(",", ".")),
+                                    Integer.parseInt(partes[6]), convidados);
                         }
-
-                        casamento.festa = new Festa(partes[0], partes[2], partes[3], partes[4],
-                                Double.parseDouble((partes[5].replace(".", "")).replace(",", ".")),
-                                Integer.parseInt(partes[6]), convidados);
                     }
                 }
 
@@ -162,7 +160,7 @@ public class LeitorCVS {
         }
     }
 
-    public static void lerCompras(String caminhoArquivo, List<Tarefa> tarefas, List<Pessoa> pessoas)
+    public static void lerCompras(String caminhoArquivo, List<Lar> lares, List<Pessoa> pessoas)
             throws IOException {
 
         try (BufferedReader leitor = new BufferedReader(
@@ -174,13 +172,20 @@ public class LeitorCVS {
 
                 String[] partes = linha.split(";");
 
-                for (Tarefa tarefa : tarefas) {
-                    if (tarefa.idTarefa.equals(partes[1])) {
-                        for (Pessoa pessoa : pessoas) {
-                            if (pessoa.id.equals(partes[2])) {
-                                tarefa.compras.add(new Compra(partes[0], partes[3], (Loja)pessoa, Integer.parseInt(partes[4]),
-                                        Integer.parseInt(partes[6]),
-                                        Double.parseDouble((partes[5].replace(".", "")).replace(",", "."))));
+                for (Lar lar : lares) {
+                    if (lar.tarefas.size() > 0) {
+                        for (Tarefa tarefa : lar.tarefas) {
+                            if (tarefa.idTarefa.equals(partes[1])) {
+                                for (Pessoa pessoa : pessoas) {
+                                    if (pessoa.id.equals(partes[2])) {
+                                        tarefa.compras.add(
+                                                new Compra(partes[0], partes[3], (Loja) pessoa,
+                                                        Integer.parseInt(partes[4]),
+                                                        Integer.parseInt(partes[6]),
+                                                        Double.parseDouble(
+                                                                (partes[5].replace(".", "")).replace(",", "."))));
+                                    }
+                                }
                             }
                         }
                     }
