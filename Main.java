@@ -31,5 +31,7 @@ public class Main {
         RelatorioPrestadores.geraRelatorioPrestadores(pessoas);
         System.out.println("//////////////////////////////////////////////////////");
         RelatorioCasais.geraRelatorioCasais(casamentos, lares);
+        System.out.println("//////////////////////////////////////////////////////");
+        RelatorioPlanejamento.geraRelatorioPlanejamento(lares);
     }
 }

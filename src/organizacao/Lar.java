@@ -22,4 +22,22 @@ public class Lar {
         this.tarefas = new ArrayList<>();
         this.casamento = null;
     }
+
+    public int calculaNumMeses() {
+        int numMeses = this.casamento.festa.parcelas;
+
+        for (Tarefa tarefa : this.tarefas) {
+            if (tarefa.parcelas > numMeses) {
+                numMeses = tarefa.parcelas;
+            }
+
+            for (Compra compra : tarefa.compras) {
+                if (compra.parcelas > numMeses) {
+                    numMeses = compra.parcelas;
+                }
+            }
+        }
+
+        return numMeses;
+    }
 }

@@ -3,7 +3,7 @@ package src.organizacao;
 public class Festa {
     public String idFesta, local, data, hora;
     public String[] convidados;
-    public Double preco;
+    public Double preco, precoParcelado;
     public int parcelas;
 
     public Festa(String idFesta, String local, String data, String hora,
@@ -15,6 +15,7 @@ public class Festa {
         this.convidados = convidados;
         this.preco = preco;
         this.parcelas = parcelas;
+        this.precoParcelado = preco/parcelas;
     }
 
     public boolean casalFoiConvidado(Casal casal) {
