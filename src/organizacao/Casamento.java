@@ -24,7 +24,7 @@ public class Casamento {
         for (Casamento casamento : casamentos) {
             // Se o casal não é o casal do casamento
             if (!casal.conjuge1.id.equals(casamento.idConjuje1) && !casal.conjuge1.id.equals(casamento.idConjuje2)) {
-                if (casamento.festa.casalFoiConvidado(casal)) {
+                if (casamento.festa != null && casamento.festa.casalFoiConvidado(casal)) {
                     num++;
                 }
             }

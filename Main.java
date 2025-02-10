@@ -5,23 +5,26 @@ import src.pessoas.*;
 import src.relatorios.*;
 
 import java.util.List;
+import java.util.ArrayList;
 
 public class Main {
 
     public static void main(String[] args) {
         List<Pessoa> pessoas = null;
+        List<Casal> casais = new ArrayList<>();
         List<Lar> lares = null;
         List<Casamento> casamentos = null;
 
 
-        String caminho = args[0];
+        String caminho = "./01/";
+        //args[0];
 
         try {
             pessoas = LeitorCVS.lerPessoas(caminho + "pessoas.csv");
-            lares = LeitorCVS.lerLares(caminho + "lares.csv", pessoas);
+            lares = LeitorCVS.lerLares(caminho + "lares.csv", pessoas, casais);
             LeitorCVS.lerTarefas(caminho + "tarefas.csv", pessoas, lares);
-            casamentos = LeitorCVS.lerCasamentos(caminho + "casamentos.csv", lares);
-            LeitorCVS.lerFestas(caminho + "festas.csv", lares);
+            casamentos = LeitorCVS.lerCasamentos(caminho + "casamentos.csv", casais);
+            LeitorCVS.lerFestas(caminho + "festas.csv", casais);
             LeitorCVS.lerCompras(caminho + "compras.csv", lares, pessoas);
 
         } catch (Exception e) {
@@ -30,8 +33,8 @@ public class Main {
 
         RelatorioPrestadores.geraRelatorioPrestadores(pessoas);
         System.out.println("//////////////////////////////////////////////////////");
-        RelatorioCasais.geraRelatorioCasais(casamentos, lares);
+        RelatorioCasais.geraRelatorioCasais(casamentos, casais);
         System.out.println("//////////////////////////////////////////////////////");
-        RelatorioPlanejamento.geraRelatorioPlanejamento(lares);
+        RelatorioPlanejamento.geraRelatorioPlanejamento(casais);
     }
 }

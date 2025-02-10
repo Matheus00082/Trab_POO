@@ -6,6 +6,7 @@ import src.pessoas.PessoaFisica;
 
 public class Casal {
     public PessoaFisica conjuge1, conjuge2;
+    public Lar lar;
     public Casamento casamento;
     public Double totalGasto;
     public int numCasamentos;
@@ -24,6 +25,7 @@ public class Casal {
         
         this.totalGasto = 0.0;
         this.numCasamentos = 0;
+        this.casamento = null;
         this.saldo = p1.poupanca + p2.poupanca;
     }
 

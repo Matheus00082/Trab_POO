@@ -7,38 +7,39 @@ import java.util.List;
 
 public class RelatorioCasais {
 
-    public static void geraRelatorioCasais(List<Casamento> casamentos, List<Lar> lares) {
+    public static void geraRelatorioCasais(List<Casamento> casamentos, List<Casal> casais) {
         // Calcula numero de casamentos que ambos foram
-        for (Lar lar : lares) {
+        for (Casal casal : casais) {
 
-            lar.casal.numCasamentos = Casamento.calculaNumCasamentos(casamentos, lar.casal);
+            casal.numCasamentos = Casamento.calculaNumCasamentos(casamentos, casal);
 
-            if (lar.casamento.festa != null) {
-                lar.casal.totalGasto = lar.casamento.festa.preco;
+            if (casal.casamento.festa != null) {
+                casal.totalGasto = casal.casamento.festa.preco;
             }
 
-            for (Tarefa tarefa : lar.tarefas) {
-                lar.casal.totalGasto += tarefa.calculaValorTotal();
+            if (casal.lar != null) {
+                for (Tarefa tarefa : casal.lar.tarefas) {
+                    casal.totalGasto += tarefa.calculaValorTotal();
+                }
             }
         }
 
         /*Ordena casais por total gasto de formar decrecente. Se houver empate, ordena por
          * nome do conjuge 1 e em ultimo em caso ordenar por quantidade de casamentos*/
-        lares.sort((Lar l1, Lar l2) -> {
-            if (l1.casal.totalGasto == l2.casal.totalGasto) {
-                if (l1.casal.conjuge1.nome.equals(l2.casal.conjuge1.nome)) {
-                    return l1.casal.numCasamentos - l2.casal.numCasamentos;
+        casais.sort((Casal c1, Casal c2) -> {
+            if (c1.totalGasto == c2.totalGasto) {
+                if (c1.conjuge1.nome.equals(c2.conjuge1.nome)) {
+                    return c1.numCasamentos - c2.numCasamentos;
                 }
-                return l1.casal.conjuge1.nome.compareTo(l2.casal.conjuge1.nome);
+                return c1.conjuge1.nome.compareTo(c2.conjuge1.nome);
             }
-            return (int)(l2.casal.totalGasto - l1.casal.totalGasto);
+            return (int)(c2.totalGasto - c1.totalGasto);
         });
 
-        for (Lar lar : lares) {
-            System.out.println(lar.casal.conjuge1.nome + ";" + lar.casal.conjuge2.nome + ";" + lar.casal.totalGasto
-                    + ";" + lar.casal.numCasamentos);
+        for (Casal casal : casais) {
+            System.out.println(casal.conjuge1.nome + ";" + casal.conjuge2.nome + ";" + casal.totalGasto
+                    + ";" + casal.numCasamentos);
         }
-
     }
 
 }
