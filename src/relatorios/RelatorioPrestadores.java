@@ -8,15 +8,15 @@ public class RelatorioPrestadores {
     public static void geraRelatorioPrestadores(List<Pessoa> prestadores) {
 
         prestadores.sort((p1, p2) -> {
-            if(p1.tipo.equals(p2.tipo)){
-                return (int)(p2.lucro - p1.lucro);
+            if(p1.getTipo().equals(p2.getTipo())) {
+                return (int)(p2.getLucro() - p1.getLucro());
             }
-            return p2.tipo.compareTo(p1.tipo);
+            return p2.getTipo().compareTo(p1.getTipo());
         });
 
         for (Pessoa prestador : prestadores) {
-            if (prestador.lucro > 0 || prestador.tipo.equals("Loja")) {
-                System.out.println(prestador.tipo + ";" + prestador.nome + ";R$ " + prestador.lucro);
+            if (prestador.getLucro() > 0 || prestador.getTipo().equals("Loja")) {
+                System.out.println(prestador.getTipo() + ";" + prestador.getNome() + ";R$ " + prestador.getLucro());
             }
         }
     }

@@ -21,43 +21,50 @@ public class RelatorioPlanejamento {
                 if (casal.ehIgualCasal(cpfs[0], cpfs[1])) {
                     cont++;
 
-                    if (casal.lar != null) {
+                    Lar lar = casal.getLar();
+                    Casamento casamento = casal.getCasamento();
 
-                        int num_meses = casal.lar.calculaNumMeses(casal.casamento);
+                    if (lar != null) {
 
-                        System.out.println(casal.conjuge1.nome + "; " + casal.conjuge2.nome);
+                        int num_meses = lar.calculaNumMeses(casamento);
+
+                        System.out.println(casal.getConjuge1().getNome() + "; " + casal.getConjuge2().getNome());
 
                         // Calcula saldo
 
                         while (num_meses > 0) {
                             Double saldo = casal.salarioTotal();
                             saldo -= casal.despesasMensais();
+                            int parcelas = casamento.getFesta().getParcelas();
 
-                            if (casal.casamento.festa != null) {
-                                if (casal.casamento.festa.parcelas > 0) {
-                                    saldo -= casal.casamento.festa.precoParcelado;
-                                    casal.casamento.festa.parcelas--;
+                            if (casamento.getFesta() != null) {
+                                if (parcelas > 0) {
+                                    saldo -= casamento.getFesta().getPrecoParcelado();
+                                    casamento.getFesta().setParcelas(parcelas - 1);
                                 }
                             }
 
-                            for (Tarefa tarefa : casal.lar.tarefas) {
-                                if (tarefa.parcelas > 0) {
-                                    saldo -= tarefa.valorParcelado;
-                                    tarefa.parcelas--;
+                            for (Tarefa tarefa : lar.getTarefas()) {
+                                int parcelas_tarefa = tarefa.getParcelas();
+
+                                if (parcelas_tarefa > 0) {
+                                    saldo -= tarefa.getValorParcelado();
+                                    tarefa.setParcelas(parcelas_tarefa - 1);
                                 }
 
-                                for (Compra compra : tarefa.compras) {
-                                    if (compra.parcelas > 0) {
-                                        saldo -= compra.precoParcelado;
-                                        compra.parcelas--;
+                                for (Compra compra : tarefa.getCompras()) {
+                                    int parcelas_compra = compra.getParcelas();
+                                    if (parcelas_compra > 0) {
+                                        saldo -= compra.getPrecoParcelado();
+                                        compra.setParcelas(parcelas_compra - 1);
                                     }
                                 }
                             }
 
                             saldo += casal.rendimentoPoupanca();
-                            casal.saldo += saldo;
+                            casal.setSaldo(saldo);
 
-                            System.out.printf("R$ %.2f ", casal.saldo);
+                            System.out.printf("R$ %.2f ", casal.getSaldo());
                             num_meses--;
                         }
 

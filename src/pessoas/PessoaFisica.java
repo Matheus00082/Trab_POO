@@ -1,13 +1,23 @@
 package src.pessoas;
 
+import java.util.Date;
+import java.text.SimpleDateFormat;
+
 public class PessoaFisica extends Pessoa{
-    public String CPF, datadeNascimento;
-    public Double poupanca, salario, gastoMensal, juros;
+    private String CPF;
+    private Date datadeNascimento;
+    private Double poupanca, salario, gastoMensal, juros;
 
     public PessoaFisica(String nome, String endereco, String telefone, String id, String CPF, String datadeNascimento, Double poupanca, Double salario, Double gastoMensal) {
         super(nome, endereco, telefone, id, "PF");
         this.CPF = CPF;
-        this.datadeNascimento = datadeNascimento;
+
+        try {
+            this.datadeNascimento = new SimpleDateFormat("dd/MM/yyyy").parse(datadeNascimento);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         this.poupanca = poupanca;
         this.salario = salario;
         this.gastoMensal = gastoMensal;
@@ -18,5 +28,56 @@ public class PessoaFisica extends Pessoa{
         if (p.CPF == cpf) return true;
         else return false;
     }
-    
+
+    public void setCpf(String cpf) {
+        this.CPF = cpf;
+    }
+
+    public String getCPF() {
+        return CPF;
+    }
+
+    public void setDatadeNascimento(String datadeNascimento) {
+        try {
+            this.datadeNascimento = new SimpleDateFormat("dd/MM/yyyy").parse(datadeNascimento);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Date getDatadeNascimento() {
+        return datadeNascimento;
+    }
+
+    public void setPoupanca(Double poupanca) {
+        this.poupanca = poupanca;
+    }
+
+    public Double getPoupanca() {
+        return poupanca;
+    }
+
+    public void setSalario(Double salario) {
+        this.salario = salario;
+    }
+
+    public Double getSalario() {
+        return salario;
+    }
+
+    public void setGastoMensal(Double gastoMensal) {
+        this.gastoMensal = gastoMensal;
+    }
+
+    public Double getGastoMensal() {
+        return gastoMensal;
+    }
+
+    public void setJuros(Double juros) {
+        this.juros = juros;
+    }
+
+    public Double getJuros() {
+        return juros;
+    }   
 }

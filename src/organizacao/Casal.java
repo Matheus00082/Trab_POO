@@ -5,17 +5,17 @@ package src.organizacao;
 import src.pessoas.PessoaFisica;
 
 public class Casal {
-    public PessoaFisica conjuge1, conjuge2;
-    public Lar lar;
-    public Casamento casamento;
-    public Double totalGasto;
-    public int numCasamentos;
-    public Double saldo;
+    private PessoaFisica conjuge1, conjuge2;
+    private Lar lar;
+    private Casamento casamento;
+    private Double totalGasto;
+    private int numCasamentos;
+    private Double saldo;
 
     public Casal(PessoaFisica p1, PessoaFisica p2) {
         
         // Em ordem alfabetica
-        if (p1.nome.compareTo(p2.nome) <= 0) {
+        if (p1.getNome().compareTo(p2.getNome()) <= 0) {
             this.conjuge1 = p1;
             this.conjuge2 = p2;
         } else {
@@ -26,23 +26,71 @@ public class Casal {
         this.totalGasto = 0.0;
         this.numCasamentos = 0;
         this.casamento = null;
-        this.saldo = p1.poupanca + p2.poupanca;
+        this.saldo = p1.getPoupanca() + p2.getPoupanca();
     }
 
     public boolean ehIgualCasal(String CPF1, String CPF2) {
-        if ((this.conjuge1.CPF.equals(CPF1) && this.conjuge2.CPF.equals(CPF2)) ||
-            (this.conjuge1.CPF.equals(CPF2) && this.conjuge2.CPF.equals(CPF1)))
+        if ((this.conjuge1.getCPF().equals(CPF1) && this.conjuge2.getCPF().equals(CPF2)) ||
+            (this.conjuge1.getCPF().equals(CPF2) && this.conjuge2.getCPF().equals(CPF1)))
             return true;
 
         return false;
     }
 
+    public PessoaFisica getConjuge1() {
+        return this.conjuge1;
+    }
+
+    public PessoaFisica getConjuge2() {
+        return this.conjuge2;
+    }
+
+    public void setLar(Lar lar) {
+        this.lar = lar;
+    }
+
+    public Lar getLar() {
+        return this.lar;
+    }
+
+    public void setCasamento(Casamento casamento) {
+        this.casamento = casamento;
+    }
+
+    public Casamento getCasamento() {
+        return this.casamento;
+    }
+
+    public void setTotalGasto(Double totalGasto) {
+        this.totalGasto = totalGasto;
+    }
+
+    public Double getTotalGasto() {
+        return this.totalGasto;
+    }
+
+    public void setNumCasamentos(int numCasamentos) {
+        this.numCasamentos = numCasamentos;
+    }
+
+    public int getNumCasamentos() {
+        return this.numCasamentos;
+    }
+
+    public void setSaldo(Double saldo) {
+        this.saldo += saldo;
+    }
+
+    public Double getSaldo() {
+        return this.saldo;
+    }
+
     public Double salarioTotal() {
-        return this.conjuge1.salario + this.conjuge2.salario;
+        return this.conjuge1.getSalario() + this.conjuge2.getSalario();
     }
 
     public Double despesasMensais() {
-        return this.conjuge1.gastoMensal + this.conjuge2.gastoMensal;
+        return this.conjuge1.getGastoMensal() + this.conjuge2.getGastoMensal();
     }
 
     public Double rendimentoPoupanca() {

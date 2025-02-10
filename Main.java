@@ -16,8 +16,9 @@ public class Main {
         List<Casamento> casamentos = null;
 
 
-        String caminho = "./01/";
+        String caminho = args[0];
         //args[0];
+        //"./01/";
 
         try {
             pessoas = LeitorCVS.lerPessoas(caminho + "pessoas.csv");

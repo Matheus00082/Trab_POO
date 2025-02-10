@@ -11,34 +11,41 @@ public class RelatorioCasais {
         // Calcula numero de casamentos que ambos foram
         for (Casal casal : casais) {
 
-            casal.numCasamentos = Casamento.calculaNumCasamentos(casamentos, casal);
+            casal.setNumCasamentos(Casamento.calculaNumCasamentos(casamentos, casal));
 
-            if (casal.casamento.festa != null) {
-                casal.totalGasto = casal.casamento.festa.preco;
+            Festa festa = casal.getCasamento().getFesta();
+
+            if (festa != null) {
+                casal.setTotalGasto(festa.getPreco());
             }
 
-            if (casal.lar != null) {
-                for (Tarefa tarefa : casal.lar.tarefas) {
-                    casal.totalGasto += tarefa.calculaValorTotal();
+            Lar lar = casal.getLar();
+
+            if (lar != null) {
+                Double gastos = 0.0;
+                for (Tarefa tarefa : lar.getTarefas()) {
+                    gastos += tarefa.calculaValorTotal();
                 }
+
+                casal.setTotalGasto(casal.getTotalGasto() + gastos);
             }
         }
 
         /*Ordena casais por total gasto de formar decrecente. Se houver empate, ordena por
          * nome do conjuge 1 e em ultimo em caso ordenar por quantidade de casamentos*/
         casais.sort((Casal c1, Casal c2) -> {
-            if (c1.totalGasto == c2.totalGasto) {
-                if (c1.conjuge1.nome.equals(c2.conjuge1.nome)) {
-                    return c1.numCasamentos - c2.numCasamentos;
+            if (c1.getTotalGasto() == c2.getTotalGasto()) {
+                if (c1.getConjuge1().getNome().equals(c2.getConjuge1().getNome())) {
+                    return c1.getNumCasamentos() - c2.getNumCasamentos();
                 }
-                return c1.conjuge1.nome.compareTo(c2.conjuge1.nome);
+                return c1.getConjuge1().getNome().compareTo(c2.getConjuge1().getNome());
             }
-            return (int)(c2.totalGasto - c1.totalGasto);
+            return (int)(c2.getTotalGasto() - c1.getTotalGasto());
         });
 
         for (Casal casal : casais) {
-            System.out.println(casal.conjuge1.nome + ";" + casal.conjuge2.nome + ";" + casal.totalGasto
-                    + ";" + casal.numCasamentos);
+            System.out.println(casal.getConjuge1().getNome() + ";" + casal.getConjuge2().getNome() + ";" + casal.getTotalGasto()
+                    + ";" + casal.getNumCasamentos());
         }
     }
 

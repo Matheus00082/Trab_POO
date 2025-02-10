@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import src.auxiliares.*;
 
 public class Lar {
-    public String idLar, rua, complemento;
-    public List<Tarefa> tarefas;
-    public int numero;
+    private String idLar, rua, complemento;
+    private List<Tarefa> tarefas;
+    private int numero;
 
     public Lar(String idLar, String rua, int numero, String complemento) {
         this.idLar = idLar;
@@ -20,20 +20,62 @@ public class Lar {
     }
 
     public int calculaNumMeses(Casamento casamento) {
-        int numMeses = casamento.festa.parcelas;
+        int numMeses = casamento.getFesta().getParcelas();
 
         for (Tarefa tarefa : this.tarefas) {
-            if (tarefa.parcelas > numMeses) {
-                numMeses = tarefa.parcelas;
+            int numParcelasTarefa = tarefa.getParcelas();
+            if ( numParcelasTarefa > numMeses) {
+                numMeses = numParcelasTarefa;
             }
 
-            for (Compra compra : tarefa.compras) {
-                if (compra.parcelas > numMeses) {
-                    numMeses = compra.parcelas;
+            for (Compra compra : tarefa.getCompras()) {
+                int numParcelasCompra = compra.getParcelas();
+                if (numParcelasCompra > numMeses) {
+                    numMeses = numParcelasCompra;
                 }
             }
         }
 
         return numMeses;
     }
+
+    public void setidLar(String idLar) {
+        this.idLar = idLar;
+    }
+
+    public String getidLar() {
+        return this.idLar;
+    }
+
+    public void setRua(String rua) {
+        this.rua = rua;
+    }
+
+    public String getRua() {
+        return this.rua;
+    }
+
+    public void setNumero(int numero) {
+        this.numero = numero;
+    }
+
+    public int getNumero() {
+        return this.numero;
+    }
+
+    public void setComplemento(String complemento) {
+        this.complemento = complemento;
+    }
+
+    public String getComplemento() {
+        return this.complemento;
+    }
+
+    public void addTarefa(Tarefa tarefa) {
+        this.tarefas.add(tarefa);
+    }
+
+    public List<Tarefa> getTarefas() {
+        return this.tarefas;
+    } 
 }
