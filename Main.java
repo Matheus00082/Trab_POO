@@ -6,6 +6,7 @@ import src.relatorios.*;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 
 public class Main {
 
@@ -16,7 +17,7 @@ public class Main {
         List<Casamento> casamentos = null;
 
 
-        String caminho = args[0];
+        String caminho = "./01/";
         //args[0];
         //"./01/";
 
@@ -28,6 +29,14 @@ public class Main {
             LeitorCVS.lerFestas(caminho + "festas.csv", casais);
             LeitorCVS.lerCompras(caminho + "compras.csv", lares, pessoas);
 
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+            // imprime datas de nascimento e casamento mas as datas não estão formatadas como dd/MM/yyyy
+            for (Casal casal : casais) {
+                System.out.println(casal.getConjuge1().getNome() + " nasceu em " + sdf.format(casal.getConjuge2().getDatadeNascimento()) + " e casou em " +  sdf.format(casal.getCasamento().getData()));
+                System.out.println(casal.getConjuge1().getNome() + " nasceu em " +  sdf.format(casal.getConjuge2().getDatadeNascimento()) + " e casou em " +  sdf.format(casal.getCasamento().getData()));
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -38,4 +47,5 @@ public class Main {
         System.out.println("//////////////////////////////////////////////////////");
         RelatorioPlanejamento.geraRelatorioPlanejamento(casais);
     }
+
 }
