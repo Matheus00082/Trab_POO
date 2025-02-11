@@ -1,6 +1,6 @@
 package src.organizacao;
 
-import java.util.List;
+import java.util.Map;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
@@ -26,11 +26,11 @@ public class Casamento {
         this.idConjuje2 = idConjuje2;
     }
 
-    public static int calculaNumCasamentos(List<Casamento> casamentos, Casal casal) {
+    public static int calculaNumCasamentos(Map<String, Casamento> casamentos, Casal casal) {
         int num = 0;
 
         // Calcula numero de casamentos que ambos foram
-        for (Casamento casamento : casamentos) {
+        for (Casamento casamento : casamentos.values()) {
             // Se o casal não é o casal do casamento
             String idConjuge1 = casal.getConjuge1().getId();
             if (!idConjuge1.equals(casamento.idConjuje1) && !idConjuge1.equals(casamento.idConjuje2)) {

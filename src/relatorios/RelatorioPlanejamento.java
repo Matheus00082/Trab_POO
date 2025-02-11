@@ -44,7 +44,7 @@ public class RelatorioPlanejamento {
                                 }
                             }
 
-                            for (Tarefa tarefa : lar.getTarefas()) {
+                            for (Tarefa tarefa : lar.getTarefas().values()) {
                                 int parcelas_tarefa = tarefa.getParcelas();
 
                                 if (parcelas_tarefa > 0) {

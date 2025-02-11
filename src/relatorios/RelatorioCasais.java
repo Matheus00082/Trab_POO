@@ -4,10 +4,11 @@ import src.organizacao.*;
 import src.auxiliares.*;
 
 import java.util.List;
+import java.util.Map;
 
 public class RelatorioCasais {
 
-    public static void geraRelatorioCasais(List<Casamento> casamentos, List<Casal> casais) {
+    public static void geraRelatorioCasais(Map<String, Casamento> casamentos, List<Casal> casais) {
         // Calcula numero de casamentos que ambos foram
         for (Casal casal : casais) {
 
@@ -23,7 +24,7 @@ public class RelatorioCasais {
 
             if (lar != null) {
                 Double gastos = 0.0;
-                for (Tarefa tarefa : lar.getTarefas()) {
+                for (Tarefa tarefa : lar.getTarefas().values()) {
                     gastos += tarefa.calculaValorTotal();
                 }
 

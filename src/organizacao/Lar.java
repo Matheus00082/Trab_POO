@@ -1,14 +1,14 @@
 package src.organizacao;
 
-import java.util.List;
-import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 //import src.pessoas.PessoaFisica;
 import src.auxiliares.*;
 
 public class Lar {
     private String idLar, rua, complemento;
-    private List<Tarefa> tarefas;
+    private Map<String, Tarefa> tarefas;
     private int numero;
 
     public Lar(String idLar, String rua, int numero, String complemento) {
@@ -16,13 +16,13 @@ public class Lar {
         this.rua = rua;
         this.numero = numero;
         this.complemento = complemento;
-        this.tarefas = new ArrayList<>();
+        this.tarefas = new HashMap<>();
     }
 
     public int calculaNumMeses(Casamento casamento) {
         int numMeses = casamento.getFesta().getParcelas();
 
-        for (Tarefa tarefa : this.tarefas) {
+        for (Tarefa tarefa : this.tarefas.values()) {
             int numParcelasTarefa = tarefa.getParcelas();
             if ( numParcelasTarefa > numMeses) {
                 numMeses = numParcelasTarefa;
@@ -71,11 +71,11 @@ public class Lar {
         return this.complemento;
     }
 
-    public void addTarefa(Tarefa tarefa) {
-        this.tarefas.add(tarefa);
+    public void addTarefa(String key, Tarefa tarefa) {
+        this.tarefas.put(key, tarefa);
     }
 
-    public List<Tarefa> getTarefas() {
+    public Map<String, Tarefa> getTarefas() {
         return this.tarefas;
     } 
 }
