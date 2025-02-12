@@ -20,22 +20,30 @@ public class Lar {
     }
 
     public int calculaNumMeses(Casamento casamento) {
-        int numMeses = casamento.getFesta().getParcelas();
+        int numMeses = 0;
 
-        for (Tarefa tarefa : this.tarefas.values()) {
-            int numParcelasTarefa = tarefa.getParcelas();
-            if ( numParcelasTarefa > numMeses) {
-                numMeses = numParcelasTarefa;
-            }
+        if (casamento != null) {
+            numMeses = casamento.getFesta().getParcelas();
+        } 
 
-            for (Compra compra : tarefa.getCompras()) {
-                int numParcelasCompra = compra.getParcelas();
-                if (numParcelasCompra > numMeses) {
-                    numMeses = numParcelasCompra;
+        if (this.tarefas.size() > 0) {
+            for (Tarefa tarefa : this.tarefas.values()) {
+                int numParcelasTarefa = tarefa.getParcelas();
+                if ( numParcelasTarefa > numMeses) {
+                    numMeses = numParcelasTarefa;
+                }
+    
+                if (tarefa.getCompras().size() > 0) {
+                    for (Compra compra : tarefa.getCompras()) {
+                        int numParcelasCompra = compra.getParcelas();
+                        if (numParcelasCompra > numMeses) {
+                            numMeses = numParcelasCompra;
+                        }
+                    }
                 }
             }
         }
-
+        
         return numMeses;
     }
 

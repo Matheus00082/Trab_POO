@@ -3,6 +3,8 @@ package src.organizacao;
 //import java.util.List;
 
 import src.pessoas.PessoaFisica;
+import src.auxiliares.Tarefa;
+import java.util.Date;
 
 public class Casal {
     private PessoaFisica conjuge1, conjuge2;
@@ -35,6 +37,30 @@ public class Casal {
             return true;
 
         return false;
+    }
+
+    public Date calculaDataInicio() {
+        Date data = null;
+
+        if (this.casamento != null) {
+            if (this.casamento.getFesta() != null){
+                data = this.casamento.getFesta().getData();
+            }
+        }
+
+        if (this.lar != null) {
+            if (this.lar.getTarefas().size() > 0) {
+                for (Tarefa tarefa : this.lar.getTarefas().values()) {
+                    if (data == null) {
+                        data = tarefa.getDataInicio();
+                    } else if (data.compareTo(tarefa.getDataInicio()) > 0) {
+                        data = tarefa.getDataInicio();
+                    }
+                }
+            }
+        }
+
+        return data;
     }
 
     public PessoaFisica getConjuge1() {

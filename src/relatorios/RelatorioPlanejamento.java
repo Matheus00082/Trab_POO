@@ -4,6 +4,9 @@ import src.organizacao.*;
 import src.auxiliares.*;
 import java.util.List;
 import java.util.Scanner;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class RelatorioPlanejamento {
 
@@ -27,8 +30,32 @@ public class RelatorioPlanejamento {
                     if (lar != null) {
 
                         int num_meses = lar.calculaNumMeses(casamento);
+                        Date dataInicio = casal.calculaDataInicio();
+                        Calendar cal = Calendar.getInstance(); 
 
+                        SimpleDateFormat sdfMes = new SimpleDateFormat("MM");
+                        int mesAtual = Integer.parseInt(sdfMes.format(dataInicio));
+
+                        System.out.print("Nome 1;Nome 2;");
+
+                        for (int i = 0; i < num_meses; i++) {
+                            SimpleDateFormat sdf = new SimpleDateFormat("MM/yyyy");
+                            String mesAno = sdf.format(dataInicio);
+                            System.out.print(mesAno);
+
+                            if (i < num_meses-1) {
+                                System.out.print(";");
+                            } else {
+                                System.out.println();
+                            }
+                            cal.setTime(dataInicio);
+                            cal.add(Calendar.MONTH, 1);
+                            dataInicio = cal.getTime();
+                        }
+
+                        
                         System.out.println(casal.getConjuge1().getNome() + "; " + casal.getConjuge2().getNome());
+
 
                         // Calcula saldo
 
@@ -62,6 +89,13 @@ public class RelatorioPlanejamento {
                             }
 
                             saldo += casal.rendimentoPoupanca();
+                            if (mesAtual == 12) {
+                                saldo += casal.salarioTotal();
+                                mesAtual = 1;
+                            } else {
+                                mesAtual++;
+                            }
+
                             casal.setSaldo(saldo);
 
                             System.out.printf("R$ %.2f ", casal.getSaldo());
