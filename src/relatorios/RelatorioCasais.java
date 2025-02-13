@@ -3,6 +3,9 @@ package src.relatorios;
 import src.organizacao.*;
 import src.auxiliares.*;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -44,9 +47,20 @@ public class RelatorioCasais {
             return (int)(c2.getTotalGasto() - c1.getTotalGasto());
         });
 
-        for (Casal casal : casais) {
-            System.out.println(casal.getConjuge1().getNome() + ";" + casal.getConjuge2().getNome() + ";" + casal.getTotalGasto()
-                    + ";" + casal.getNumCasamentos());
+        String Arquivo = "3-estatisticas-casais.csv";
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(Arquivo))) {
+
+            for (Casal casal : casais) {
+                writer.write(casal.getConjuge1().getNome() + ";" 
+                            + casal.getConjuge2().getNome() + ";" 
+                            + casal.getTotalGasto() + ";" 
+                            + casal.getNumCasamentos());
+                writer.newLine();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

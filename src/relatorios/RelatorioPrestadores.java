@@ -4,6 +4,8 @@ import src.pessoas.*;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 
 public class RelatorioPrestadores {
 
@@ -18,10 +20,19 @@ public class RelatorioPrestadores {
             return p2.getTipo().compareTo(p1.getTipo());
         });
 
-        for (Pessoa prestador : prestadoresList) {
-            if (prestador.getLucro() > 0 || prestador.getTipo().equals("Loja")) {
-                System.out.println(prestador.getTipo() + ";" + prestador.getNome() + ";R$ " + prestador.getLucro());
+        String Arquivo = "2-estatisticas-prestadores.csv";
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(Arquivo))) {
+
+            for (Pessoa prestador : prestadoresList) {
+                if (prestador.getLucro() > 0 || prestador.getTipo().equals("Loja")) {
+                    writer.write(prestador.getTipo() + ";" + prestador.getNome() + ";R$ " + prestador.getLucro());
+                    writer.newLine();
+                }
             }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
