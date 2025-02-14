@@ -3,68 +3,84 @@ package src.relatorios;
 import src.organizacao.*;
 import src.auxiliares.*;
 import java.util.List;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class RelatorioPlanejamento {
 
     public static void imprimeRelatorio(Casal casal) {
-        int num_meses = casal.calculaNumMeses();         
-        Date dataInicial = casal.calculaDataInicioPagamentos();  
-        Date dataAtual = dataInicial;  
+        int num_meses = casal.calculaNumMeses();
+        Date dataInicial = casal.calculaDataInicioPagamentos();
+        Date dataAtual = dataInicial;
 
-        System.out.print("Nome 1;Nome 2;");
+        String arquivo = "1-planejamento.csv";
 
-        for (int i = 0; i < num_meses; i++) {
-            String mesAno = DataFunctions.getMesAno(dataAtual);
-            System.out.print(mesAno);
+        try (PrintWriter  writer = new PrintWriter(new FileWriter(arquivo, true))) {
 
-            if (i < num_meses-1) {
-                System.out.print(";");
-            } else {
-                System.out.println();
+            writer.write("Nome 1;Nome 2;");
+
+            for (int i = 0; i < num_meses; i++) {
+                String mesAno = DataFunctions.getMesAno(dataAtual);
+                writer.write(mesAno);
+
+                if (i < num_meses - 1) {
+                    writer.write(";");
+                } else {
+                    writer.write("\n");
+                }
+
+                dataAtual = DataFunctions.incrementaMes(dataAtual);
             }
 
-            dataAtual = DataFunctions.incrementaMes(dataAtual);
-        }
+            writer.write(casal.getConjuge1().getNome() + ";" + casal.getConjuge2().getNome() + ";");
 
-        System.out.print(casal.getConjuge1().getNome() + ";" + casal.getConjuge2().getNome() + ";");
+            for (int i = 0; i < num_meses; i++) {
+                casal.atualizaSaldoCasal(dataInicial);
 
-        for (int i = 0; i < num_meses; i++) {
-            casal.atualizaSaldoCasal(dataInicial);
-            System.out.printf("%.2f", casal.getSaldo());
+                writer.printf("R$ %.2f", casal.getSaldo());
 
-            if (i < (num_meses - 1)) {
-                System.out.print(";");
+                if (i < (num_meses - 1)) {
+                    writer.write(";");
+                }
+                dataInicial = DataFunctions.incrementaMes(dataInicial);
             }
-            dataInicial = DataFunctions.incrementaMes(dataInicial);
-        }
 
-        System.out.println();
+            writer.write("\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void geraRelatorioPlanejamento(List<Casal> casais) {
+        List<String> cpfs = new ArrayList<>();
+        String filePath = "./01/entrada.txt"; // Path to your .txt file
+        String line;
 
-        Scanner s = new Scanner(System.in);
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            while ((line = br.readLine()) != null) {
+                line = line.trim();
+                String[] cpfPair = line.split(", ");
+                if (cpfPair.length == 2) {
+                    cpfs.add(cpfPair[0]);
+                    cpfs.add(cpfPair[1]);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        while (s.hasNextLine()) {
-            String linha = s.nextLine();
-            String[] cpfs = linha.split(",\\s*");
-
-            int cont = 0;
-
+        for (int i = 0; i < cpfs.size() / 2; i++) {
             for (Casal casal : casais) {
-                if (casal.ehIgualCasal(cpfs[0], cpfs[1])) {
-                    cont++;
+                if (casal.ehIgualCasal(cpfs.get(i * 2), cpfs.get(i * 2 + 1))) {
                     imprimeRelatorio(casal);
                 }
             }
-
-            if (cont == 0) {
-                System.out.println("Casal com CPFs " + cpfs[0] + " e " + cpfs[1] + " não está cadastrado.");
-            }
         }
 
-        s.close();
     }
 }
