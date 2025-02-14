@@ -1,5 +1,6 @@
 package src.auxiliares;
 
+import src.organizacao.Casal;
 import src.pessoas.*;
 import java.util.List;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.text.SimpleDateFormat;
 public class Tarefa {
     private String idTarefa;
     private Date dataInicio;
-    private int prazoDias, parcelas;
+    private int prazoDias, parcelasInicial, parcelasAtual;
     private List<Compra> compras;
     private Pessoa trabalhador;
     private Double valorParcelado;
@@ -24,11 +25,41 @@ public class Tarefa {
         }
 
         this.prazoDias = prazoDias;
-        this.parcelas = parcelas;
+        this.parcelasInicial = parcelas;
+        this.parcelasAtual = parcelas;
         this.compras = new ArrayList<Compra>();
         this.trabalhador = trabalhador;
         this.trabalhador.setLucro(valor);;
-        this.valorParcelado = valor/parcelas;
+        this.valorParcelado = valor/parcelasInicial;
+    }
+
+    public int obtemMaiorNumParcelasCompras() {
+        int num = 0;
+
+        for (Compra compra : this.compras) {
+            if (compra.getParcelas() > num) {
+                num = compra.getParcelas();
+            }
+        }
+
+        return num;
+    }
+
+    public boolean ehMesdePagamentoTarefa(Date data) {
+        if ((DataFunctions.ehMesmoMeseAno(data, this.dataInicio) || (this.parcelasAtual != this.parcelasInicial)) &&
+            (this.parcelasAtual != 0)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public void pagaTarefa(Casal casal) {
+        casal.subSaldoAtual(this.valorParcelado);
+
+        for (Compra compra : this.compras) {
+            compra.pagaCompra(casal);
+        }
     }
 
     public void setIdTarefa(String idTarefa) {
@@ -59,12 +90,16 @@ public class Tarefa {
         return prazoDias;
     }
 
-    public void setParcelas(int parcelas) {
-        this.parcelas = parcelas;
+    public void setParcelasAtual(int parcelas) {
+        this.parcelasAtual = parcelas;
     }
 
-    public int getParcelas() {
-        return parcelas;
+    public int getParcelasInicial() {
+        return parcelasInicial;
+    }
+
+    public int getParcelasAtual() {
+        return parcelasAtual;
     }
 
     public void addCompras(Compra compra) {

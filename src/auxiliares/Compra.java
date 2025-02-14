@@ -1,5 +1,6 @@
 package src.auxiliares;
 
+import src.organizacao.Casal;
 import src.pessoas.Loja;
 
 public class Compra {
@@ -16,7 +17,14 @@ public class Compra {
         this.quantidade = quantidade;
         this.parcelas = parcelas;
         this.preco = preco;
-        this.precoParcelado = preco/parcelas;
+        this.precoParcelado = (preco * quantidade)/parcelas;
+    }
+
+    public void pagaCompra(Casal casal) {
+        if (this.parcelas > 0) {
+            casal.subSaldoAtual(this.precoParcelado);
+            this.parcelas--;
+        }
     }
 
     public void setIdCompra(String idCompra) {

@@ -1,6 +1,7 @@
 package src.organizacao;
 
 import java.util.Map;
+
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
@@ -41,6 +42,21 @@ public class Casamento {
         }
 
         return num;
+    }
+
+    public boolean ehMesdePagamentoCasamento(Date data) {
+        if (this.festa.ehMesDePagamentoFesta(data)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public void pagaFestaCasamento(Date data, Casal casal) {
+        if (ehMesdePagamentoCasamento(data)) {
+            this.festa.setParcelasAtual(this.festa.getParcelasAtual() - 1);
+            casal.subSaldoAtual(this.festa.getPrecoParcelado());
+        }
     }
 
     public void setIdCasamento(String idCasamento) {

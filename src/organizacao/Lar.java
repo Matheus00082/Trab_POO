@@ -2,6 +2,7 @@ package src.organizacao;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Date;
 
 //import src.pessoas.PessoaFisica;
 import src.auxiliares.*;
@@ -19,32 +20,30 @@ public class Lar {
         this.tarefas = new HashMap<>();
     }
 
-    public int calculaNumMeses(Casamento casamento) {
-        int numMeses = 0;
+    public int obtemMaiorNumParcelasTarefas() {
+        int num = 0;
 
-        if (casamento != null) {
-            numMeses = casamento.getFesta().getParcelas();
-        } 
+        for (Tarefa tarefa : this.tarefas.values()) {
+            if (tarefa.getParcelasInicial() > num) {
+                num = tarefa.getParcelasInicial();
+            }
 
-        if (this.tarefas.size() > 0) {
-            for (Tarefa tarefa : this.tarefas.values()) {
-                int numParcelasTarefa = tarefa.getParcelas();
-                if ( numParcelasTarefa > numMeses) {
-                    numMeses = numParcelasTarefa;
-                }
-    
-                if (tarefa.getCompras().size() > 0) {
-                    for (Compra compra : tarefa.getCompras()) {
-                        int numParcelasCompra = compra.getParcelas();
-                        if (numParcelasCompra > numMeses) {
-                            numMeses = numParcelasCompra;
-                        }
-                    }
+            if (tarefa.getCompras().size() > 0) {
+                if (tarefa.obtemMaiorNumParcelasCompras() > num) {
+                    num = tarefa.obtemMaiorNumParcelasCompras();
                 }
             }
         }
-        
-        return numMeses;
+
+        return num;
+    }
+
+    public void pagaTarefas(Date data, Casal casal) {
+        for (Tarefa tarefa : this.tarefas.values()) {
+            if (tarefa.ehMesdePagamentoTarefa(data)) {
+                tarefa.pagaTarefa(casal);
+            }
+        }
     }
 
     public void setidLar(String idLar) {

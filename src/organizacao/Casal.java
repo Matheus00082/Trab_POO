@@ -3,6 +3,7 @@ package src.organizacao;
 //import java.util.List;
 
 import src.pessoas.PessoaFisica;
+import src.auxiliares.DataFunctions;
 import src.auxiliares.Tarefa;
 import java.util.Date;
 
@@ -12,7 +13,7 @@ public class Casal {
     private Casamento casamento;
     private Double totalGasto;
     private int numCasamentos;
-    private Double saldo;
+    private Double saldoAtual;
 
     public Casal(PessoaFisica p1, PessoaFisica p2) {
         
@@ -28,7 +29,7 @@ public class Casal {
         this.totalGasto = 0.0;
         this.numCasamentos = 0;
         this.casamento = null;
-        this.saldo = p1.getPoupanca() + p2.getPoupanca();
+        this.saldoAtual = p1.getPoupanca() + p2.getPoupanca();
     }
 
     public boolean ehIgualCasal(String CPF1, String CPF2) {
@@ -39,7 +40,7 @@ public class Casal {
         return false;
     }
 
-    public Date calculaDataInicio() {
+    public Date calculaDataInicioPagamentos() {
         Date data = null;
 
         if (this.casamento != null) {
@@ -61,6 +62,35 @@ public class Casal {
         }
 
         return data;
+    }
+
+    public int calculaNumMeses() {
+        int numMeses = 0;
+
+        if (this.casamento != null) {
+            numMeses = this.casamento.getFesta().getParcelasInicial();
+        }
+
+        if (this.lar.getTarefas().size() > 0) {
+            if (this.lar.obtemMaiorNumParcelasTarefas() > numMeses) {
+                numMeses = this.lar.obtemMaiorNumParcelasTarefas();
+            }
+        }
+
+        return numMeses;
+    }
+
+    public void atualizaSaldoCasal(Date data) {
+        this.saldoAtual += this.rendimentoPoupanca();
+        this.saldoAtual -= this.despesasMensais();
+        this.casamento.pagaFestaCasamento(data, this);
+        this.lar.pagaTarefas(data, this);
+
+        if (DataFunctions.getMes(data) == 12) {
+            this.saldoAtual += this.salarioTotal() * 2;
+        } else {
+            this.saldoAtual += this.salarioTotal();
+        }
     }
 
     public PessoaFisica getConjuge1() {
@@ -103,12 +133,16 @@ public class Casal {
         return this.numCasamentos;
     }
 
-    public void setSaldo(Double saldo) {
-        this.saldo += saldo;
+    public void addSaldoAtual(Double saldo) {
+        this.saldoAtual += saldo;
+    }
+
+    public void subSaldoAtual(Double saldo) {
+        this.saldoAtual -= saldo;
     }
 
     public Double getSaldo() {
-        return this.saldo;
+        return this.saldoAtual;
     }
 
     public Double salarioTotal() {
@@ -120,7 +154,7 @@ public class Casal {
     }
 
     public Double rendimentoPoupanca() {
-        return ((0.5 / 100) * this.saldo);
+        return ((0.5 / 100) * this.saldoAtual);
     }
 
 }

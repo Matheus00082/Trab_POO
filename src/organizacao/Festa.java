@@ -1,6 +1,9 @@
 package src.organizacao;
 
 import java.util.Date;
+
+import src.auxiliares.DataFunctions;
+
 import java.text.SimpleDateFormat;
 
 public class Festa {
@@ -8,7 +11,8 @@ public class Festa {
     private Date data;
     private String[] convidados;
     private Double preco, precoParcelado;
-    private int parcelas;
+    private int parcelasInicial;
+    private int parcelasAtual;
 
     public Festa(String idFesta, String local, String data, String hora,
             Double preco, int parcelas, String[] convidados) {
@@ -25,8 +29,16 @@ public class Festa {
         this.hora = hora;
         this.convidados = convidados;
         this.preco = preco;
-        this.parcelas = parcelas;
-        this.precoParcelado = preco/parcelas;
+        this.parcelasInicial = parcelas;
+        this.parcelasAtual = parcelas;
+        this.precoParcelado = preco/parcelasInicial;
+    }
+
+    public boolean ehMesDePagamentoFesta(Date data) {
+        if ((DataFunctions.ehMesmoMeseAno(data, this.data) || (parcelasAtual != parcelasInicial)) && (parcelasAtual != 0)) {
+            return true;
+        }
+        return false;
     }
 
     public void setIdFesta(String idFesta) {
@@ -90,12 +102,16 @@ public class Festa {
         return this.precoParcelado;
     }
 
-    public void setParcelas(int parcelas) {
-        this.parcelas = parcelas;
+    public void setParcelasAtual(int parcelas) {
+        this.parcelasAtual = parcelas;
     }
 
-    public int getParcelas() {
-        return this.parcelas;
+    public int getParcelasInicial() {
+        return this.parcelasInicial;
+    }
+
+    public int getParcelasAtual() {
+        return this.parcelasAtual;
     }
 
     public boolean casalFoiConvidado(Casal casal) {
