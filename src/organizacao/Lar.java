@@ -40,9 +40,7 @@ public class Lar {
 
     public void pagaTarefas(Date data, Casal casal) {
         for (Tarefa tarefa : this.tarefas.values()) {
-            if (tarefa.ehMesdePagamentoTarefa(data)) {
-                tarefa.pagaTarefa(casal);
-            }
+            tarefa.pagaTarefa(casal, data);
         }
     }
 

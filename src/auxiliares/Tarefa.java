@@ -17,7 +17,7 @@ public class Tarefa {
 
     public Tarefa(String idTarefa, String dataInicio, int prazoDias, int parcelas, Double valor, Pessoa trabalhador) {
         this.idTarefa = idTarefa;
-            
+
         try {
             this.dataInicio = new SimpleDateFormat("dd/MM/yyyy").parse(dataInicio);
         } catch (Exception e) {
@@ -29,8 +29,8 @@ public class Tarefa {
         this.parcelasAtual = parcelas;
         this.compras = new ArrayList<Compra>();
         this.trabalhador = trabalhador;
-        this.trabalhador.setLucro(valor);;
-        this.valorParcelado = valor/parcelasInicial;
+        this.trabalhador.setLucro(valor);
+        this.valorParcelado = valor / parcelasInicial;
     }
 
     public int obtemMaiorNumParcelasCompras() {
@@ -47,19 +47,32 @@ public class Tarefa {
 
     public boolean ehMesdePagamentoTarefa(Date data) {
         if ((DataFunctions.ehMesmoMeseAno(data, this.dataInicio) || (this.parcelasAtual != this.parcelasInicial)) &&
-            (this.parcelasAtual != 0)) {
+                (this.parcelasAtual != 0)) {
             return true;
         }
-
         return false;
     }
 
-    public void pagaTarefa(Casal casal) {
-        casal.subSaldoAtual(this.valorParcelado);
-
-        for (Compra compra : this.compras) {
-            compra.pagaCompra(casal);
+    public void pagaTarefa(Casal casal, Date data) {
+        boolean ehMes = ehMesdePagamentoTarefa(data);
+        if (ehMes) {
+            casal.subSaldoAtual(this.valorParcelado);
+            this.parcelasAtual--;
         }
+
+        String Inicio = new SimpleDateFormat("MM/yyyy").format(this.dataInicio);
+        String Atual = new SimpleDateFormat("MM/yyyy").format(data);
+        int anoInicio = Integer.parseInt(Inicio.split("/")[1]);
+        int anoAtual = Integer.parseInt(Atual.split("/")[1]);
+        int mesInicio = Integer.parseInt(Inicio.split("/")[0]);
+        int mesAtual = Integer.parseInt(Atual.split("/")[0]);
+
+        if (((anoAtual > anoInicio) || (anoAtual == anoInicio && mesAtual >= mesInicio))) {
+            for (Compra compra : this.compras) {
+                compra.pagaCompra(casal);
+            }
+        }
+        
     }
 
     public void setIdTarefa(String idTarefa) {
@@ -134,5 +147,5 @@ public class Tarefa {
         }
 
         return (valorTotal + this.trabalhador.getLucro());
-    } 
+    }
 }

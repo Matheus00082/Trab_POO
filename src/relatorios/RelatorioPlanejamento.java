@@ -44,9 +44,7 @@ public class RelatorioPlanejamento {
 
                 writer.printf("R$ %.2f", casal.getSaldo());
 
-                if (i < (num_meses - 1)) {
-                    writer.write(";");
-                }
+                writer.write(";");
                 dataInicial = DataFunctions.incrementaMes(dataInicial);
             }
 
