@@ -20,17 +20,23 @@ public class Lar {
         this.tarefas = new HashMap<>();
     }
 
-    public int obtemMaiorNumParcelasTarefas() {
+    public int obtemMaiorNumParcelasTarefas(Date data) {
         int num = 0;
 
         for (Tarefa tarefa : this.tarefas.values()) {
-            if (tarefa.getParcelasInicial() > num) {
-                num = tarefa.getParcelasInicial();
+            int numParcelasTarefas = tarefa.getParcelasInicial();
+
+            if (numParcelasTarefas > num) {
+                num = numParcelasTarefas;
+                data = tarefa.getDataInicio();
             }
 
             if (tarefa.getCompras().size() > 0) {
-                if (tarefa.obtemMaiorNumParcelasCompras() > num) {
-                    num = tarefa.obtemMaiorNumParcelasCompras();
+                int numParcelasCompras = tarefa.obtemMaiorNumParcelasCompras();
+                
+                if (numParcelasCompras > num) {
+                    num = numParcelasCompras;
+                    data = tarefa.getDataInicio();
                 }
             }
         }

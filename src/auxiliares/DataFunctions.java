@@ -32,6 +32,29 @@ public class DataFunctions {
         return false;
     }
 
+    public static int mesesEntreDatas(Date data1, Date data2) {
+
+        if (!verificaSeEhPosterior(data1, data2)) {
+            return 0;
+        }
+
+        int ano1 = getAno(data1);
+        int ano2 = getAno(data2);
+        int mes1 = getMes(data1);
+        int mes2 = getMes(data2);
+
+        int meses = 0;
+
+        if (ano1 == ano2) {
+            meses = mes2 - mes1;
+        } else {
+            meses = (ano2 - ano1) * 12;
+            meses += mes2 - mes1;
+        }
+
+        return meses;
+    }
+
     public static int getAno(Date data) {
         SimpleDateFormat sdfAno = new SimpleDateFormat("yyyy");
         int ano = Integer.parseInt(sdfAno.format(data));

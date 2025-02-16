@@ -64,17 +64,28 @@ public class Casal {
         return data;
     }
 
-    public int calculaNumMeses() {
+    public int calculaNumMeses(Date dataInicial) {
         int numMeses = 0;
+        boolean limiteEstaEmTaredas = false;
 
-        if (this.casamento != null) {
+        if (this.casamento != null && this.casamento.getFesta() != null) {
             numMeses = this.casamento.getFesta().getParcelasInicial();
         }
 
-        if (this.lar.getTarefas().size() > 0) {
-            if (this.lar.obtemMaiorNumParcelasTarefas() > numMeses) {
-                numMeses = this.lar.obtemMaiorNumParcelasTarefas();
+        if (this.lar != null && this.lar.getTarefas().size() > 0) {
+            Date data = new Date();
+            int parcelas = this.lar.obtemMaiorNumParcelasTarefas(data);
+            int mesesEntreDatas = DataFunctions.mesesEntreDatas(dataInicial, data);
+            System.out.println(dataInicial + " "+ mesesEntreDatas + " " + data);
+
+            if (parcelas + mesesEntreDatas > numMeses) {
+                numMeses = parcelas + mesesEntreDatas;
+                limiteEstaEmTaredas = true;
             }
+        }
+
+        if (!limiteEstaEmTaredas) {
+            numMeses += DataFunctions.mesesEntreDatas(dataInicial, this.casamento.getFesta().getData());
         }
 
         return numMeses;

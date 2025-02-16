@@ -14,8 +14,8 @@ import java.util.Date;
 public class RelatorioPlanejamento {
 
     public static void imprimeRelatorio(Casal casal) {
-        int num_meses = casal.calculaNumMeses();
         Date dataInicial = casal.calculaDataInicioPagamentos();
+        int num_meses = casal.calculaNumMeses(dataInicial);
         Date dataAtual = dataInicial;
 
         String arquivo = "1-planejamento.csv";
