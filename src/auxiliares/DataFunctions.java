@@ -19,6 +19,26 @@ public class DataFunctions {
         return false;
     }
 
+    public static boolean verificaSeEhPosterior(Date dataDeInicio, Date dataParaComparar) {
+        int anoInicio = DataFunctions.getAno(dataDeInicio);
+        int anoAtual = DataFunctions.getAno(dataParaComparar);
+        int mesInicio = DataFunctions.getMes(dataDeInicio);
+        int mesAtual = DataFunctions.getMes(dataParaComparar);
+
+        if (((anoAtual > anoInicio) || (anoAtual == anoInicio && mesAtual >= mesInicio))) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static int getAno(Date data) {
+        SimpleDateFormat sdfAno = new SimpleDateFormat("yyyy");
+        int ano = Integer.parseInt(sdfAno.format(data));
+
+        return ano;
+    }
+
     public static int getMes(Date data) {
         SimpleDateFormat sdfMes = new SimpleDateFormat("MM");
         int mes = Integer.parseInt(sdfMes.format(data));

@@ -60,14 +60,7 @@ public class Tarefa {
             this.parcelasAtual--;
         }
 
-        String Inicio = new SimpleDateFormat("MM/yyyy").format(this.dataInicio);
-        String Atual = new SimpleDateFormat("MM/yyyy").format(data);
-        int anoInicio = Integer.parseInt(Inicio.split("/")[1]);
-        int anoAtual = Integer.parseInt(Atual.split("/")[1]);
-        int mesInicio = Integer.parseInt(Inicio.split("/")[0]);
-        int mesAtual = Integer.parseInt(Atual.split("/")[0]);
-
-        if (((anoAtual > anoInicio) || (anoAtual == anoInicio && mesAtual >= mesInicio))) {
+        if (DataFunctions.verificaSeEhPosterior(this.dataInicio, data)) {
             for (Compra compra : this.compras) {
                 compra.pagaCompra(casal);
             }
