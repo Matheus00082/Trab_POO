@@ -30,9 +30,7 @@ public class Casamento {
     public static int calculaNumCasamentos(Map<String, Casamento> casamentos, Casal casal) {
         int num = 0;
 
-        // Calcula numero de casamentos que ambos foram
         for (Casamento casamento : casamentos.values()) {
-            // Se o casal não é o casal do casamento
             String idConjuge1 = casal.getConjuge1().getId();
             if (!idConjuge1.equals(casamento.idConjuje1) && !idConjuge1.equals(casamento.idConjuje2)) {
                 if (casamento.festa != null && casamento.festa.casalFoiConvidado(casal)) {
@@ -53,9 +51,11 @@ public class Casamento {
     }
 
     public void pagaFestaCasamento(Date data, Casal casal) {
-        if (ehMesdePagamentoCasamento(data)) {
-            this.festa.setParcelasAtual(this.festa.getParcelasAtual() - 1);
-            casal.subSaldoAtual(this.festa.getPrecoParcelado());
+        if (this.festa != null) {
+            if (ehMesdePagamentoCasamento(data)) {
+                this.festa.setParcelasAtual(this.festa.getParcelasAtual() - 1);
+                casal.subSaldoAtual(this.festa.getPrecoParcelado());
+            }
         }
     }
 

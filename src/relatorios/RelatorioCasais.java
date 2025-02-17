@@ -17,10 +17,8 @@ public class RelatorioCasais {
 
             casal.setNumCasamentos(Casamento.calculaNumCasamentos(casamentos, casal));
 
-            Festa festa = casal.getCasamento().getFesta();
-
-            if (festa != null) {
-                casal.setTotalGasto(festa.getPreco());
+            if (casal.getCasamento() != null && casal.getCasamento().getFesta() != null) {
+                casal.setTotalGasto(casal.getCasamento().getFesta().getPreco());
             }
 
             Lar lar = casal.getLar();
@@ -52,9 +50,10 @@ public class RelatorioCasais {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(Arquivo))) {
 
             for (Casal casal : casais) {
+                String totalGasto = String.format("R$ %.2f", casal.getTotalGasto()).replace('.', ',');
                 writer.write(casal.getConjuge1().getNome() + ";" 
                             + casal.getConjuge2().getNome() + ";" 
-                            + casal.getTotalGasto() + ";" 
+                            + totalGasto + ";" 
                             + casal.getNumCasamentos());
                 writer.newLine();
             }

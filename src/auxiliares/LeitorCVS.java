@@ -115,7 +115,7 @@ public class LeitorCVS {
         return tarefas;
     }
 
-    public static Map<String, Casamento> lerCasamentos(String caminhoArquivo, List<Casal> casais) throws IOException {
+    public static Map<String, Casamento> lerCasamentos(String caminhoArquivo, Map<String, Pessoa> pessoas, List<Casal> casais) throws IOException {
         Map<String, Casamento> casamentos = new HashMap<>();
 
         try (BufferedReader leitor = new BufferedReader(
@@ -126,18 +126,39 @@ public class LeitorCVS {
             while ((linha = leitor.readLine()) != null) {
                 String[] partes = linha.split(";");
 
+                Casamento casamento = new Casamento(partes[0], partes[1], partes[2], partes[3], partes[4], partes[5]);
+
+                String idConjuge1 = partes[1];
+                String idConjuge2 = partes[2];
+
+                boolean casalEncontrado = false;
+
                 for (Casal casal : casais) {
-                    String idConjuge1 = casal.getConjuge1().getId(), idConjuge2 = casal.getConjuge2().getId();
+                    String casalConjuge1 = casal.getConjuge1().getId();
+                    String casalConjuge2 = casal.getConjuge2().getId();
 
-                    if (idConjuge1.equals(partes[1]) && idConjuge2.equals(partes[2]) ||
-                            idConjuge1.equals(partes[2]) && idConjuge2.equals(partes[1])) {
-
-                        Casamento casamento = new Casamento(partes[0], partes[1], partes[2], partes[3], partes[4],
-                                partes[5]);
-
+                    if ((idConjuge1.equals(casalConjuge1) && idConjuge2.equals(casalConjuge2)) ||
+                        (idConjuge1.equals(casalConjuge2) && idConjuge2.equals(casalConjuge1))) {
+                        
                         casal.setCasamento(casamento);
                         casamentos.put(partes[0], casamento);
+                        casalEncontrado = true;
+                        break; 
                     }
+                }
+
+                if (!casalEncontrado) {
+                    PessoaFisica conjuge1 = (PessoaFisica) pessoas.get(idConjuge1);
+                    PessoaFisica conjuge2 = (PessoaFisica) pessoas.get(idConjuge2);
+
+                    if (conjuge1 == null || conjuge2 == null) {
+                        throw new IllegalArgumentException("Casal não encontrado");
+                    }
+
+                    Casal novoCasal = new Casal(conjuge1, conjuge2);
+                    novoCasal.setCasamento(casamento);
+                    casais.add(novoCasal);
+                    casamentos.put(partes[0], casamento);
                 }
             }
         }

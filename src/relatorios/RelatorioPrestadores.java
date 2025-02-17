@@ -25,8 +25,9 @@ public class RelatorioPrestadores {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(Arquivo))) {
 
             for (Pessoa prestador : prestadoresList) {
-                if (prestador.getLucro() > 0 || prestador.getTipo().equals("Loja")) {
-                    writer.write(prestador.getTipo() + ";" + prestador.getNome() + ";R$ " + prestador.getLucro());
+                if (prestador.getTipo().equals("PJ") || prestador.getTipo().equals("Loja")) {
+                    String lucro = String.format("R$ %.2f", prestador.getLucro()).replace('.', ',');
+                    writer.write(prestador.getTipo() + ";" + prestador.getNome() + ";" + lucro);
                     writer.newLine();
                 }
             }

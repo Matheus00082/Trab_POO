@@ -18,7 +18,7 @@ public class Main {
         Map<String, Casamento> casamentos = null;
 
 
-        String caminho = "./01/";
+        String caminho ="./Casos/06/";
         //args[0];
         //"./01/";
 
@@ -26,7 +26,7 @@ public class Main {
             pessoas = LeitorCVS.lerPessoas(caminho + "pessoas.csv");
             lares = LeitorCVS.lerLares(caminho + "lares.csv", pessoas, casais);
             LeitorCVS.lerTarefas(caminho + "tarefas.csv", pessoas, lares);
-            casamentos = LeitorCVS.lerCasamentos(caminho + "casamentos.csv", casais);
+            casamentos = LeitorCVS.lerCasamentos(caminho + "casamentos.csv", pessoas, casais);
             LeitorCVS.lerFestas(caminho + "festas.csv", casamentos);
             LeitorCVS.lerCompras(caminho + "compras.csv", lares, pessoas);
 

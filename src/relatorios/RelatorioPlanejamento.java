@@ -21,33 +21,37 @@ public class RelatorioPlanejamento {
         String arquivo = "1-planejamento.csv";
 
         try (PrintWriter  writer = new PrintWriter(new FileWriter(arquivo, true))) {
+            if (dataInicial == null) {
+                writer.write("Casal com CPFs " + casal.getConjuge1().getCPF() + " e " + casal.getConjuge2().getCPF() + 
+                " não possui gastos cadastrados.");
+            } else {
+                writer.write("Nome 1;Nome 2;");
 
-            writer.write("Nome 1;Nome 2;");
+                for (int i = 0; i < num_meses; i++) {
+                    String mesAno = DataFunctions.getMesAno(dataAtual);
+                    writer.write(mesAno);
 
-            for (int i = 0; i < num_meses; i++) {
-                String mesAno = DataFunctions.getMesAno(dataAtual);
-                writer.write(mesAno);
+                    if (i < num_meses - 1) {
+                        writer.write(";");
+                    } else {
+                        writer.write("\n");
+                    }
 
-                if (i < num_meses - 1) {
-                    writer.write(";");
-                } else {
-                    writer.write("\n");
+                    dataAtual = DataFunctions.incrementaMes(dataAtual);
                 }
 
-                dataAtual = DataFunctions.incrementaMes(dataAtual);
+                writer.write(casal.getConjuge1().getNome() + ";" + casal.getConjuge2().getNome() + ";");
+
+                for (int i = 0; i < num_meses; i++) {
+                    casal.atualizaSaldoCasal(dataInicial);
+
+                    String saldo = String.format("R$ %.2f", casal.getSaldo()).replace('.', ',');
+                    writer.write(saldo);
+
+                    writer.write(";");
+                    dataInicial = DataFunctions.incrementaMes(dataInicial);
+                }
             }
-
-            writer.write(casal.getConjuge1().getNome() + ";" + casal.getConjuge2().getNome() + ";");
-
-            for (int i = 0; i < num_meses; i++) {
-                casal.atualizaSaldoCasal(dataInicial);
-
-                writer.printf("R$ %.2f", casal.getSaldo());
-
-                writer.write(";");
-                dataInicial = DataFunctions.incrementaMes(dataInicial);
-            }
-
             writer.write("\n");
         } catch (IOException e) {
             e.printStackTrace();
@@ -56,7 +60,7 @@ public class RelatorioPlanejamento {
 
     public static void geraRelatorioPlanejamento(List<Casal> casais) {
         List<String> cpfs = new ArrayList<>();
-        String filePath = "./01/entrada.txt"; // Path to your .txt file
+        String filePath = "./Casos/06/entrada.txt"; // Path to your .txt file
         String line;
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {

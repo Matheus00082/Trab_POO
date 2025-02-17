@@ -85,7 +85,9 @@ public class Casal {
         }
 
         if (!limiteEstaEmTaredas) {
-            numMeses += DataFunctions.mesesEntreDatas(dataInicial, this.casamento.getFesta().getData());
+            if (this.casamento != null && this.casamento.getFesta() != null) {
+                numMeses += DataFunctions.mesesEntreDatas(dataInicial, this.casamento.getFesta().getData());
+            }
         }
 
         return numMeses;
@@ -94,8 +96,12 @@ public class Casal {
     public void atualizaSaldoCasal(Date data) {
         this.saldoAtual += this.rendimentoPoupanca();
         this.saldoAtual -= this.despesasMensais();
-        this.casamento.pagaFestaCasamento(data, this);
-        this.lar.pagaTarefas(data, this);
+
+        if (this.casamento != null) {
+            this.casamento.pagaFestaCasamento(data, this);
+        } if (this.lar != null) {
+            this.lar.pagaTarefas(data, this);
+        }
 
         if (DataFunctions.getMes(data) == 12) {
             this.saldoAtual += this.salarioTotal() * 2;

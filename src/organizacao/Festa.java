@@ -118,7 +118,7 @@ public class Festa {
         int cont = 0;
 
         for (String convidado : this.convidados) {
-            if (casal.getConjuge1().getNome() == convidado || casal.getConjuge2().getNome() == convidado) {
+            if (casal.getConjuge1().getNome().equals(convidado) || casal.getConjuge2().getNome().equals(convidado)) {
                 cont++;
             }
 
