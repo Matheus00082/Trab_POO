@@ -20,9 +20,9 @@ public class RelatorioPrestadores {
             return p2.getTipo().compareTo(p1.getTipo());
         });
 
-        String Arquivo = "2-estatisticas-prestadores.csv";
+        String arquivo = "2-estatisticas-prestadores.csv";
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(Arquivo))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivo, true))) {
 
             for (Pessoa prestador : prestadoresList) {
                 if (prestador.getTipo().equals("PJ") || prestador.getTipo().equals("Loja")) {

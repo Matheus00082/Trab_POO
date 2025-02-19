@@ -16,6 +16,7 @@ public class Main {
         List<Casal> casais = new ArrayList<>();
         Map<String, Lar> lares = null;
         Map<String, Casamento> casamentos = null;
+        LeitorCVS.criaArquivosVazios();
 
 
         String caminho ="./Casos_exc/EXC08/";

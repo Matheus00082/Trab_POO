@@ -11,8 +11,19 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.io.PrintWriter;
 
 public class LeitorCVS {
+
+    public static void criaArquivosVazios() {
+        try {
+            new PrintWriter("1-planejamento.csv").close();
+            new PrintWriter("2-estatisticas-prestadores.csv").close();
+            new PrintWriter("3-estatisticas-casais.csv").close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static Map<String, Pessoa> lerPessoas(String caminhoArquivo) throws IOException {
         Map<String, Pessoa> pessoas = new HashMap<>();

@@ -45,9 +45,9 @@ public class RelatorioCasais {
             return (int)(c2.getTotalGasto() - c1.getTotalGasto());
         });
 
-        String Arquivo = "3-estatisticas-casais.csv";
+        String arquivo = "3-estatisticas-casais.csv";
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(Arquivo))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivo,true))) {
 
             for (Casal casal : casais) {
                 String totalGasto = String.format("R$ %.2f", casal.getTotalGasto()).replace('.', ',');
