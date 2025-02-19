@@ -76,7 +76,6 @@ public class Casal {
             Date data = new Date();
             int parcelas = this.lar.obtemMaiorNumParcelasTarefas(data);
             int mesesEntreDatas = DataFunctions.mesesEntreDatas(dataInicial, data);
-            System.out.println(dataInicial + " "+ mesesEntreDatas + " " + data);
 
             if (parcelas + mesesEntreDatas > numMeses) {
                 numMeses = parcelas + mesesEntreDatas;

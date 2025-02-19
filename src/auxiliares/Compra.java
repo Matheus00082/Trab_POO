@@ -1,13 +1,17 @@
 package src.auxiliares;
 
+import java.util.HashMap;
+
 import src.organizacao.Casal;
 import src.pessoas.Loja;
+import java.util.Map;
 
 public class Compra {
     private String idCompra, nomeProduto;
     private Loja loja;
     private int quantidade, parcelas;
     private Double preco, precoParcelado;
+    protected static Map<String, String> ids = new HashMap<>();
 
     public Compra(String idCompra, String nomeProduto, Loja loja, int quantidade, int parcelas, Double preco) {
         this.idCompra = idCompra;
@@ -18,6 +22,14 @@ public class Compra {
         this.parcelas = parcelas;
         this.preco = preco;
         this.precoParcelado = (preco * quantidade)/parcelas;
+
+        if (ids.get(idCompra) != null) {
+            throw new IllegalArgumentException("ID repetido " + idCompra + " na classe Compra.");
+        }
+    }
+
+    public static void setIds(String id) {
+        ids.put(id, id);
     }
 
     public void pagaCompra(Casal casal) {

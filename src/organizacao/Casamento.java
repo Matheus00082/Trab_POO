@@ -3,6 +3,7 @@ package src.organizacao;
 import java.util.Map;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.text.SimpleDateFormat;
 
 public class Casamento {
@@ -10,6 +11,7 @@ public class Casamento {
     private String hora, local;
     private Date data;
     private Festa festa;
+    protected static Map<String, String> ids = new HashMap<>();
 
     public Casamento(String idCasamento, String idConjuje1, String idConjuje2, String data, String hora, String local) {
         this.idCasamento = idCasamento;
@@ -25,6 +27,14 @@ public class Casamento {
         this.festa = null;
         this.idConjuje1 = idConjuje1;
         this.idConjuje2 = idConjuje2;
+
+        if (ids.get(idCasamento) != null) {
+            throw new IllegalArgumentException("ID repetido " + idCasamento + " na classe Casamento.");
+        }
+    }
+
+    public static void setIds(String id) {
+        ids.put(id, id);
     }
 
     public static int calculaNumCasamentos(Map<String, Casamento> casamentos, Casal casal) {

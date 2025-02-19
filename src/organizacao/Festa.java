@@ -1,6 +1,8 @@
 package src.organizacao;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import src.auxiliares.DataFunctions;
 
@@ -13,6 +15,7 @@ public class Festa {
     private Double preco, precoParcelado;
     private int parcelasInicial;
     private int parcelasAtual;
+    protected static Map<String, String> ids = new HashMap<>();
 
     public Festa(String idFesta, String local, String data, String hora,
             Double preco, int parcelas, String[] convidados) {
@@ -32,6 +35,14 @@ public class Festa {
         this.parcelasInicial = parcelas;
         this.parcelasAtual = parcelas;
         this.precoParcelado = preco/parcelasInicial;
+
+        if (ids.get(idFesta) != null) {
+            throw new IllegalArgumentException("ID repetido " + idFesta + " na classe Festa.");
+        }
+    }
+
+    public static void setIds(String id) {
+        ids.put(id, id);
     }
 
     public boolean ehMesDePagamentoFesta(Date data) {

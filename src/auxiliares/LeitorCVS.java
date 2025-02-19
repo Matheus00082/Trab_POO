@@ -44,6 +44,8 @@ public class LeitorCVS {
                     pessoas.put(partes[0], new Loja(partes[2], partes[4], partes[3], partes[0], partes[5]));
 
                 }
+
+                Pessoa.setIds(partes[0]);
             }
         }
         return pessoas;
@@ -74,6 +76,8 @@ public class LeitorCVS {
                 casal.setLar(lar);
                 casais.add(casal);
                 lares.put(partes[0], lar);
+
+                Lar.setIds(partes[0]);
             }
         }
         return lares;
@@ -109,6 +113,7 @@ public class LeitorCVS {
 
                 lar.getTarefas().put(partes[0], t);
                 tarefas.put(partes[0], t);
+                Tarefa.setIds(partes[0]);
             }
         }
 
@@ -160,6 +165,8 @@ public class LeitorCVS {
                     casais.add(novoCasal);
                     casamentos.put(partes[0], casamento);
                 }
+
+                Casamento.setIds(partes[0]);
             }
         }
 
@@ -194,6 +201,8 @@ public class LeitorCVS {
                 } else {
                     throw new IllegalArgumentException("Casamento não encontrado para a festa");
                 }
+
+                Festa.setIds(partes[0]);
             }
         }
     }
@@ -226,6 +235,8 @@ public class LeitorCVS {
                                             Double.parseDouble(
                                                     (partes[5].replace(".", "")).replace(",", "."))));
                         }
+
+                        Compra.setIds(partes[0]);
                     }
                 }
             }

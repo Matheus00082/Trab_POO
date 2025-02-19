@@ -5,6 +5,8 @@ import src.pessoas.*;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.text.SimpleDateFormat;
 
 public class Tarefa {
@@ -14,6 +16,7 @@ public class Tarefa {
     private List<Compra> compras;
     private Pessoa trabalhador;
     private Double valorParcelado;
+    protected static Map<String, String> ids = new HashMap<>();
 
     public Tarefa(String idTarefa, String dataInicio, int prazoDias, int parcelas, Double valor, Pessoa trabalhador) {
         this.idTarefa = idTarefa;
@@ -31,6 +34,14 @@ public class Tarefa {
         this.trabalhador = trabalhador;
         this.trabalhador.setLucro(valor);
         this.valorParcelado = valor / parcelasInicial;
+
+        if (ids.get(idTarefa) != null) {
+            throw new IllegalArgumentException("ID repetido " + idTarefa + " na classe Tarefa.");
+        }
+    }
+
+    public static void setIds(String id) {
+        ids.put(id, id);
     }
 
     public int obtemMaiorNumParcelasCompras() {

@@ -1,9 +1,13 @@
 package src.pessoas;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Pessoa {
     protected String nome, endereco, telefone, id;
     protected Double lucro;
     protected String tipo;
+    protected static Map<String, String> ids = new HashMap<>();
 
     public Pessoa(String nome, String endereco, String telefone, String id, String tipo) {
         this.nome = nome;
@@ -12,8 +16,15 @@ public class Pessoa {
         this.id = id;
         this.tipo = tipo;
         this.lucro = 0.0;
+
+        if (ids.get(id) != null) {
+            throw new IllegalArgumentException("ID repetido " + id + " na classe Pessoa.");
+        }
     }
 
+    public static void setIds(String id) {
+        ids.put(id, id);
+    }
 
     public void setNome(String nome) {
         this.nome = nome;

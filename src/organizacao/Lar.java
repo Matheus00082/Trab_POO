@@ -11,6 +11,7 @@ public class Lar {
     private String idLar, rua, complemento;
     private Map<String, Tarefa> tarefas;
     private int numero;
+    protected static Map<String, String> ids = new HashMap<>();
 
     public Lar(String idLar, String rua, int numero, String complemento) {
         this.idLar = idLar;
@@ -18,6 +19,14 @@ public class Lar {
         this.numero = numero;
         this.complemento = complemento;
         this.tarefas = new HashMap<>();
+
+        if (ids.get(idLar) != null) {
+            throw new IllegalArgumentException("ID repetido " + idLar + " na classe Lar.");
+        }
+    }
+
+    public static void setIds(String id) {
+        ids.put(id, id);
     }
 
     public int obtemMaiorNumParcelasTarefas(Date data) {

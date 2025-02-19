@@ -18,7 +18,7 @@ public class Main {
         Map<String, Casamento> casamentos = null;
 
 
-        String caminho ="./Casos/06/";
+        String caminho ="./Casos_exc/EXC06/";
         //args[0];
         //"./01/";
 
@@ -30,13 +30,18 @@ public class Main {
             LeitorCVS.lerFestas(caminho + "festas.csv", casamentos);
             LeitorCVS.lerCompras(caminho + "compras.csv", lares, pessoas);
 
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         RelatorioPlanejamento.geraRelatorioPlanejamento(casais);
-        RelatorioPrestadores.geraRelatorioPrestadores(pessoas);
-        RelatorioCasais.geraRelatorioCasais(casamentos, casais);
+        if (pessoas != null) {
+            RelatorioPrestadores.geraRelatorioPrestadores(pessoas);
+        } if (casamentos != null && casais != null) {
+            RelatorioCasais.geraRelatorioCasais(casamentos, casais);
+        }
     }
 
 }
