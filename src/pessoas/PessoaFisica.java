@@ -2,14 +2,24 @@ package src.pessoas;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.Map;
+import java.util.HashMap;
 
 public class PessoaFisica extends Pessoa{
     private String CPF;
     private Date datadeNascimento;
     private Double poupanca, salario, gastoMensal, juros;
+    protected static Map<String, String> cpfs = new HashMap<>();
 
     public PessoaFisica(String nome, String endereco, String telefone, String id, String CPF, String datadeNascimento, Double poupanca, Double salario, Double gastoMensal) {
         super(nome, endereco, telefone, id, "PF");
+
+        if (cpfs.containsKey(CPF) && !cpfs.get(CPF).equals(id)) {
+            throw new IllegalArgumentException("O CPF " + CPF + " da Pessoa " + id + " é repetido.");
+        }
+
+        cpfs.put(CPF, id);
+        
         this.CPF = CPF;
 
         try {

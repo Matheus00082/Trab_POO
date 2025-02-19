@@ -60,7 +60,7 @@ public class RelatorioPlanejamento {
 
     public static void geraRelatorioPlanejamento(List<Casal> casais) {
         List<String> cpfs = new ArrayList<>();
-        String filePath = "./Casos_exc/EXC06/entrada.txt"; // Path to your .txt file
+        String filePath = "./Casos_exc/EXC08/entrada.txt"; // Path to your .txt file
         String line;
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {

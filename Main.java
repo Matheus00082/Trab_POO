@@ -18,7 +18,7 @@ public class Main {
         Map<String, Casamento> casamentos = null;
 
 
-        String caminho ="./Casos_exc/EXC06/";
+        String caminho ="./Casos_exc/EXC08/";
         //args[0];
         //"./01/";
 
