@@ -57,12 +57,16 @@ public class RelatorioPlanejamento {
     }
 
     public static void geraRelatorioPlanejamento(List<Casal> casais) {
-        String line;
         Scanner scanner = new Scanner(System.in);
 
-        while ((line = scanner.nextLine()) != null) {
-            line = line.trim();
-            String[] cpfPair = line.split(", ");
+        while ((scanner.hasNextLine())) {
+            String line = scanner.nextLine();
+
+            if (line.isEmpty()) {
+                break;
+            }
+
+            String[] cpfPair = line.split(",\\s*");
             if (cpfPair.length == 2) {
                 for (Casal casal : casais) {
                     if (casal.ehIgualCasal(cpfPair[0], cpfPair[1])) {

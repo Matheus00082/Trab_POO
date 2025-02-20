@@ -15,11 +15,11 @@ import java.io.PrintWriter;
 
 public class LeitorCVS {
 
-    public static void criaArquivosVazios() {
+    public static void criaArquivosVazios(String caminho) {
         try {
-            new PrintWriter("1-planejamento.csv").close();
-            new PrintWriter("2-estatisticas-prestadores.csv").close();
-            new PrintWriter("3-estatisticas-casais.csv").close();
+            new PrintWriter(caminho + "/saida/1-planejamento.csv").close();
+            new PrintWriter(caminho + "/saida/2-estatisticas-prestadores.csv").close();
+            new PrintWriter(caminho + "/saida/3-estatisticas-casais.csv").close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -126,7 +126,8 @@ public class LeitorCVS {
         return tarefas;
     }
 
-    public static Map<String, Casamento> lerCasamentos(String caminhoArquivo, Map<String, Pessoa> pessoas, List<Casal> casais) throws IOException {
+    public static Map<String, Casamento> lerCasamentos(String caminhoArquivo, Map<String, Pessoa> pessoas,
+            List<Casal> casais) throws IOException {
         Map<String, Casamento> casamentos = new HashMap<>();
 
         try (BufferedReader leitor = new BufferedReader(
@@ -151,12 +152,12 @@ public class LeitorCVS {
                     String casalConjuge2 = casal.getConjuge2().getId();
 
                     if ((idConjuge1.equals(casalConjuge1) && idConjuge2.equals(casalConjuge2)) ||
-                        (idConjuge1.equals(casalConjuge2) && idConjuge2.equals(casalConjuge1))) {
-                        
+                            (idConjuge1.equals(casalConjuge2) && idConjuge2.equals(casalConjuge1))) {
+
                         casal.setCasamento(casamento);
                         casamentos.put(partes[0], casamento);
                         casalEncontrado = true;
-                        break; 
+                        break;
                     }
                 }
 
@@ -212,7 +213,8 @@ public class LeitorCVS {
         }
     }
 
-    public static void lerCompras(String caminhoArquivo, Map<String, Lar> lares, Map<String, Pessoa> pessoas, Map<String, Tarefa> t)
+    public static void lerCompras(String caminhoArquivo, Map<String, Lar> lares, Map<String, Pessoa> pessoas,
+            Map<String, Tarefa> t)
             throws IOException {
 
         try (BufferedReader leitor = new BufferedReader(

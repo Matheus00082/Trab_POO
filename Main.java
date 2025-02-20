@@ -5,6 +5,8 @@ import src.pessoas.*;
 import src.relatorios.*;
 
 import java.util.List;
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -17,10 +19,9 @@ public class Main {
         Map<String, Lar> lares = null;
         Map<String, Casamento> casamentos = null;
         Map<String, Tarefa> tarefas = null;
-        LeitorCVS.criaArquivosVazios();
 
-
-        String caminho = "./Casos_exc/EXC18/";
+        String caminho = args[0];
+        LeitorCVS.criaArquivosVazios(caminho);
         //"./Casos_exc/EXC18/";
         //args[0];
         //"./01/";
@@ -42,7 +43,15 @@ public class Main {
 
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
-        } catch (Exception e) {
+            System.exit(0);
+        } catch (ParseException p){
+            System.out.println(p.getMessage());
+            System.exit(0);
+        }catch (IOException i) {
+            System.out.println(i.getMessage());
+            System.exit(0);
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
