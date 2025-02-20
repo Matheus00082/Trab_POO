@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class RelatorioCasais {
 
-    public static void geraRelatorioCasais(Map<String, Casamento> casamentos, List<Casal> casais) {
+    public static void geraRelatorioCasais(String caminho, Map<String, Casamento> casamentos, List<Casal> casais) {
         // Calcula numero de casamentos que ambos foram
         for (Casal casal : casais) {
 
@@ -44,9 +44,9 @@ public class RelatorioCasais {
             return (int)(c2.getTotalGasto() - c1.getTotalGasto());
         });
 
-        String arquivo = "3-estatisticas-casais.csv";
+        String arquivo = "saida/3-estatisticas-casais.csv";
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivo,true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminho+arquivo,true))) {
 
             for (Casal casal : casais) {
                 String totalGasto = String.format("R$ %.2f", casal.getTotalGasto()).replace('.', ',');

@@ -63,7 +63,7 @@ public class Lar {
         return num;
     }
 
-    public void pagaTarefas(Date data, Casal casal) {
+    public void pagaTarefas(Date data, Casal casal) throws Exception {
         for (Tarefa tarefa : this.tarefas.values()) {
             tarefa.pagaTarefa(casal, data);
         }

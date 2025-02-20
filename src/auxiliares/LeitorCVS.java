@@ -5,6 +5,7 @@ import src.organizacao.*;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -15,17 +16,18 @@ import java.io.PrintWriter;
 
 public class LeitorCVS {
 
-    public static void criaArquivosVazios(String caminho) {
+    public static void criaArquivosVazios(String caminho) throws IOException {
+
         try {
-            new PrintWriter(caminho + "/saida/1-planejamento.csv").close();
-            new PrintWriter(caminho + "/saida/2-estatisticas-prestadores.csv").close();
-            new PrintWriter(caminho + "/saida/3-estatisticas-casais.csv").close();
+            new PrintWriter(caminho + "saida/1-planejamento.csv").close();
+            new PrintWriter(caminho + "saida/2-estatisticas-prestadores.csv").close();
+            new PrintWriter(caminho + "saida/3-estatisticas-casais.csv").close();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IOException("Erro de I/O");
         }
     }
 
-    public static Map<String, Pessoa> lerPessoas(String caminhoArquivo) throws IOException {
+    public static Map<String, Pessoa> lerPessoas(String caminhoArquivo) throws Exception{
         Map<String, Pessoa> pessoas = new HashMap<>();
 
         try (BufferedReader leitor = new BufferedReader(
@@ -97,7 +99,7 @@ public class LeitorCVS {
 
     public static Map<String, Tarefa> lerTarefas(String caminhoArquivo, Map<String, Pessoa> pessoas,
             Map<String, Lar> lares)
-            throws IOException {
+            throws Exception {
         Map<String, Tarefa> tarefas = new HashMap<>();
 
         try (BufferedReader leitor = new BufferedReader(
@@ -127,7 +129,7 @@ public class LeitorCVS {
     }
 
     public static Map<String, Casamento> lerCasamentos(String caminhoArquivo, Map<String, Pessoa> pessoas,
-            List<Casal> casais) throws IOException {
+            List<Casal> casais) throws Exception {
         Map<String, Casamento> casamentos = new HashMap<>();
 
         try (BufferedReader leitor = new BufferedReader(
@@ -182,7 +184,7 @@ public class LeitorCVS {
         return casamentos;
     }
 
-    public static void lerFestas(String caminhoArquivo, Map<String, Casamento> casamentos) throws IOException {
+    public static void lerFestas(String caminhoArquivo, Map<String, Casamento> casamentos) throws Exception {
 
         try (BufferedReader leitor = new BufferedReader(
                 new InputStreamReader(new FileInputStream(caminhoArquivo), StandardCharsets.UTF_8))) {

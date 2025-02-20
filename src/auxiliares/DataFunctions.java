@@ -1,16 +1,22 @@
 package src.auxiliares;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 public class DataFunctions {
-    
-    public static boolean ehMesmoMeseAno(Date data1, Date data2) {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/yyyy");
 
-        String mesAno1 = sdf.format(data1);
-        String mesAno2 = sdf.format(data2);
+    public static boolean ehMesmoMeseAno(Date data1, Date data2) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/yyyy");
+        String mesAno1 = null, mesAno2 = null;
+
+        try {
+            mesAno1 = sdf.format(data1);
+            mesAno2 = sdf.format(data2);
+        } catch (Exception e) {
+            throw new ParseException("Erro ao formatar a data", 0);
+        }
 
         if (mesAno1.equals(mesAno2)) {
             return true;
@@ -19,7 +25,7 @@ public class DataFunctions {
         return false;
     }
 
-    public static boolean verificaSeEhPosterior(Date dataDeInicio, Date dataParaComparar) {
+    public static boolean verificaSeEhPosterior(Date dataDeInicio, Date dataParaComparar) throws ParseException {
         int anoInicio = DataFunctions.getAno(dataDeInicio);
         int anoAtual = DataFunctions.getAno(dataParaComparar);
         int mesInicio = DataFunctions.getMes(dataDeInicio);
@@ -32,7 +38,7 @@ public class DataFunctions {
         return false;
     }
 
-    public static int mesesEntreDatas(Date data1, Date data2) {
+    public static int mesesEntreDatas(Date data1, Date data2) throws ParseException {
 
         if (!verificaSeEhPosterior(data1, data2)) {
             return 0;
@@ -55,23 +61,44 @@ public class DataFunctions {
         return meses;
     }
 
-    public static int getAno(Date data) {
+    public static int getAno(Date data) throws ParseException {
         SimpleDateFormat sdfAno = new SimpleDateFormat("yyyy");
-        int ano = Integer.parseInt(sdfAno.format(data));
+        String dateAno = null;
+        try {
+            dateAno = sdfAno.format(data);
+        } catch (Exception e) {
+            throw new ParseException("Erro ao formatar a data", 0);
+        }
+
+        int ano = Integer.parseInt(dateAno);
 
         return ano;
     }
 
-    public static int getMes(Date data) {
+    public static int getMes(Date data) throws ParseException {
         SimpleDateFormat sdfMes = new SimpleDateFormat("MM");
-        int mes = Integer.parseInt(sdfMes.format(data));
+        String dateMes = null;
+        int mes = 0;
+
+        try {
+            dateMes = sdfMes.format(data);
+            mes = Integer.parseInt(dateMes);
+        } catch (Exception e) {
+            throw new  ParseException("Erro ao formatar a data", 0);
+        }
 
         return mes;
     }
 
-    public static String getMesAno(Date data) {
+    public static String getMesAno(Date data) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("MM/yyyy");
-        String mesAno = sdf.format(data);
+        String mesAno = null;
+
+        try {
+            mesAno = sdf.format(data);
+        } catch (Exception e) {
+            throw new ParseException("Erro ao formatar a data", 0);
+        }
 
         return mesAno;
     }

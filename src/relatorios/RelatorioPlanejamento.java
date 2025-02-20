@@ -11,14 +11,14 @@ import java.util.Date;
 
 public class RelatorioPlanejamento {
 
-    public static void imprimeRelatorio(Casal casal) {
+    public static void imprimeRelatorio(String caminho, Casal casal) throws Exception{
         Date dataInicial = casal.calculaDataInicioPagamentos();
         int num_meses = casal.calculaNumMeses(dataInicial);
         Date dataAtual = dataInicial;
 
-        String arquivo = "1-planejamento.csv";
+        String arquivo = "saida/1-planejamento.csv";
 
-        try (PrintWriter writer = new PrintWriter(new FileWriter(arquivo, true))) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(caminho+arquivo, true))) {
             if (dataInicial == null) {
                 writer.write("Casal com CPFs " + casal.getConjuge1().getCPF() + " e " + casal.getConjuge2().getCPF() +
                         " não possui gastos cadastrados.");
@@ -56,7 +56,7 @@ public class RelatorioPlanejamento {
         }
     }
 
-    public static void geraRelatorioPlanejamento(List<Casal> casais) {
+    public static void geraRelatorioPlanejamento(String caminho, List<Casal> casais) throws Exception {
         Scanner scanner = new Scanner(System.in);
 
         while ((scanner.hasNextLine())) {
@@ -70,7 +70,7 @@ public class RelatorioPlanejamento {
             if (cpfPair.length == 2) {
                 for (Casal casal : casais) {
                     if (casal.ehIgualCasal(cpfPair[0], cpfPair[1])) {
-                        imprimeRelatorio(casal);
+                        imprimeRelatorio(caminho, casal);
                     }
                 }
             }

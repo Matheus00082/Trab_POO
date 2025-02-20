@@ -1,6 +1,8 @@
 package src.organizacao;
 
 import java.util.Map;
+
+import java.text.ParseException;
 import src.pessoas.Pessoa;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,13 +25,13 @@ public class Casamento {
         }
     }
 
-    public Casamento(String idCasamento, String idConjuje1, String idConjuje2, String data, String hora, String local) {
+    public Casamento(String idCasamento, String idConjuje1, String idConjuje2, String data, String hora, String local) throws Exception{
         this.idCasamento = idCasamento;
 
         try {
             this.data = new SimpleDateFormat("dd/MM/yyyy").parse(data);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new ParseException("Erro ao formatar a data", 0);
         }
 
         this.hora = hora;
@@ -62,7 +64,7 @@ public class Casamento {
         return num;
     }
 
-    public boolean ehMesdePagamentoCasamento(Date data) {
+    public boolean ehMesdePagamentoCasamento(Date data) throws ParseException {
         if (this.festa.ehMesDePagamentoFesta(data)) {
             return true;
         }
@@ -70,7 +72,7 @@ public class Casamento {
         return false;
     }
 
-    public void pagaFestaCasamento(Date data, Casal casal) {
+    public void pagaFestaCasamento(Date data, Casal casal) throws ParseException {
         if (this.festa != null) {
             if (ehMesdePagamentoCasamento(data)) {
                 this.festa.setParcelasAtual(this.festa.getParcelasAtual() - 1);

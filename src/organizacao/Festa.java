@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import java.text.ParseException;
 import src.auxiliares.DataFunctions;
 
 import java.text.SimpleDateFormat;
@@ -18,7 +19,7 @@ public class Festa {
     protected static Map<String, String> ids = new HashMap<>();
 
     public Festa(String idFesta, String local, String data, String hora,
-            Double preco, int parcelas, String[] convidados) {
+            Double preco, int parcelas, String[] convidados) throws ParseException {
         this.idFesta = idFesta;
         this.local = local;
         
@@ -26,7 +27,7 @@ public class Festa {
             SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
             this.data = formato.parse(data);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new ParseException("Erro ao formatar a data", 0);
         }
 
         this.hora = hora;
@@ -51,7 +52,7 @@ public class Festa {
         ids.put(id, id);
     }
 
-    public boolean ehMesDePagamentoFesta(Date data) {
+    public boolean ehMesDePagamentoFesta(Date data) throws ParseException {
         if ((DataFunctions.ehMesmoMeseAno(data, this.data) || (parcelasAtual != parcelasInicial)) && (parcelasAtual != 0)) {
             return true;
         }
@@ -74,12 +75,12 @@ public class Festa {
         return this.local;
     }
 
-    public void setData(String data) {
+    public void setData(String data) throws ParseException {
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
         try {
             this.data = formato.parse(data);
         } catch (Exception e) {
-            e.printStackTrace();
+           throw new ParseException("Erro ao formatar a data", 0);
         }
     }
 

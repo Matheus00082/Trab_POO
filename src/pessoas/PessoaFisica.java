@@ -3,6 +3,9 @@ package src.pessoas;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.Map;
+
+import java.text.ParseException;
+
 import java.util.HashMap;
 
 public class PessoaFisica extends Pessoa{
@@ -11,7 +14,7 @@ public class PessoaFisica extends Pessoa{
     private Double poupanca, salario, gastoMensal, juros;
     protected static Map<String, String> cpfs = new HashMap<>();
 
-    public PessoaFisica(String nome, String endereco, String telefone, String id, String CPF, String datadeNascimento, Double poupanca, Double salario, Double gastoMensal) {
+    public PessoaFisica(String nome, String endereco, String telefone, String id, String CPF, String datadeNascimento, Double poupanca, Double salario, Double gastoMensal) throws Exception {
         super(nome, endereco, telefone, id, "PF");
 
         if (cpfs.containsKey(CPF) && !cpfs.get(CPF).equals(id)) {
@@ -25,7 +28,7 @@ public class PessoaFisica extends Pessoa{
         try {
             this.datadeNascimento = new SimpleDateFormat("dd/MM/yyyy").parse(datadeNascimento);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new ParseException("Erro ao formatar a data", 0);
         }
 
         this.poupanca = poupanca;
@@ -47,11 +50,11 @@ public class PessoaFisica extends Pessoa{
         return CPF;
     }
 
-    public void setDatadeNascimento(String datadeNascimento) {
+    public void setDatadeNascimento(String datadeNascimento) throws ParseException {
         try {
             this.datadeNascimento = new SimpleDateFormat("dd/MM/yyyy").parse(datadeNascimento);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new ParseException("Erro ao formatar a data", 0);
         }
     }
 

@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import java.text.ParseException;
+
 import java.text.SimpleDateFormat;
 
 public class Tarefa {
@@ -19,7 +22,7 @@ public class Tarefa {
     private Double valorParcelado;
     protected static Map<String, String> ids = new HashMap<>();
 
-    public Tarefa(String idTarefa, String dataInicio, int prazoDias, int parcelas, Double valor, Pessoa trabalhador) {
+    public Tarefa(String idTarefa, String dataInicio, int prazoDias, int parcelas, Double valor, Pessoa trabalhador) throws ParseException {
         this.idTarefa = idTarefa;
         if (ids.get(idTarefa) != null) {
             throw new IllegalArgumentException("ID repetido " + idTarefa + " na classe Tarefa.");
@@ -30,7 +33,7 @@ public class Tarefa {
         try {
             this.dataInicio = new SimpleDateFormat("dd/MM/yyyy").parse(dataInicio);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new ParseException("Erro ao formatar a data", 0);
         }
 
         this.prazoDias = prazoDias;
@@ -71,7 +74,7 @@ public class Tarefa {
         return num;
     }
 
-    public boolean ehMesdePagamentoTarefa(Date data) {
+    public boolean ehMesdePagamentoTarefa(Date data) throws ParseException {
         if ((DataFunctions.ehMesmoMeseAno(data, this.dataInicio) || (this.parcelasAtual != this.parcelasInicial)) &&
                 (this.parcelasAtual != 0)) {
             return true;
@@ -79,7 +82,7 @@ public class Tarefa {
         return false;
     }
 
-    public void pagaTarefa(Casal casal, Date data) {
+    public void pagaTarefa(Casal casal, Date data) throws ParseException {
         boolean ehMes = ehMesdePagamentoTarefa(data);
         if (ehMes) {
             casal.subSaldoAtual(this.valorParcelado);
@@ -102,11 +105,11 @@ public class Tarefa {
         return idTarefa;
     }
 
-    public void setDataInicio(String dataInicio) {
+    public void setDataInicio(String dataInicio) throws ParseException {
         try {
             this.dataInicio = new SimpleDateFormat("dd/MM/yyyy").parse(dataInicio);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new ParseException("Erro ao formatar a data", 0);
         }
     }
 

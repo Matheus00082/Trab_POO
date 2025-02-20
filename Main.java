@@ -5,15 +5,12 @@ import src.pessoas.*;
 import src.relatorios.*;
 
 import java.util.List;
-import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Map;
 
 public class Main {
 
     public static void main(String[] args) {
-        //List<Pessoa> pessoas = null;
         Map<String, Pessoa> pessoas = null;
         List<Casal> casais = new ArrayList<>();
         Map<String, Lar> lares = null;
@@ -21,12 +18,9 @@ public class Main {
         Map<String, Tarefa> tarefas = null;
 
         String caminho = args[0];
-        LeitorCVS.criaArquivosVazios(caminho);
-        //"./Casos_exc/EXC18/";
-        //args[0];
-        //"./01/";
 
         try {
+            LeitorCVS.criaArquivosVazios(caminho);
             pessoas = LeitorCVS.lerPessoas(caminho + "pessoas.csv");
             lares = LeitorCVS.lerLares(caminho + "lares.csv", pessoas, casais);
             tarefas = LeitorCVS.lerTarefas(caminho + "tarefas.csv", pessoas, lares);
@@ -34,26 +28,17 @@ public class Main {
             LeitorCVS.lerFestas(caminho + "festas.csv", casamentos);
             LeitorCVS.lerCompras(caminho + "compras.csv", lares, pessoas, tarefas);
 
-            RelatorioPlanejamento.geraRelatorioPlanejamento(casais);
+            RelatorioPlanejamento.geraRelatorioPlanejamento(caminho, casais);
             if (pessoas != null) {
-                RelatorioPrestadores.geraRelatorioPrestadores(pessoas);
+                RelatorioPrestadores.geraRelatorioPrestadores(caminho, pessoas);
             } if (casamentos != null && casais != null) {
-                RelatorioCasais.geraRelatorioCasais(casamentos, casais);
+                RelatorioCasais.geraRelatorioCasais(caminho, casamentos, casais);
             }
 
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             System.exit(0);
-        } catch (ParseException p){
-            System.out.println(p.getMessage());
-            System.exit(0);
-        }catch (IOException i) {
-            System.out.println(i.getMessage());
-            System.exit(0);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+        } 
     }
 
 }

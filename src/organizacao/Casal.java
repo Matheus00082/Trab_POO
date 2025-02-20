@@ -64,7 +64,7 @@ public class Casal {
         return data;
     }
 
-    public int calculaNumMeses(Date dataInicial) {
+    public int calculaNumMeses(Date dataInicial) throws Exception {
         int numMeses = 0;
         boolean limiteEstaEmTaredas = false;
 
@@ -92,7 +92,7 @@ public class Casal {
         return numMeses;
     }
 
-    public void atualizaSaldoCasal(Date data) {
+    public void atualizaSaldoCasal(Date data) throws Exception {
         this.saldoAtual *= (1.005);
         this.saldoAtual -= this.despesasMensais();
 

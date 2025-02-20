@@ -9,7 +9,7 @@ import java.io.FileWriter;
 
 public class RelatorioPrestadores {
 
-    public static void geraRelatorioPrestadores(Map<String, Pessoa> prestadores) {
+    public static void geraRelatorioPrestadores(String caminho, Map<String, Pessoa> prestadores) {
 
         List<Pessoa> prestadoresList = new ArrayList<>(prestadores.values());
 
@@ -20,9 +20,9 @@ public class RelatorioPrestadores {
             return p2.getTipo().compareTo(p1.getTipo());
         });
 
-        String arquivo = "2-estatisticas-prestadores.csv";
+        String arquivo = "saida/2-estatisticas-prestadores.csv";
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivo, true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminho+arquivo, true))) {
 
             for (Pessoa prestador : prestadoresList) {
                 if (prestador.getTipo().equals("PJ") || prestador.getTipo().equals("Loja")) {
