@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class RelatorioCasais {
 
-    public static void geraRelatorioCasais(String caminho, Map<String, Casamento> casamentos, List<Casal> casais) {
+    public static void geraRelatorioCasais(String caminho, Map<String, Casamento> casamentos, List<Casal> casais) throws IOException {
         // Calcula numero de casamentos que ambos foram
         for (Casal casal : casais) {
 
@@ -58,7 +58,7 @@ public class RelatorioCasais {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IOException("Erro de I/O");
         }
     }
 

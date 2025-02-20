@@ -6,10 +6,11 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.IOException;
 
 public class RelatorioPrestadores {
 
-    public static void geraRelatorioPrestadores(String caminho, Map<String, Pessoa> prestadores) {
+    public static void geraRelatorioPrestadores(String caminho, Map<String, Pessoa> prestadores) throws IOException {
 
         List<Pessoa> prestadoresList = new ArrayList<>(prestadores.values());
 
@@ -33,7 +34,8 @@ public class RelatorioPrestadores {
             }
             
         } catch (Exception e) {
-            e.printStackTrace();
+        throw new IOException("Erro de I/O");
+
         }
     }
 }

@@ -54,7 +54,7 @@ public class Tarefa {
 
     public static void tarefaTemIdDeLarValido(Map<String, Lar> lares, String idLar, String idTarefa) {
         if (lares.get(idLar) == null) {
-            throw new IllegalArgumentException("ID de Lar " + idLar + " não cadastrado na Tarefa de ID " + idTarefa + ".");
+            throw new IllegalArgumentException("ID(s) de Lar " + idLar + " não cadastrado na Tarefa de ID " + idTarefa + ".");
         }
     }
 

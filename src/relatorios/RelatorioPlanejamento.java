@@ -52,7 +52,7 @@ public class RelatorioPlanejamento {
             }
             writer.write("\n");
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IOException("Erro de I/O");
         }
     }
 

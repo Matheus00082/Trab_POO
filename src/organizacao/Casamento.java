@@ -19,9 +19,9 @@ public class Casamento {
         if (pessoas.get(id1) == null && pessoas.get(id2) == null) {
             throw new IllegalArgumentException("ID(s) de Pessoa " + id1 + " " + id2 + " não cadastrado no Casamento de ID " + idCasamento + ".");
         } else if (pessoas.get(id1) == null && pessoas.get(id2) != null){
-            throw new IllegalArgumentException("ID de Pessoa " + id1 + " não cadastrado no Casamento de ID " + idCasamento + ".");
+            throw new IllegalArgumentException("ID(s) de Pessoa " + id1 + " não cadastrado no Casamento de ID " + idCasamento + ".");
         } else if (pessoas.get(id1) != null && pessoas.get(id2) == null){
-            throw new IllegalArgumentException("ID de Pessoa " + id2 + " não cadastrado no Casamento de ID " + idCasamento + ".");
+            throw new IllegalArgumentException("ID(s) de Pessoa " + id2 + " não cadastrado no Casamento de ID " + idCasamento + ".");
         }
     }
 
