@@ -2,6 +2,7 @@ package src.auxiliares;
 
 import src.organizacao.Casal;
 import src.pessoas.*;
+import src.organizacao.*;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,6 +38,18 @@ public class Tarefa {
 
         if (ids.get(idTarefa) != null) {
             throw new IllegalArgumentException("ID repetido " + idTarefa + " na classe Tarefa.");
+        }
+    }
+
+    public static void prestadorEstaCadastrado(Map<String, Pessoa> pessoas, String idPrestador, String idTarefa) {
+        if (pessoas.get(idPrestador) == null) {
+            throw new IllegalArgumentException("ID(s) de Prestador de Serviço " + idPrestador + " não cadastrado na Tarefa de ID " + idTarefa + ".");
+        }
+    }
+
+    public static void tarefaTemIdDeLarValido(Map<String, Lar> lares, String idLar, String idTarefa) {
+        if (lares.get(idLar) == null) {
+            throw new IllegalArgumentException("ID de Lar " + idLar + " não cadastrado na Tarefa de ID " + idTarefa + ".");
         }
     }
 

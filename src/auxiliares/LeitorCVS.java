@@ -74,6 +74,8 @@ public class LeitorCVS {
             while ((linha = leitor.readLine()) != null) {
                 String[] partes = linha.split(";");
 
+                Lar.pessoaEstaCadastradaLar(pessoas, partes[1], partes[2], partes[0]);
+
                 PessoaFisica conjuge1 = (PessoaFisica) pessoas.get(partes[1]);
                 PessoaFisica conjuge2 = (PessoaFisica) pessoas.get(partes[2]);
 
@@ -109,15 +111,10 @@ public class LeitorCVS {
 
                 Pessoa trabalhador = (Pessoa) pessoas.get(partes[2]);
 
-                if (trabalhador == null) {
-                    throw new IllegalArgumentException("Trabalhador não encontrado para a tarefa");
-                }
-
                 Lar lar = lares.get(partes[1]);
 
-                if (lar == null) {
-                    throw new IllegalArgumentException("Lar não encontrado para a tarefa");
-                }
+                Tarefa.tarefaTemIdDeLarValido(lares, partes[1], partes[0]);
+                Tarefa.prestadorEstaCadastrado(pessoas, partes[2], partes[0]);
 
                 Tarefa t = new Tarefa(partes[0], partes[3], Integer.parseInt(partes[4]), Integer.parseInt(partes[6]),
                         Double.parseDouble((partes[5].replace(".", "")).replace(",", ".")), trabalhador);
@@ -146,6 +143,8 @@ public class LeitorCVS {
 
                 String idConjuge1 = partes[1];
                 String idConjuge2 = partes[2];
+
+                Casamento.pessoaEstaCadastradaCasamento(pessoas, idConjuge1, idConjuge2, partes[0]);
 
                 boolean casalEncontrado = false;
 
@@ -197,21 +196,18 @@ public class LeitorCVS {
 
                 Casamento casamento = casamentos.get(partes[1]);
 
-                if (casamento != null) {
+                Festa.casamentoEstaCadastrado(casamentos, partes[1], partes[0]);
 
-                    int numConvidados = Integer.parseInt(partes[7]);
-                    String[] convidados = new String[numConvidados];
+                int numConvidados = Integer.parseInt(partes[7]);
+                String[] convidados = new String[numConvidados];
 
-                    for (int i = 0; i < numConvidados; i++) {
-                        convidados[i] = partes[8 + i];
-                    }
-
-                    casamento.setFesta(new Festa(partes[0], partes[2], partes[3], partes[4],
-                            Double.parseDouble((partes[5].replace(".", "")).replace(",", ".")),
-                            Integer.parseInt(partes[6]), convidados));
-                } else {
-                    throw new IllegalArgumentException("Casamento não encontrado para a festa");
+                for (int i = 0; i < numConvidados; i++) {
+                    convidados[i] = partes[8 + i];
                 }
+
+                casamento.setFesta(new Festa(partes[0], partes[2], partes[3], partes[4],
+                        Double.parseDouble((partes[5].replace(".", "")).replace(",", ".")),
+                        Integer.parseInt(partes[6]), convidados));
 
                 Festa.setIds(partes[0]);
             }
@@ -236,7 +232,15 @@ public class LeitorCVS {
 
                     if (tarefas.size() > 0) {
                         Tarefa tarefa = tarefas.get(partes[1]);
-                        Loja loja = (Loja) pessoas.get(partes[2]);
+                        Loja loja = null;
+
+                        Compra.verificaSeEhPessoaJuridica(pessoas, partes[2], partes[0]);
+                        Compra.compraTemIdValidoDeLoja(pessoas, partes[2], partes[0]);
+                        Compra.compraTemIdValidoDeTarefa(tarefas, partes[1], partes[0]);
+
+                        if (pessoas.get(partes[2]) instanceof Loja) {
+                            loja = (Loja) pessoas.get(partes[2]);
+                        }
 
                         if (tarefa != null && loja != null) {
                             tarefa.addCompras(

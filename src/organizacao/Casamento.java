@@ -1,7 +1,7 @@
 package src.organizacao;
 
 import java.util.Map;
-
+import src.pessoas.Pessoa;
 import java.util.Date;
 import java.util.HashMap;
 import java.text.SimpleDateFormat;
@@ -12,6 +12,16 @@ public class Casamento {
     private Date data;
     private Festa festa;
     protected static Map<String, String> ids = new HashMap<>();
+
+    public static void pessoaEstaCadastradaCasamento(Map<String, Pessoa> pessoas, String id1, String id2, String idCasamento) {
+        if (pessoas.get(id1) == null && pessoas.get(id2) == null) {
+            throw new IllegalArgumentException("ID(s) de Pessoa " + id1 + " " + id2 + " não cadastrado no Casamento de ID " + idCasamento + ".");
+        } else if (pessoas.get(id1) == null && pessoas.get(id2) != null){
+            throw new IllegalArgumentException("ID de Pessoa " + id1 + " não cadastrado no Casamento de ID " + idCasamento + ".");
+        } else if (pessoas.get(id1) != null && pessoas.get(id2) == null){
+            throw new IllegalArgumentException("ID de Pessoa " + id2 + " não cadastrado no Casamento de ID " + idCasamento + ".");
+        }
+    }
 
     public Casamento(String idCasamento, String idConjuje1, String idConjuje2, String data, String hora, String local) {
         this.idCasamento = idCasamento;

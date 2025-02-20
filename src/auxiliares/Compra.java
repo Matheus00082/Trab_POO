@@ -4,6 +4,8 @@ import java.util.HashMap;
 
 import src.organizacao.Casal;
 import src.pessoas.Loja;
+import src.pessoas.Pessoa;
+
 import java.util.Map;
 
 public class Compra {
@@ -21,10 +23,30 @@ public class Compra {
         this.quantidade = quantidade;
         this.parcelas = parcelas;
         this.preco = preco;
-        this.precoParcelado = (preco * quantidade)/parcelas;
+        this.precoParcelado = (preco * quantidade) / parcelas;
 
         if (ids.get(idCompra) != null) {
             throw new IllegalArgumentException("ID repetido " + idCompra + " na classe Compra.");
+        }
+    }
+
+    public static void verificaSeEhPessoaJuridica(Map<String, Pessoa> pessoas, String idLoja, String idCompra) {
+        Pessoa pessoa = pessoas.get(idLoja);
+
+        if (pessoa.getTipo() == "PJ") {
+            throw new IllegalArgumentException("ID " + idLoja + " da Compra de id " + idCompra + " não se refere a uma Loja, mas a uma PJ.");
+        }
+    }
+    
+    public static void compraTemIdValidoDeTarefa(Map<String, Tarefa> tarefas, String idTarefa, String idCompra) {
+        if (tarefas.get(idTarefa) == null) {
+            throw new IllegalArgumentException("ID(s) de Tarefa " + idTarefa + " não cadastrado na " + "Compra de ID " + idCompra + ".");
+        }
+    }
+
+    public static void compraTemIdValidoDeLoja(Map<String, Pessoa> lojas, String idLoja, String idCompra) {
+        if (lojas.get(idLoja) == null) {
+            throw new IllegalArgumentException("ID(s) de Loja " + idLoja + " não cadastrado na " + "Compra de ID " + idCompra + ".");
         }
     }
 

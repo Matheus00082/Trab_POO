@@ -7,7 +7,6 @@ public class PessoaJuridica extends Pessoa{
     protected String CNPJ;
     protected static Map<String, String> cnpjs = new HashMap<>();
 
-
     public PessoaJuridica(String nome, String endereco, String telefone, String id, String CNPJ) {
         super(nome, endereco, telefone, id, "PJ");
 

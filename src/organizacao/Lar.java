@@ -6,6 +6,7 @@ import java.util.Date;
 
 //import src.pessoas.PessoaFisica;
 import src.auxiliares.*;
+import src.pessoas.Pessoa;
 
 public class Lar {
     private String idLar, rua, complemento;
@@ -22,6 +23,16 @@ public class Lar {
 
         if (ids.get(idLar) != null) {
             throw new IllegalArgumentException("ID repetido " + idLar + " na classe Lar.");
+        }
+    }
+
+    public static void pessoaEstaCadastradaLar(Map<String, Pessoa> pessoas, String id1, String id2, String idLar) {
+        if (pessoas.get(id1) == null && pessoas.get(id2) == null) {
+            throw new IllegalArgumentException("ID(s) de Pessoa " + id1 + " " + id2 + " não cadastrado no Lar de ID " + idLar + ".");
+        } else if (pessoas.get(id1) == null && pessoas.get(id2) != null) {
+            throw new IllegalArgumentException("ID(s) de Pessoa " + id1 + " não cadastrado no Lar de ID " + idLar + ".");
+        } else if (pessoas.get(id1) != null && pessoas.get(id2) == null) {
+            throw new IllegalArgumentException("ID(s) de Pessoa " + id2 + " não cadastrado no Lar de ID " + idLar + ".");
         }
     }
 

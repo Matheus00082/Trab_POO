@@ -41,6 +41,12 @@ public class Festa {
         }
     }
 
+    public static void casamentoEstaCadastrado(Map<String, Casamento> casamentos, String idCasamento, String idFesta) {
+        if (casamentos.get(idCasamento) == null) {
+            throw new IllegalArgumentException("ID(s) de Casamento " + idCasamento + " não cadastrado na Festa de ID " + idFesta + ".");
+        }
+    }
+
     public static void setIds(String id) {
         ids.put(id, id);
     }

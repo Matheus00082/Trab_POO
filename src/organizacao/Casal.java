@@ -93,7 +93,7 @@ public class Casal {
     }
 
     public void atualizaSaldoCasal(Date data) {
-        this.saldoAtual += this.rendimentoPoupanca();
+        this.saldoAtual = (1 + 0.005);
         this.saldoAtual -= this.despesasMensais();
 
         if (this.casamento != null) {

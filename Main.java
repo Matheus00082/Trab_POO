@@ -19,7 +19,7 @@ public class Main {
         LeitorCVS.criaArquivosVazios();
 
 
-        String caminho ="./Casos_exc/EXC08/";
+        String caminho ="./Casos_exc/EXC18/";
         //args[0];
         //"./01/";
 
@@ -31,17 +31,17 @@ public class Main {
             LeitorCVS.lerFestas(caminho + "festas.csv", casamentos);
             LeitorCVS.lerCompras(caminho + "compras.csv", lares, pessoas);
 
+            RelatorioPlanejamento.geraRelatorioPlanejamento(casais);
+            if (pessoas != null) {
+                RelatorioPrestadores.geraRelatorioPrestadores(pessoas);
+            } if (casamentos != null && casais != null) {
+                RelatorioCasais.geraRelatorioCasais(casamentos, casais);
+            }
+
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
-        }
-
-        RelatorioPlanejamento.geraRelatorioPlanejamento(casais);
-        if (pessoas != null) {
-            RelatorioPrestadores.geraRelatorioPrestadores(pessoas);
-        } if (casamentos != null && casais != null) {
-            RelatorioCasais.geraRelatorioCasais(casamentos, casais);
         }
     }
 
