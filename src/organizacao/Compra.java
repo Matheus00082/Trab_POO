@@ -1,8 +1,7 @@
-package src.auxiliares;
+package src.organizacao;
 
 import java.util.HashMap;
 
-import src.organizacao.Casal;
 import src.pessoas.Loja;
 import src.pessoas.Pessoa;
 
@@ -16,6 +15,11 @@ public class Compra {
     protected static Map<String, String> ids = new HashMap<>();
 
     public Compra(String idCompra, String nomeProduto, Loja loja, int quantidade, int parcelas, Double preco) {
+        if (ids.get(idCompra) != null) {
+            throw new IllegalArgumentException("ID repetido " + idCompra + " na classe Compra.");
+        }
+
+        setIdCompra(idCompra);
         this.idCompra = idCompra;
         this.nomeProduto = nomeProduto;
         this.loja = loja;
@@ -24,10 +28,6 @@ public class Compra {
         this.parcelas = parcelas;
         this.preco = preco;
         this.precoParcelado = (preco * quantidade) / parcelas;
-
-        if (ids.get(idCompra) != null) {
-            throw new IllegalArgumentException("ID repetido " + idCompra + " na classe Compra.");
-        }
     }
 
     public static void verificaSeEhPessoaJuridica(Map<String, Pessoa> pessoas, String idLoja, String idCompra) {

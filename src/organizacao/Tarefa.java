@@ -1,8 +1,8 @@
-package src.auxiliares;
+package src.organizacao;
 
-import src.organizacao.Casal;
+import src.auxiliares.DataFunctions;
 import src.pessoas.*;
-import src.organizacao.*;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,6 +21,11 @@ public class Tarefa {
 
     public Tarefa(String idTarefa, String dataInicio, int prazoDias, int parcelas, Double valor, Pessoa trabalhador) {
         this.idTarefa = idTarefa;
+        if (ids.get(idTarefa) != null) {
+            throw new IllegalArgumentException("ID repetido " + idTarefa + " na classe Tarefa.");
+        }
+
+        Tarefa.setIds(idTarefa);
 
         try {
             this.dataInicio = new SimpleDateFormat("dd/MM/yyyy").parse(dataInicio);
@@ -36,9 +41,6 @@ public class Tarefa {
         this.trabalhador.setLucro(valor);
         this.valorParcelado = valor / parcelasInicial;
 
-        if (ids.get(idTarefa) != null) {
-            throw new IllegalArgumentException("ID repetido " + idTarefa + " na classe Tarefa.");
-        }
     }
 
     public static void prestadorEstaCadastrado(Map<String, Pessoa> pessoas, String idPrestador, String idTarefa) {

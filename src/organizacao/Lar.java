@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Date;
 
 //import src.pessoas.PessoaFisica;
-import src.auxiliares.*;
 import src.pessoas.Pessoa;
 
 public class Lar {

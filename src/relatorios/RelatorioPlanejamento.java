@@ -3,12 +3,10 @@ package src.relatorios;
 import src.organizacao.*;
 import src.auxiliares.*;
 import java.util.List;
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.util.Scanner;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Date;
 
 public class RelatorioPlanejamento {
@@ -20,10 +18,10 @@ public class RelatorioPlanejamento {
 
         String arquivo = "1-planejamento.csv";
 
-        try (PrintWriter  writer = new PrintWriter(new FileWriter(arquivo, true))) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(arquivo, true))) {
             if (dataInicial == null) {
-                writer.write("Casal com CPFs " + casal.getConjuge1().getCPF() + " e " + casal.getConjuge2().getCPF() + 
-                " não possui gastos cadastrados.");
+                writer.write("Casal com CPFs " + casal.getConjuge1().getCPF() + " e " + casal.getConjuge2().getCPF() +
+                        " não possui gastos cadastrados.");
             } else {
                 writer.write("Nome 1;Nome 2;");
 
@@ -59,30 +57,21 @@ public class RelatorioPlanejamento {
     }
 
     public static void geraRelatorioPlanejamento(List<Casal> casais) {
-        List<String> cpfs = new ArrayList<>();
-        String filePath = "./Casos_exc/EXC18/entrada.txt";
         String line;
+        Scanner scanner = new Scanner(System.in);
 
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            while ((line = br.readLine()) != null) {
-                line = line.trim();
-                String[] cpfPair = line.split(", ");
-                if (cpfPair.length == 2) {
-                    cpfs.add(cpfPair[0]);
-                    cpfs.add(cpfPair[1]);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        for (int i = 0; i < cpfs.size() / 2; i++) {
-            for (Casal casal : casais) {
-                if (casal.ehIgualCasal(cpfs.get(i * 2), cpfs.get(i * 2 + 1))) {
-                    imprimeRelatorio(casal);
+        while ((line = scanner.nextLine()) != null) {
+            line = line.trim();
+            String[] cpfPair = line.split(", ");
+            if (cpfPair.length == 2) {
+                for (Casal casal : casais) {
+                    if (casal.ehIgualCasal(cpfPair[0], cpfPair[1])) {
+                        imprimeRelatorio(casal);
+                    }
                 }
             }
         }
 
+        scanner.close();
     }
 }

@@ -16,20 +16,22 @@ public class Main {
         List<Casal> casais = new ArrayList<>();
         Map<String, Lar> lares = null;
         Map<String, Casamento> casamentos = null;
+        Map<String, Tarefa> tarefas = null;
         LeitorCVS.criaArquivosVazios();
 
 
-        String caminho ="./Casos_exc/EXC18/";
+        String caminho = "./Casos_exc/EXC18/";
+        //"./Casos_exc/EXC18/";
         //args[0];
         //"./01/";
 
         try {
             pessoas = LeitorCVS.lerPessoas(caminho + "pessoas.csv");
             lares = LeitorCVS.lerLares(caminho + "lares.csv", pessoas, casais);
-            LeitorCVS.lerTarefas(caminho + "tarefas.csv", pessoas, lares);
+            tarefas = LeitorCVS.lerTarefas(caminho + "tarefas.csv", pessoas, lares);
             casamentos = LeitorCVS.lerCasamentos(caminho + "casamentos.csv", pessoas, casais);
             LeitorCVS.lerFestas(caminho + "festas.csv", casamentos);
-            LeitorCVS.lerCompras(caminho + "compras.csv", lares, pessoas);
+            LeitorCVS.lerCompras(caminho + "compras.csv", lares, pessoas, tarefas);
 
             RelatorioPlanejamento.geraRelatorioPlanejamento(casais);
             if (pessoas != null) {

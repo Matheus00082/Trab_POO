@@ -4,7 +4,7 @@ package src.organizacao;
 
 import src.pessoas.PessoaFisica;
 import src.auxiliares.DataFunctions;
-import src.auxiliares.Tarefa;
+
 import java.util.Date;
 
 public class Casal {
@@ -93,7 +93,7 @@ public class Casal {
     }
 
     public void atualizaSaldoCasal(Date data) {
-        this.saldoAtual = (1 + 0.005);
+        this.saldoAtual *= (1.005);
         this.saldoAtual -= this.despesasMensais();
 
         if (this.casamento != null) {

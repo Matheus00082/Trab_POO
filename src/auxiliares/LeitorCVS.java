@@ -79,7 +79,6 @@ public class LeitorCVS {
                 PessoaFisica conjuge1 = (PessoaFisica) pessoas.get(partes[1]);
                 PessoaFisica conjuge2 = (PessoaFisica) pessoas.get(partes[2]);
 
-                // Verifica se o casal foi encontrado
                 if (conjuge1 == null || conjuge2 == null) {
                     throw new IllegalArgumentException("Casal não encontrado");
                 }
@@ -121,7 +120,6 @@ public class LeitorCVS {
 
                 lar.getTarefas().put(partes[0], t);
                 tarefas.put(partes[0], t);
-                Tarefa.setIds(partes[0]);
             }
         }
 
@@ -214,7 +212,7 @@ public class LeitorCVS {
         }
     }
 
-    public static void lerCompras(String caminhoArquivo, Map<String, Lar> lares, Map<String, Pessoa> pessoas)
+    public static void lerCompras(String caminhoArquivo, Map<String, Lar> lares, Map<String, Pessoa> pessoas, Map<String, Tarefa> t)
             throws IOException {
 
         try (BufferedReader leitor = new BufferedReader(
@@ -234,9 +232,9 @@ public class LeitorCVS {
                         Tarefa tarefa = tarefas.get(partes[1]);
                         Loja loja = null;
 
-                        Compra.verificaSeEhPessoaJuridica(pessoas, partes[2], partes[0]);
+                        Compra.compraTemIdValidoDeTarefa(t, partes[1], partes[0]);
                         Compra.compraTemIdValidoDeLoja(pessoas, partes[2], partes[0]);
-                        Compra.compraTemIdValidoDeTarefa(tarefas, partes[1], partes[0]);
+                        Compra.verificaSeEhPessoaJuridica(pessoas, partes[2], partes[0]);
 
                         if (pessoas.get(partes[2]) instanceof Loja) {
                             loja = (Loja) pessoas.get(partes[2]);
@@ -250,8 +248,6 @@ public class LeitorCVS {
                                             Double.parseDouble(
                                                     (partes[5].replace(".", "")).replace(",", "."))));
                         }
-
-                        Compra.setIds(partes[0]);
                     }
                 }
             }
