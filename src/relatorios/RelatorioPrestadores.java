@@ -20,7 +20,7 @@ public class RelatorioPrestadores {
             return p2.getTipo().compareTo(p1.getTipo());
         });
 
-        String arquivo = "saida/2-estatisticas-prestadores.csv";
+        String arquivo = "/saida/2-estatisticas-prestadores.csv";
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminho+arquivo, true))) {
 

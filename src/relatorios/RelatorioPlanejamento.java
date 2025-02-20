@@ -16,7 +16,7 @@ public class RelatorioPlanejamento {
         int num_meses = casal.calculaNumMeses(dataInicial);
         Date dataAtual = dataInicial;
 
-        String arquivo = "saida/1-planejamento.csv";
+        String arquivo = "/saida/1-planejamento.csv";
 
         try (PrintWriter writer = new PrintWriter(new FileWriter(caminho+arquivo, true))) {
             if (dataInicial == null) {

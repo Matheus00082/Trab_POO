@@ -21,12 +21,12 @@ public class Main {
 
         try {
             LeitorCVS.criaArquivosVazios(caminho);
-            pessoas = LeitorCVS.lerPessoas(caminho + "pessoas.csv");
-            lares = LeitorCVS.lerLares(caminho + "lares.csv", pessoas, casais);
-            tarefas = LeitorCVS.lerTarefas(caminho + "tarefas.csv", pessoas, lares);
-            casamentos = LeitorCVS.lerCasamentos(caminho + "casamentos.csv", pessoas, casais);
-            LeitorCVS.lerFestas(caminho + "festas.csv", casamentos);
-            LeitorCVS.lerCompras(caminho + "compras.csv", lares, pessoas, tarefas);
+            pessoas = LeitorCVS.lerPessoas(caminho + "/pessoas.csv");
+            lares = LeitorCVS.lerLares(caminho + "/lares.csv", pessoas, casais);
+            tarefas = LeitorCVS.lerTarefas(caminho + "/tarefas.csv", pessoas, lares);
+            casamentos = LeitorCVS.lerCasamentos(caminho + "/casamentos.csv", pessoas, casais);
+            LeitorCVS.lerFestas(caminho + "/festas.csv", casamentos);
+            LeitorCVS.lerCompras(caminho + "/compras.csv", lares, pessoas, tarefas);
 
             RelatorioPlanejamento.geraRelatorioPlanejamento(caminho, casais);
             if (pessoas != null) {
@@ -37,6 +37,7 @@ public class Main {
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            e.printStackTrace();   
             System.exit(0);
         } 
     }

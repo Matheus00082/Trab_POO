@@ -44,7 +44,7 @@ public class RelatorioCasais {
             return (int)(c2.getTotalGasto() - c1.getTotalGasto());
         });
 
-        String arquivo = "saida/3-estatisticas-casais.csv";
+        String arquivo = "/saida/3-estatisticas-casais.csv";
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminho+arquivo,true))) {
 

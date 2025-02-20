@@ -5,7 +5,6 @@ import src.organizacao.*;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -19,9 +18,9 @@ public class LeitorCVS {
     public static void criaArquivosVazios(String caminho) throws IOException {
 
         try {
-            new PrintWriter(caminho + "saida/1-planejamento.csv").close();
-            new PrintWriter(caminho + "saida/2-estatisticas-prestadores.csv").close();
-            new PrintWriter(caminho + "saida/3-estatisticas-casais.csv").close();
+            new PrintWriter(caminho + "/saida/1-planejamento.csv").close();
+            new PrintWriter(caminho + "/saida/2-estatisticas-prestadores.csv").close();
+            new PrintWriter(caminho + "/saida/3-estatisticas-casais.csv").close();
         } catch (IOException e) {
             throw new IOException("Erro de I/O");
         }
