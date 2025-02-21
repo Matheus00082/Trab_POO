@@ -11,17 +11,25 @@ import java.util.Date;
 
 public class RelatorioPlanejamento {
 
-    public static void imprimeRelatorio(String caminho, Casal casal) throws Exception{
-        Date dataInicial = casal.calculaDataInicioPagamentos();
-        int num_meses = casal.calculaNumMeses(dataInicial);
-        Date dataAtual = dataInicial;
-
+    public static void imprimeRelatorio(String caminho, Casal casal, String cpf1, String cpf2) throws Exception{
+     
         String arquivo = "/saida/1-planejamento.csv";
 
         try (PrintWriter writer = new PrintWriter(new FileWriter(caminho+arquivo, true))) {
+
+            if (casal == null) {
+                writer.write("Casal com CPFs " + cpf1 + " e " + cpf2 + " não está cadastrado.\n");
+                return;
+            }
+
+            Date dataInicial = casal.calculaDataInicioPagamentos();
+            int num_meses = casal.calculaNumMeses(dataInicial);
+            Date dataAtual = dataInicial;
+
             if (dataInicial == null) {
                 writer.write("Casal com CPFs " + casal.getConjuge1().getCPF() + " e " + casal.getConjuge2().getCPF() +
-                        " não possui gastos cadastrados.");
+                        " não possui gastos cadastrados.\n");
+                return;
             } else {
                 writer.write("Nome 1;Nome 2;");
 
@@ -70,7 +78,9 @@ public class RelatorioPlanejamento {
             if (cpfPair.length == 2) {
                 for (Casal casal : casais) {
                     if (casal.ehIgualCasal(cpfPair[0], cpfPair[1])) {
-                        imprimeRelatorio(caminho, casal);
+                        imprimeRelatorio(caminho, casal, cpfPair[0], cpfPair[1]);
+                    } else {
+                        imprimeRelatorio(caminho, null, cpfPair[0], cpfPair[1]);
                     }
                 }
             }
