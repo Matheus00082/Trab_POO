@@ -76,12 +76,19 @@ public class RelatorioPlanejamento {
 
             String[] cpfPair = line.split(",\\s*");
             if (cpfPair.length == 2) {
+                
+                boolean casalEncontrado = false;
+
                 for (Casal casal : casais) {
                     if (casal.ehIgualCasal(cpfPair[0], cpfPair[1])) {
                         imprimeRelatorio(caminho, casal, cpfPair[0], cpfPair[1]);
-                    } else {
-                        imprimeRelatorio(caminho, null, cpfPair[0], cpfPair[1]);
+                        casalEncontrado = true;
+                        break;
                     }
+                }
+
+                if (!casalEncontrado) {
+                    imprimeRelatorio(caminho, null, cpfPair[0], cpfPair[1]);
                 }
             }
         }
