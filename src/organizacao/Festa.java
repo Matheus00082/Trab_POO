@@ -27,7 +27,7 @@ public class Festa {
             SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
             this.data = formato.parse(data);
         } catch (Exception e) {
-            throw new ParseException("Erro ao formatar a data", 0);
+            throw new ParseException("Erro de formatação", 0);
         }
 
         this.hora = hora;
@@ -80,7 +80,7 @@ public class Festa {
         try {
             this.data = formato.parse(data);
         } catch (Exception e) {
-           throw new ParseException("Erro ao formatar a data", 0);
+           throw new ParseException("Erro de formatação", 0);
         }
     }
 

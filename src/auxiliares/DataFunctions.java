@@ -15,7 +15,7 @@ public class DataFunctions {
             mesAno1 = sdf.format(data1);
             mesAno2 = sdf.format(data2);
         } catch (Exception e) {
-            throw new ParseException("Erro ao formatar a data", 0);
+            throw new ParseException("Erro de formatação", 0);
         }
 
         if (mesAno1.equals(mesAno2)) {
@@ -67,7 +67,7 @@ public class DataFunctions {
         try {
             dateAno = sdfAno.format(data);
         } catch (Exception e) {
-            throw new ParseException("Erro ao formatar a data", 0);
+            throw new ParseException("Erro de formatação", 0);
         }
 
         int ano = Integer.parseInt(dateAno);
@@ -84,7 +84,7 @@ public class DataFunctions {
             dateMes = sdfMes.format(data);
             mes = Integer.parseInt(dateMes);
         } catch (Exception e) {
-            throw new  ParseException("Erro ao formatar a data", 0);
+            throw new  ParseException("Erro de formatação", 0);
         }
 
         return mes;
@@ -97,7 +97,7 @@ public class DataFunctions {
         try {
             mesAno = sdf.format(data);
         } catch (Exception e) {
-            throw new ParseException("Erro ao formatar a data", 0);
+            throw new ParseException("Erro de formatação", 0);
         }
 
         return mesAno;

@@ -33,7 +33,7 @@ public class Tarefa {
         try {
             this.dataInicio = new SimpleDateFormat("dd/MM/yyyy").parse(dataInicio);
         } catch (Exception e) {
-            throw new ParseException("Erro ao formatar a data", 0);
+            throw new ParseException("Erro de formatação", 0);
         }
 
         this.prazoDias = prazoDias;
@@ -109,7 +109,7 @@ public class Tarefa {
         try {
             this.dataInicio = new SimpleDateFormat("dd/MM/yyyy").parse(dataInicio);
         } catch (Exception e) {
-            throw new ParseException("Erro ao formatar a data", 0);
+            throw new ParseException("Erro de formatação", 0);
         }
     }
 

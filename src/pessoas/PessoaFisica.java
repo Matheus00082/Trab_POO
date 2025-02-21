@@ -28,7 +28,7 @@ public class PessoaFisica extends Pessoa{
         try {
             this.datadeNascimento = new SimpleDateFormat("dd/MM/yyyy").parse(datadeNascimento);
         } catch (Exception e) {
-            throw new ParseException("Erro ao formatar a data", 0);
+            throw new ParseException("Erro de formatação", 0);
         }
 
         this.poupanca = poupanca;
@@ -54,7 +54,7 @@ public class PessoaFisica extends Pessoa{
         try {
             this.datadeNascimento = new SimpleDateFormat("dd/MM/yyyy").parse(datadeNascimento);
         } catch (Exception e) {
-            throw new ParseException("Erro ao formatar a data", 0);
+            throw new ParseException("Erro de formatação", 0);
         }
     }
 

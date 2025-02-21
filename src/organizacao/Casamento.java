@@ -31,7 +31,7 @@ public class Casamento {
         try {
             this.data = new SimpleDateFormat("dd/MM/yyyy").parse(data);
         } catch (Exception e) {
-            throw new ParseException("Erro ao formatar a data", 0);
+            throw new ParseException("Erro de formatação", 0);
         }
 
         this.hora = hora;
