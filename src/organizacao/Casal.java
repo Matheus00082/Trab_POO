@@ -93,7 +93,9 @@ public class Casal {
     }
 
     public void atualizaSaldoCasal(Date data) throws Exception {
-        this.saldoAtual *= (1.005);
+        if (this.saldoAtual > 0) {
+            this.saldoAtual *= (1.005);
+        }
         this.saldoAtual -= this.despesasMensais();
 
         if (this.casamento != null) {
