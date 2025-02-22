@@ -38,7 +38,7 @@ public class RelatorioCasais {
                 }
                 return c1.getConjuge1().getNome().replace(" ", "").compareTo(c2.getConjuge1().getNome().replace(" ", ""));
             }
-            return (int)(c2.getTotalGasto() - c1.getTotalGasto());
+            return Double.compare(c2.getTotalGasto(), c1.getTotalGasto());
         });
 
         String arquivo = "/saida/3-estatisticas-casais.csv";

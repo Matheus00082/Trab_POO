@@ -19,7 +19,7 @@ public class RelatorioPrestadores {
                 if (p2.getLucro() == p1.getLucro()) {
                     return p1.getNome().replaceAll(" ", "").compareTo(p2.getNome().replaceAll(" ", ""));
                 }
-                return Double.compare(0, 0).getLucro() - p1.getLucro());
+                return Double.compare(p2.getLucro(), p1.getLucro());
             }
             return Pessoa.compararTipos(p1.getTipo(), p2.getTipo());
         });
