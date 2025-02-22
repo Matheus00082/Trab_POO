@@ -18,6 +18,7 @@ public class Casal {
     public Casal(PessoaFisica p1, PessoaFisica p2) {
         
         // Em ordem alfabetica
+    
         if (p1.getNome().compareTo(p2.getNome()) <= 0) {
             this.conjuge1 = p1;
             this.conjuge2 = p2;
@@ -33,8 +34,13 @@ public class Casal {
     }
 
     public boolean ehIgualCasal(String CPF1, String CPF2) {
-        if ((this.conjuge1.getCPF().equals(CPF1) && this.conjuge2.getCPF().equals(CPF2)) ||
-            (this.conjuge1.getCPF().equals(CPF2) && this.conjuge2.getCPF().equals(CPF1)))
+        CPF1 = CPF1.replaceAll(" ", "");
+        CPF2 = CPF2.replaceAll(" ", "");
+        String cpfConjuge1 = this.conjuge1.getCPF().replaceAll(" ", "");
+        String cpfConjuge2 = this.conjuge2.getCPF().replaceAll(" ", "");
+
+        if ((cpfConjuge1.equals(CPF1) && cpfConjuge2.equals(CPF2)) ||
+            (cpfConjuge1.equals(CPF2) && cpfConjuge2.equals(CPF1)))
             return true;
 
         return false;

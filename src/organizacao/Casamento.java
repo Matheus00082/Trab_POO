@@ -53,8 +53,8 @@ public class Casamento {
         int num = 0;
 
         for (Casamento casamento : casamentos.values()) {
-            String idConjuge1 = casal.getConjuge1().getId();
-            if (!idConjuge1.equals(casamento.idConjuje1) && !idConjuge1.equals(casamento.idConjuje2)) {
+            String idConjuge1 = casal.getConjuge1().getId().replaceAll(" ", "");
+            if (!idConjuge1.equals(casamento.idConjuje1.replaceAll(" ", "")) && !idConjuge1.equals(casamento.idConjuje2.replaceAll(" ", ""))) {
                 if (casamento.festa != null && casamento.festa.casalFoiConvidado(casal)) {
                     num++;
                 }

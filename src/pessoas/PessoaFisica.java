@@ -21,7 +21,7 @@ public class PessoaFisica extends Pessoa{
             throw new IllegalArgumentException("O CPF " + CPF + " da Pessoa " + id + " é repetido.");
         }
 
-        cpfs.put(CPF, id);
+        cpfs.put(CPF.replace(" ", ""), id.replace(" ", ""));
         
         this.CPF = CPF;
 
@@ -38,7 +38,7 @@ public class PessoaFisica extends Pessoa{
     }
 
     public static boolean ehIgualCpf(PessoaFisica p, String cpf) {
-        if (p.CPF == cpf) return true;
+        if (p.CPF.replace(" ", "").equals(cpf.replace(" ", ""))) return true;
         else return false;
     }
 

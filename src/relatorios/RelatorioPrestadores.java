@@ -16,9 +16,12 @@ public class RelatorioPrestadores {
 
         prestadoresList.sort((p1, p2) -> {
             if(p1.getTipo().equals(p2.getTipo())) {
-                return (int)(p2.getLucro() - p1.getLucro());
+                if (p2.getLucro() == p1.getLucro()) {
+                    return p1.getNome().replaceAll(" ", "").compareTo(p2.getNome().replaceAll(" ", ""));
+                }
+                return Double.compare(0, 0).getLucro() - p1.getLucro());
             }
-            return p2.getTipo().compareTo(p1.getTipo());
+            return Pessoa.compararTipos(p1.getTipo(), p2.getTipo());
         });
 
         String arquivo = "/saida/2-estatisticas-prestadores.csv";
@@ -26,7 +29,7 @@ public class RelatorioPrestadores {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminho+arquivo, true))) {
 
             for (Pessoa prestador : prestadoresList) {
-                if (prestador.getTipo().equals("PJ") || prestador.getTipo().equals("Loja")) {
+                if (prestador.getEhPrestador()) {
                     String lucro = String.format("R$ %.2f", prestador.getLucro()).replace('.', ',');
                     writer.write(prestador.getTipo() + ";" + prestador.getNome() + ";" + lucro);
                     writer.newLine();

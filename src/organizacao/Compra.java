@@ -19,7 +19,7 @@ public class Compra {
             throw new IllegalArgumentException("ID repetido " + idCompra + " na classe Compra.");
         }
 
-        setIds(idCompra);
+        setIds(idCompra.replace(" ", ""));
         this.idCompra = idCompra;
         this.nomeProduto = nomeProduto;
         this.loja = loja;

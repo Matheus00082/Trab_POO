@@ -28,7 +28,7 @@ public class Tarefa {
             throw new IllegalArgumentException("ID repetido " + idTarefa + " na classe Tarefa.");
         }
 
-        Tarefa.setIds(idTarefa);
+        Tarefa.setIds(idTarefa.replace(" ", ""));
 
         try {
             this.dataInicio = new SimpleDateFormat("dd/MM/yyyy").parse(dataInicio);
@@ -41,7 +41,11 @@ public class Tarefa {
         this.parcelasAtual = parcelas;
         this.compras = new ArrayList<Compra>();
         this.trabalhador = trabalhador;
-        this.trabalhador.setLucro(valor);
+
+        if(!(trabalhador instanceof Loja)){ // não deu alteração de nota
+            this.trabalhador.setLucro(valor);
+        }
+
         this.valorParcelado = valor / parcelasInicial;
 
     }

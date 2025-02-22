@@ -35,13 +35,12 @@ public class LeitorCVS {
             String linha;
 
             while ((linha = leitor.readLine()) != null) {
-
                 String[] partes = linha.split(";");
-                String tipo = partes[1];
+                String tipo = partes[1].replace(" ", "");
 
                 if (tipo.equals("F")) {
 
-                    pessoas.put(partes[0],
+                    pessoas.put(partes[0].replace(" ", ""),
                             new PessoaFisica(partes[2], partes[4], partes[3], partes[0], partes[5], partes[6],
                                     Double.parseDouble(partes[7].replace(",", ".")),
                                     Double.parseDouble(partes[8].replace(",", ".")),
@@ -49,15 +48,15 @@ public class LeitorCVS {
 
                 } else if (tipo.equals("J")) {
 
-                    pessoas.put(partes[0], new PessoaJuridica(partes[2], partes[4], partes[3], partes[0], partes[5]));
+                    pessoas.put(partes[0].replace(" ", ""), new PessoaJuridica(partes[2], partes[4], partes[3], partes[0], partes[5]));
 
                 } else if (tipo.equals("L")) {
 
-                    pessoas.put(partes[0], new Loja(partes[2], partes[4], partes[3], partes[0], partes[5]));
+                    pessoas.put(partes[0].replace(" ", ""), new Loja(partes[2], partes[4], partes[3], partes[0], partes[5]));
 
                 }
 
-                Pessoa.setIds(partes[0]);
+                Pessoa.setIds(partes[0].replace(" ", ""));
             }
         }
         return pessoas;
@@ -74,11 +73,12 @@ public class LeitorCVS {
 
             while ((linha = leitor.readLine()) != null) {
                 String[] partes = linha.split(";");
+                
 
                 Lar.pessoaEstaCadastradaLar(pessoas, partes[1], partes[2], partes[0]);
 
-                PessoaFisica conjuge1 = (PessoaFisica) pessoas.get(partes[1]);
-                PessoaFisica conjuge2 = (PessoaFisica) pessoas.get(partes[2]);
+                PessoaFisica conjuge1 = (PessoaFisica) pessoas.get(partes[1].replace(" ", ""));
+                PessoaFisica conjuge2 = (PessoaFisica) pessoas.get(partes[2].replace(" ", ""));
 
                 if (conjuge1 == null || conjuge2 == null) {
                     throw new IllegalArgumentException("Casal não encontrado");
@@ -88,9 +88,8 @@ public class LeitorCVS {
                 Lar lar = new Lar(partes[0], partes[3], Integer.parseInt(partes[4]), partes[5]);
                 casal.setLar(lar);
                 casais.add(casal);
-                lares.put(partes[0], lar);
-
-                Lar.setIds(partes[0]);
+                lares.put(partes[0].replace(" ", ""), lar);
+                Lar.setIds(partes[0].replace(" ", ""));
             }
         }
         return lares;
@@ -109,18 +108,22 @@ public class LeitorCVS {
             while ((linha = leitor.readLine()) != null) {
                 String[] partes = linha.split(";");
 
-                Pessoa trabalhador = (Pessoa) pessoas.get(partes[2]);
+                Pessoa trabalhador = (Pessoa) pessoas.get(partes[2].replace(" ", ""));
 
-                Lar lar = lares.get(partes[1]);
+                Lar lar = lares.get(partes[1].replace(" ", ""));
 
                 Tarefa.tarefaTemIdDeLarValido(lares, partes[1], partes[0]);
                 Tarefa.prestadorEstaCadastrado(pessoas, partes[2], partes[0]);
 
+                if (trabalhador instanceof PessoaFisica) {
+                    trabalhador.setEhPrestador(true);
+                }
+
                 Tarefa t = new Tarefa(partes[0], partes[3], Integer.parseInt(partes[4]), Integer.parseInt(partes[6]),
                         Double.parseDouble((partes[5].replace(".", "")).replace(",", ".")), trabalhador);
 
-                lar.getTarefas().put(partes[0], t);
-                tarefas.put(partes[0], t);
+                lar.getTarefas().put(partes[0].replace(" ", ""), t);
+                tarefas.put(partes[0].replace(" ", ""), t);
             }
         }
 
@@ -141,22 +144,22 @@ public class LeitorCVS {
 
                 Casamento casamento = new Casamento(partes[0], partes[1], partes[2], partes[3], partes[4], partes[5]);
 
-                String idConjuge1 = partes[1];
-                String idConjuge2 = partes[2];
+                String idConjuge1 = partes[1].replace(" ", "");
+                String idConjuge2 = partes[2].replace(" ", "");
 
                 Casamento.pessoaEstaCadastradaCasamento(pessoas, idConjuge1, idConjuge2, partes[0]);
 
                 boolean casalEncontrado = false;
 
                 for (Casal casal : casais) {
-                    String casalConjuge1 = casal.getConjuge1().getId();
-                    String casalConjuge2 = casal.getConjuge2().getId();
+                    String casalConjuge1 = casal.getConjuge1().getId().replace(" ", "");
+                    String casalConjuge2 = casal.getConjuge2().getId().replace(" ", "");
 
                     if ((idConjuge1.equals(casalConjuge1) && idConjuge2.equals(casalConjuge2)) ||
                             (idConjuge1.equals(casalConjuge2) && idConjuge2.equals(casalConjuge1))) {
 
                         casal.setCasamento(casamento);
-                        casamentos.put(partes[0], casamento);
+                        casamentos.put(partes[0].replace(" ", ""), casamento);
                         casalEncontrado = true;
                         break;
                     }
@@ -173,10 +176,10 @@ public class LeitorCVS {
                     Casal novoCasal = new Casal(conjuge1, conjuge2);
                     novoCasal.setCasamento(casamento);
                     casais.add(novoCasal);
-                    casamentos.put(partes[0], casamento);
+                    casamentos.put(partes[0].replace(" ", ""), casamento);
                 }
 
-                Casamento.setIds(partes[0]);
+                Casamento.setIds(partes[0].replace(" ", ""));
             }
         }
 
@@ -194,7 +197,7 @@ public class LeitorCVS {
 
                 String[] partes = linha.split(";");
 
-                Casamento casamento = casamentos.get(partes[1]);
+                Casamento casamento = casamentos.get(partes[1].replace(" ", ""));
 
                 Festa.casamentoEstaCadastrado(casamentos, partes[1], partes[0]);
 
@@ -209,7 +212,7 @@ public class LeitorCVS {
                         Double.parseDouble((partes[5].replace(".", "")).replace(",", ".")),
                         Integer.parseInt(partes[6]), convidados));
 
-                Festa.setIds(partes[0]);
+                Festa.setIds(partes[0].replace(" ", ""));
             }
         }
     }
@@ -232,18 +235,19 @@ public class LeitorCVS {
                     Map<String, Tarefa> tarefas = lar.getTarefas();
 
                     if (tarefas.size() > 0) {
-                        Tarefa tarefa = tarefas.get(partes[1]);
+                        Tarefa tarefa = tarefas.get(partes[1].replace(" ", ""));
                         Loja loja = null;
 
                         Compra.compraTemIdValidoDeTarefa(t, partes[1], partes[0]);
                         Compra.compraTemIdValidoDeLoja(pessoas, partes[2], partes[0]);
                         Compra.verificaSeEhPessoaJuridica(pessoas, partes[2], partes[0]);
 
-                        if (pessoas.get(partes[2]) instanceof Loja) {
-                            loja = (Loja) pessoas.get(partes[2]);
+                        Pessoa p = pessoas.get(partes[2].replace(" ", ""));
+                        if (p instanceof Loja) {
+                            loja = (Loja) p;
                         }
 
-                        if (tarefa != null && loja != null) {
+                        if (tarefa != null && loja != null) { // possível erro de leitura
                             tarefa.addCompras(
                                     new Compra(partes[0], partes[3], loja,
                                             Integer.parseInt(partes[4]),

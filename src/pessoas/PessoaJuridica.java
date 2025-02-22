@@ -14,9 +14,10 @@ public class PessoaJuridica extends Pessoa{
             throw new IllegalArgumentException("O CNPJ " + CNPJ + " da Pessoa " + id + " é repetido.");
         }
 
-        cnpjs.put(CNPJ, id);
+        cnpjs.put(CNPJ.replace(" ", ""), id.replace(" ", ""));
 
         this.CNPJ = CNPJ;
+        this.setEhPrestador(true);
     }
 
     public void setCnpj(String cnpj) {

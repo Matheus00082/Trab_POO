@@ -11,7 +11,6 @@ import java.util.Map;
 public class RelatorioCasais {
 
     public static void geraRelatorioCasais(String caminho, Map<String, Casamento> casamentos, List<Casal> casais) throws IOException {
-        // Calcula numero de casamentos que ambos foram
         for (Casal casal : casais) {
 
             casal.setNumCasamentos(Casamento.calculaNumCasamentos(casamentos, casal));
@@ -32,14 +31,12 @@ public class RelatorioCasais {
             }
         }
 
-        /*Ordena casais por total gasto de formar decrecente. Se houver empate, ordena por
-         * nome do conjuge 1 e em ultimo em caso ordenar por quantidade de casamentos*/
         casais.sort((Casal c1, Casal c2) -> {
             if (c1.getTotalGasto() == c2.getTotalGasto()) {
-                if (c1.getConjuge1().getNome().equals(c2.getConjuge1().getNome())) {
+                if (c1.getConjuge1().getNome().replace(" ", "").equals(c2.getConjuge1().getNome().replace(" ", ""))) {
                     return c1.getNumCasamentos() - c2.getNumCasamentos();
                 }
-                return c1.getConjuge1().getNome().compareTo(c2.getConjuge1().getNome());
+                return c1.getConjuge1().getNome().replace(" ", "").compareTo(c2.getConjuge1().getNome().replace(" ", ""));
             }
             return (int)(c2.getTotalGasto() - c1.getTotalGasto());
         });
