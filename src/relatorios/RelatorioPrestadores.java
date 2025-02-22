@@ -31,7 +31,7 @@ public class RelatorioPrestadores {
             for (Pessoa prestador : prestadoresList) {
                 if (prestador.getEhPrestador()) {
                     String lucro = String.format("R$ %.2f", prestador.getLucro()).replace('.', ',');
-                    writer.write(prestador.getTipo() + ";" + prestador.getNome() + ";" + lucro);
+                    writer.write(prestador.getTipo() + ";" + prestador.getNome().trim().replaceAll("\\s+", " ") + ";" + lucro);
                     writer.newLine();
                 }
             }

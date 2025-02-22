@@ -19,8 +19,9 @@ public class RelatorioPlanejamento {
         String arquivo = "/saida/1-planejamento.csv";
 
         try (PrintWriter writer = new PrintWriter(new FileWriter(caminho+arquivo, true))) {
+            
             if (dataInicial == null) {
-                writer.write("Casal com CPFs " + casal.getConjuge1().getCPF() + " e " + casal.getConjuge2().getCPF() +
+                writer.write("Casal com CPFs " + casal.getConjuge1().getCPF().replace(" ", "") + " e " + casal.getConjuge2().getCPF().replace(" ", "") +
                         " não possui gastos cadastrados.");
             } else {
                 writer.write("Nome 1;Nome 2;");
@@ -38,7 +39,10 @@ public class RelatorioPlanejamento {
                     dataAtual = DataFunctions.incrementaMes(dataAtual);
                 }
 
-                writer.write(casal.getConjuge1().getNome() + ";" + casal.getConjuge2().getNome() + ";");
+                String nome1 = casal.getConjuge1().getNome().trim().replaceAll("\\s+", " ");
+                String nome2 = casal.getConjuge2().getNome().trim().replaceAll("\\s+", " ");
+
+                writer.write(nome1 + ";" + nome2 + ";");
 
                 for (int i = 0; i < num_meses; i++) {
                     casal.atualizaSaldoCasal(dataInicial);

@@ -47,10 +47,9 @@ public class RelatorioCasais {
 
             for (Casal casal : casais) {
                 String totalGasto = String.format("R$ %.2f", casal.getTotalGasto()).replace('.', ',');
-                writer.write(casal.getConjuge1().getNome() + ";" 
-                            + casal.getConjuge2().getNome() + ";" 
-                            + totalGasto + ";" 
-                            + casal.getNumCasamentos());
+                String nome1 = casal.getConjuge1().getNome().trim().replaceAll("\\s+", " ");
+                String nome2 = casal.getConjuge2().getNome().trim().replaceAll("\\s+", " ");
+                writer.write(nome1 + ";" + nome2 + ";"  + totalGasto + ";" + casal.getNumCasamentos());
                 writer.newLine();
             }
 
