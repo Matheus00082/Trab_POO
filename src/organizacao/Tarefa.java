@@ -1,104 +1,118 @@
 package src.organizacao;
 
-import src.auxiliares.DataFunctions;
-import src.pessoas.*;
-
+import java.util.Date;
+import src.pessoas.Pessoas;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
-
-import java.text.ParseException;
-
-import java.text.SimpleDateFormat;
+import src.auxiliares.GerenciadorDeDatas;
 
 public class Tarefa {
     private String idTarefa;
     private Date dataInicio;
     private int prazoDias, parcelasInicial, parcelasAtual;
     private List<Compra> compras;
-    private Pessoa trabalhador;
-    private Double valorParcelado;
-    protected static Map<String, String> ids = new HashMap<>();
+    private Pessoas trabalhador;
+    private Double valorParcelado, valorTotal;
+    private static Map<String, Tarefa> tarefas = new HashMap<>();
 
-    public Tarefa(String idTarefa, String dataInicio, int prazoDias, int parcelas, Double valor, Pessoa trabalhador) throws ParseException {
-        this.idTarefa = idTarefa;
-        if (ids.get(idTarefa) != null) {
+    public Tarefa(String idTarefa, Pessoas trabalhador, String dataInicio, int prazoDias, Double valor, int parcelas) throws ParseException{
+        
+        if (tarefas.get(idTarefa) != null) {
             throw new IllegalArgumentException("ID repetido " + idTarefa + " na classe Tarefa.");
-        }
-
-        Tarefa.setIds(idTarefa.replace(" ", ""));
-
+        }     
+        
+        tarefas.put(idTarefa, this);
+        
         try {
-            this.dataInicio = new SimpleDateFormat("dd/MM/yyyy").parse(dataInicio);
+            this.dataInicio = new SimpleDateFormat("dd/MM/yyyy").parse(dataInicio.replace(" ", ""));
         } catch (Exception e) {
             throw new ParseException("Erro de formatação", 0);
         }
 
+        this.idTarefa = idTarefa;
+        this.trabalhador = trabalhador;
         this.prazoDias = prazoDias;
         this.parcelasInicial = parcelas;
         this.parcelasAtual = parcelas;
-        this.compras = new ArrayList<Compra>();
-        this.trabalhador = trabalhador;
-
-        if(!(trabalhador instanceof Loja)){ // não deu alteração de nota
-            this.trabalhador.setLucro(valor);
-        }
-
-        this.valorParcelado = valor / parcelasInicial;
-
+        this.valorTotal = valor;
+        this.valorParcelado = valor/parcelas;
+        this.compras = new ArrayList<>();
     }
 
-    public static void prestadorEstaCadastrado(Map<String, Pessoa> pessoas, String idPrestador, String idTarefa) {
+    public static void prestadorEstaCadastrado(String idPrestador, String idTarefa) {
+        Map<String, Pessoas> pessoas = Pessoas.getPessoas();
+
         if (pessoas.get(idPrestador) == null) {
             throw new IllegalArgumentException("ID(s) de Prestador de Serviço " + idPrestador + " não cadastrado na Tarefa de ID " + idTarefa + ".");
         }
     }
 
-    public static void tarefaTemIdDeLarValido(Map<String, Lar> lares, String idLar, String idTarefa) {
+    public static void tarefaTemIdDeLarValido(String idLar, String idTarefa) {
+        Map<String, Lar> lares = Lar.getLares();
+        
         if (lares.get(idLar) == null) {
             throw new IllegalArgumentException("ID(s) de Lar " + idLar + " não cadastrado na Tarefa de ID " + idTarefa + ".");
         }
     }
 
-    public static void setIds(String id) {
-        ids.put(id, id);
-    }
-
-    public int obtemMaiorNumParcelasCompras() {
-        int num = 0;
-
-        for (Compra compra : this.compras) {
-            if (compra.getParcelas() > num) {
-                num = compra.getParcelas();
-            }
-        }
-
-        return num;
-    }
-
-    public boolean ehMesdePagamentoTarefa(Date data) throws ParseException {
-        if ((DataFunctions.ehMesmoMeseAno(data, this.dataInicio) || (this.parcelasAtual != this.parcelasInicial)) &&
-                (this.parcelasAtual != 0)) {
+    public boolean ehMesPagamentoTarefa(Date data) throws ParseException{
+        if (GerenciadorDeDatas.ehMesmoMeseAno(data, this.dataInicio) || ((this.parcelasAtual < this.parcelasInicial) && (this.parcelasAtual > 0))) {
             return true;
         }
         return false;
     }
 
     public void pagaTarefa(Casal casal, Date data) throws ParseException {
-        boolean ehMes = ehMesdePagamentoTarefa(data);
+        boolean ehMes = ehMesPagamentoTarefa(data);
         if (ehMes) {
             casal.subSaldoAtual(this.valorParcelado);
             this.parcelasAtual--;
         }
 
-        if (DataFunctions.verificaSeEhPosterior(this.dataInicio, data)) {
+        if (GerenciadorDeDatas.comparaDatas(this.dataInicio, data) < 0) {
             for (Compra compra : this.compras) {
-                compra.pagaCompra(casal);
+                compra.pagaCompra(casal); 
             }
+        }  
+    }
+
+    public Double obtemValorTotalCompras(List<Compra> compras) {
+        Double total = 0.0;
+        for (Compra compra : compras) {
+            total += (compra.getPreco()*compra.getQuantidade());
         }
-        
+
+        return total;
+    }
+
+    public Double calculaValorTotalGastoTarefa() {
+        Double valorTotal = 0.0;
+
+        valorTotal += obtemValorTotalCompras(this.compras);
+
+        return (valorTotal + this.valorTotal);
+    }
+
+    public void calculaLucroPrestadores() { 
+        if (this.trabalhador.getTipo().equals("PJ") || this.trabalhador.getTipo().equals("PF")) {
+            this.trabalhador.addLucro(this.valorTotal);
+        }
+
+        for (Compra compra : this.compras) {
+            compra.getLoja().addLucro(compra.getPreco() * compra.getQuantidade());
+        }
+    }
+
+    public static Map<String, Tarefa> getTarefas() {
+        return tarefas;
+    }
+
+    public static Tarefa getTarefaCadastrada(String idTarefa) {
+        return tarefas.get(idTarefa);
     }
 
     public void setIdTarefa(String idTarefa) {
@@ -106,7 +120,7 @@ public class Tarefa {
     }
 
     public String getIdTarefa() {
-        return idTarefa;
+        return this.idTarefa;
     }
 
     public void setDataInicio(String dataInicio) throws ParseException {
@@ -118,7 +132,7 @@ public class Tarefa {
     }
 
     public Date getDataInicio() {
-        return dataInicio;
+        return this.dataInicio;
     }
 
     public void setPrazoDias(int prazoDias) {
@@ -126,7 +140,7 @@ public class Tarefa {
     }
 
     public int getPrazoDias() {
-        return prazoDias;
+        return this.prazoDias;
     }
 
     public void setParcelasAtual(int parcelas) {
@@ -134,27 +148,27 @@ public class Tarefa {
     }
 
     public int getParcelasInicial() {
-        return parcelasInicial;
+        return this.parcelasInicial;
     }
 
     public int getParcelasAtual() {
-        return parcelasAtual;
+        return this.parcelasAtual;
     }
 
-    public void addCompras(Compra compra) {
+    public void addCompra(Compra compra) {
         this.compras.add(compra);
     }
 
     public List<Compra> getCompras() {
-        return compras;
+        return this.compras;
     }
 
-    public void setTrabalhador(Pessoa trabalhador) {
+    public void setTrabalhador(Pessoas trabalhador) {
         this.trabalhador = trabalhador;
     }
 
-    public Pessoa getTrabalhador() {
-        return trabalhador;
+    public Pessoas getTrabalhador() {
+        return this.trabalhador;
     }
 
     public void setValorParcelado(Double valorParcelado) {
@@ -162,16 +176,6 @@ public class Tarefa {
     }
 
     public Double getValorParcelado() {
-        return valorParcelado;
-    }
-
-    public Double calculaValorTotal() {
-        Double valorTotal = 0.0;
-
-        for (Compra compra : compras) {
-            valorTotal += compra.getLoja().getLucro();
-        }
-
-        return (valorTotal + this.trabalhador.getLucro());
+        return this.valorParcelado;
     }
 }

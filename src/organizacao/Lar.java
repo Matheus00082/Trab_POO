@@ -1,33 +1,39 @@
 package src.organizacao;
 
 import java.util.Map;
-import java.util.HashMap;
-import java.util.Date;
 
-//import src.pessoas.PessoaFisica;
-import src.pessoas.Pessoa;
+import src.pessoas.Pessoas;
+import java.util.Date;
+import java.text.ParseException;
+
+import java.util.HashMap;
 
 public class Lar {
     private String idLar, rua, complemento;
     private Map<String, Tarefa> tarefas;
     private int numero;
-    protected static Map<String, String> ids = new HashMap<>();
+    private static Map<String, Lar> lares = new HashMap<>();
 
     public Lar(String idLar, String rua, int numero, String complemento) {
+
+        if (lares.get(idLar) != null) {
+            throw new IllegalArgumentException("ID repetido " + idLar + " na classe Lar.");
+        }
+
+        lares.put(idLar, this);
+
         this.idLar = idLar;
         this.rua = rua;
         this.numero = numero;
         this.complemento = complemento;
         this.tarefas = new HashMap<>();
-
-        if (ids.get(idLar) != null) {
-            throw new IllegalArgumentException("ID repetido " + idLar + " na classe Lar.");
-        }
     }
 
-    public static void pessoaEstaCadastradaLar(Map<String, Pessoa> pessoas, String id1, String id2, String idLar) {
+    public static void pessoaEstaCadastradaLar(String idLar, String id1, String id2) {
+        Map<String, Pessoas> pessoas = Pessoas.getPessoas();
+
         if (pessoas.get(id1) == null && pessoas.get(id2) == null) {
-            throw new IllegalArgumentException("ID(s) de Pessoa " + id1 + " " + id2 + " não cadastrado no Lar de ID " + idLar + ".");
+             throw new IllegalArgumentException("ID(s) de Pessoa " + id1 + " " + id2 + " não cadastrado no Lar de ID " + idLar + ".");
         } else if (pessoas.get(id1) == null && pessoas.get(id2) != null) {
             throw new IllegalArgumentException("ID(s) de Pessoa " + id1 + " não cadastrado no Lar de ID " + idLar + ".");
         } else if (pessoas.get(id1) != null && pessoas.get(id2) == null) {
@@ -35,38 +41,18 @@ public class Lar {
         }
     }
 
-    public static void setIds(String id) {
-        ids.put(id, id);
-    }
-
-    public int obtemMaiorNumParcelasTarefas(Date data) {
-        int num = 0;
-
-        for (Tarefa tarefa : this.tarefas.values()) {
-            int numParcelasTarefas = tarefa.getParcelasInicial();
-
-            if (numParcelasTarefas > num) {
-                num = numParcelasTarefas;
-                data = tarefa.getDataInicio();
-            }
-
-            if (tarefa.getCompras().size() > 0) {
-                int numParcelasCompras = tarefa.obtemMaiorNumParcelasCompras();
-                
-                if (numParcelasCompras > num) {
-                    num = numParcelasCompras;
-                    data = tarefa.getDataInicio();
-                }
-            }
-        }
-
-        return num;
-    }
-
-    public void pagaTarefas(Date data, Casal casal) throws Exception {
+    public void pagaTarefas(Date data, Casal casal) throws ParseException {
         for (Tarefa tarefa : this.tarefas.values()) {
             tarefa.pagaTarefa(casal, data);
         }
+    }
+
+    public static Map<String, Lar> getLares() {
+        return lares;
+    }
+
+    public static Lar getLarCadastrado(String idLar) {
+        return lares.get(idLar);
     }
 
     public void setidLar(String idLar) {
@@ -107,5 +93,6 @@ public class Lar {
 
     public Map<String, Tarefa> getTarefas() {
         return this.tarefas;
-    } 
+    }
+
 }

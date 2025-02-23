@@ -1,45 +1,34 @@
-
 import src.auxiliares.*;
 import src.organizacao.*;
 import src.pessoas.*;
 import src.relatorios.*;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-
 public class Main {
-
     public static void main(String[] args) {
-        Map<String, Pessoa> pessoas = null;
-        List<Casal> casais = new ArrayList<>();
-        Map<String, Lar> lares = null;
-        Map<String, Casamento> casamentos = null;
-        Map<String, Tarefa> tarefas = null;
 
-        String caminho = args[0];
+        String caminho = args[0].replaceAll(" ", "");
 
         try {
+            // Cria arquivos vazios a serem preenchidos posteriormente
             LeitorCVS.criaArquivosVazios(caminho);
-            pessoas = LeitorCVS.lerPessoas(caminho + "/pessoas.csv");
-            lares = LeitorCVS.lerLares(caminho + "/lares.csv", pessoas, casais);
-            tarefas = LeitorCVS.lerTarefas(caminho + "/tarefas.csv", pessoas, lares);
-            casamentos = LeitorCVS.lerCasamentos(caminho + "/casamentos.csv", pessoas, casais);
-            LeitorCVS.lerFestas(caminho + "/festas.csv", casamentos);
-            LeitorCVS.lerCompras(caminho + "/compras.csv", lares, pessoas, tarefas);
-
-            RelatorioPlanejamento.geraRelatorioPlanejamento(caminho, casais);
-            if (pessoas != null) {
-                RelatorioPrestadores.geraRelatorioPrestadores(caminho, pessoas);
-            } if (casamentos != null && casais != null) {
-                RelatorioCasais.geraRelatorioCasais(caminho, casamentos, casais);
+            // Lê os arquivos CSV e preenche o "banco de dados" 
+            LeitorCVS.lerPessoas(caminho);
+            LeitorCVS.lerLares(caminho);
+            LeitorCVS.lerTarefas(caminho);
+            LeitorCVS.lerCasamentos(caminho);
+            LeitorCVS.lerFestas(caminho);
+            LeitorCVS.lerCompras(caminho);
+            // Gera relatórios
+            RelatorioPlanejamento.geraRelatorioPlanejamento(caminho);
+            if (Pessoas.getPessoas() != null) {
+                RelatorioPrestadores.geraRelatorioPrestadores(caminho);
+            } if (Casamento.getCasamentos() != null && Casal.getCasais() != null) {
+                RelatorioCasais.geraRelatorioCasais(caminho);
             }
-
         } catch (Exception e) {
             System.out.println(e.getMessage());
             //e.printStackTrace();   
             System.exit(0);
-        } 
+        }
     }
-
 }

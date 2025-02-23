@@ -1,63 +1,61 @@
 package src.organizacao;
 
-import java.util.HashMap;
-
 import src.pessoas.Loja;
-import src.pessoas.Pessoa;
+import src.pessoas.Pessoas;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class Compra {
     private String idCompra, nomeProduto;
     private Loja loja;
-    private int quantidade, parcelas;
+    private int qtd, parcelas, parcelasAtual;
     private Double preco, precoParcelado;
-    protected static Map<String, String> ids = new HashMap<>();
+    private static Map<String, Compra> compras = new HashMap<>();
 
-    public Compra(String idCompra, String nomeProduto, Loja loja, int quantidade, int parcelas, Double preco) {
-        if (ids.get(idCompra) != null) {
+    public Compra(String idCompra, Loja loja, String nomeProduto, int qtd, Double preco, int parcelas) {
+
+        if (compras.get(idCompra) != null) {
             throw new IllegalArgumentException("ID repetido " + idCompra + " na classe Compra.");
+            
         }
 
-        setIds(idCompra.replace(" ", ""));
         this.idCompra = idCompra;
-        this.nomeProduto = nomeProduto;
         this.loja = loja;
-        this.loja.setLucro(preco * quantidade);
-        this.quantidade = quantidade;
-        this.parcelas = parcelas;
+        this.nomeProduto = nomeProduto;
+        this.qtd = qtd;
         this.preco = preco;
-        this.precoParcelado = (preco * quantidade) / parcelas;
-    }
+        this.parcelas = parcelas;
+        this.parcelasAtual = parcelas;
+        this.precoParcelado = (preco * qtd) / parcelas;
 
-    public static void verificaSeEhPessoaJuridica(Map<String, Pessoa> pessoas, String idLoja, String idCompra) {
-        Pessoa pessoa = pessoas.get(idLoja);
+        compras.put(idCompra, this);
+    }
+    
+    public static void verificaSeEhPessoaJuridica(String idCompra, String idLoja) {
+        Pessoas pessoa = Pessoas.getPessoaCadastrada(idLoja);
 
         if (pessoa.getTipo() == "PJ") {
             throw new IllegalArgumentException("ID " + idLoja + " da Compra de id " + idCompra + " não se refere a uma Loja, mas a uma PJ.");
         }
     }
     
-    public static void compraTemIdValidoDeTarefa(Map<String, Tarefa> tarefas, String idTarefa, String idCompra) {
-        if (tarefas.get(idTarefa) == null) {
+    public static void compraTemIdValidoDeTarefa(String idCompra, String idTarefa) {
+        if (Tarefa.getTarefaCadastrada(idTarefa) == null) {
             throw new IllegalArgumentException("ID(s) de Tarefa " + idTarefa + " não cadastrado na " + "Compra de ID " + idCompra + ".");
         }
     }
 
-    public static void compraTemIdValidoDeLoja(Map<String, Pessoa> lojas, String idLoja, String idCompra) {
-        if (lojas.get(idLoja) == null) {
-            throw new IllegalArgumentException("ID(s) de Loja " + idLoja + " não cadastrado na " + "Compra de ID " + idCompra + ".");
+    public static void compraTemIdValidoDeLoja(String idCompra, String idLoja) {
+        if (Pessoas.getPessoaCadastrada(idLoja) == null) {
+           throw new IllegalArgumentException("ID(s) de Loja " + idLoja + " não cadastrado na " + "Compra de ID " + idCompra + ".");
         }
-    }
-
-    public static void setIds(String id) {
-        ids.put(id, id);
     }
 
     public void pagaCompra(Casal casal) {
         if (this.parcelas > 0) {
             casal.subSaldoAtual(this.precoParcelado);
-            this.parcelas--;
+            this.parcelasAtual--;
         }
     }
 
@@ -66,7 +64,7 @@ public class Compra {
     }
 
     public String getIdCompra() {
-        return idCompra;
+        return this.idCompra;
     }
 
     public void setNomeProduto(String nomeProduto) {
@@ -74,7 +72,7 @@ public class Compra {
     }
 
     public String getNomeProduto() {
-        return nomeProduto;
+        return this.nomeProduto;
     }
 
     public void setLoja(Loja loja) {
@@ -82,15 +80,15 @@ public class Compra {
     }
 
     public Loja getLoja() {
-        return loja;
+        return this.loja;
     }
 
     public void setQuantidade(int quantidade) {
-        this.quantidade = quantidade;
+        this.qtd = quantidade;
     }
 
     public int getQuantidade() {
-        return quantidade;
+        return this.qtd;
     }
 
     public void setParcelas(int parcelas) {
@@ -98,7 +96,11 @@ public class Compra {
     }
 
     public int getParcelas() {
-        return parcelas;
+        return this.parcelas;
+    }
+
+    public int getParcelasAtual() {
+        return this.parcelasAtual;
     }
 
     public void setPreco(Double preco) {
@@ -106,7 +108,7 @@ public class Compra {
     }
 
     public Double getPreco() {
-        return preco;
+        return this.preco;
     }
 
     public void setPrecoParcelado(Double precoParcelado) {
@@ -114,6 +116,7 @@ public class Compra {
     }
 
     public Double getPrecoParcelado() {
-        return precoParcelado;
+        return this.precoParcelado;
     }
-}
+
+};

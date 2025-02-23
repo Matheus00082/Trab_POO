@@ -2,84 +2,91 @@ package src.relatorios;
 
 import src.organizacao.*;
 import src.auxiliares.*;
-import java.util.List;
+
 import java.util.Scanner;
+import java.util.Date;
+import java.util.Map;
+import java.io.PrintWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Date;
+
 
 public class RelatorioPlanejamento {
 
-    public static void imprimeRelatorio(String caminho, Casal casal) throws Exception{
-        Date dataInicial = casal.calculaDataInicioPagamentos();
-        int num_meses = casal.calculaNumMeses(dataInicial);
-        Date dataAtual = dataInicial;
+    private static void imprimeRelatorioPlanejamento(String caminho, Casal casal, String cpf1, String cpf2) throws Exception {
+        
+        String arquivo = caminho + "/saida/1-planejamento.csv";
 
-        String arquivo = "/saida/1-planejamento.csv";
-
-        try (PrintWriter writer = new PrintWriter(new FileWriter(caminho+arquivo, true))) {
-            
-            if (dataInicial == null) {
-                writer.write("Casal com CPFs " + casal.getConjuge1().getCPF().replace(" ", "") + " e " + casal.getConjuge2().getCPF().replace(" ", "") +
-                        " não possui gastos cadastrados.");
-            } else {
-                writer.write("Nome 1;Nome 2;");
-
-                for (int i = 0; i < num_meses; i++) {
-                    String mesAno = DataFunctions.getMesAno(dataAtual);
-                    writer.write(mesAno);
-
-                    if (i < num_meses - 1) {
-                        writer.write(";");
-                    } else {
-                        writer.write("\n");
-                    }
-
-                    dataAtual = DataFunctions.incrementaMes(dataAtual);
-                }
-
-                String nome1 = casal.getConjuge1().getNome().trim().replaceAll("\\s+", " ");
-                String nome2 = casal.getConjuge2().getNome().trim().replaceAll("\\s+", " ");
-
-                writer.write(nome1 + ";" + nome2 + ";");
-
-                for (int i = 0; i < num_meses; i++) {
-                    casal.atualizaSaldoCasal(dataInicial);
-
-                    String saldo = String.format("R$ %.2f", casal.getSaldo()).replace('.', ',');
-                    writer.write(saldo);
-
-                    writer.write(";");
-                    dataInicial = DataFunctions.incrementaMes(dataInicial);
-                }
+        try (PrintWriter writer = new PrintWriter(new FileWriter(arquivo, true))) {
+            if (casal == null) {
+                writer.write("Casal com CPFs " + cpf1 + " e " + cpf2 + " não está cadastrado.\n");
+                return;
             }
-            writer.write("\n");
+
+            Date dataInicial = casal.calculaDataInicial();
+            Date dataAtual = dataInicial;
+            int numMeses = casal.calculaNumMeses(dataInicial);
+
+            if (numMeses == 0) {
+                writer.write("Casal com CPFs " + cpf1 + " e " + cpf2 + " não possui gastos cadastrados.\n");
+                return;
+            }
+
+            // Imprime meses e anos MM/AAAA
+            writer.write("Nome 1;Nome 2;");
+            
+            for (int i = 0; i < numMeses; i++) {
+                String mesAno = GerenciadorDeDatas.getMesAno(dataAtual);
+                writer.write(mesAno);
+
+                if (i < numMeses - 1) {
+                    writer.write(";");
+                } else {
+                    writer.write("\n");
+                }
+
+                dataAtual = GerenciadorDeDatas.incrementaMeses(dataAtual, 1);
+            }
+
+            // Imprime nomes e saldos
+            writer.write(casal.getConjuge1().getNome() + ";" + casal.getConjuge2().getNome() + ";");
+
+            for (int i = 1; i <= numMeses; i++) {
+                String saldo = String.format("R$ %.2f;", casal.getSaldos().get(i)).replace('.', ',');
+                writer.write(saldo);
+            }   
+
+            writer.write("\n"); 
+
         } catch (IOException e) {
-            throw new IOException("Erro de I/O");
+           throw new IOException("Erro de I/O");
         }
+
     }
 
-    public static void geraRelatorioPlanejamento(String caminho, List<Casal> casais) throws Exception {
+    public static void geraRelatorioPlanejamento(String caminho) throws Exception {
         Scanner scanner = new Scanner(System.in);
+        Map <String, Casal> casais = Casal.getCasais();
+
+        for (Casal casal : casais.values()) {
+            casal.calculaSaldosCasal();
+        }
 
         while ((scanner.hasNextLine())) {
             String line = scanner.nextLine();
-
-            if (line.isEmpty()) {
-                break;
-            }
-
             String[] cpfPair = line.split(",\\s*");
+
+            for (String string : cpfPair) {
+                string.trim().replaceAll(" ", "");
+            }
+            
             if (cpfPair.length == 2) {
-                for (Casal casal : casais) {
-                    if (casal.ehIgualCasal(cpfPair[0], cpfPair[1])) {
-                        imprimeRelatorio(caminho, casal);
-                    }
-                }
+                Casal casal = Casal.getCasalCadastrado(cpfPair[0], cpfPair[1]);
+                imprimeRelatorioPlanejamento(caminho, casal, cpfPair[0], cpfPair[1]);
             }
         }
 
         scanner.close();
     }
+
 }

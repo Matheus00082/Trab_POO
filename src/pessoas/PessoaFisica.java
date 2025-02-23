@@ -2,52 +2,48 @@ package src.pessoas;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
-import java.util.Map;
-
 import java.text.ParseException;
 
-import java.util.HashMap;
-
-public class PessoaFisica extends Pessoa{
-    private String CPF;
+public class PessoaFisica extends Pessoas {
+    private String cpf;
     private Date datadeNascimento;
-    private Double poupanca, salario, gastoMensal, juros;
-    protected static Map<String, String> cpfs = new HashMap<>();
+    private Double dinheiroGuardado, salario, gastosMensais;
 
-    public PessoaFisica(String nome, String endereco, String telefone, String id, String CPF, String datadeNascimento, Double poupanca, Double salario, Double gastoMensal) throws Exception {
-        super(nome, endereco, telefone, id, "PF");
+    public PessoaFisica(String id, String nome, String telefone, String endereco, String cpf, String datadeNascimento,
+            Double dinheiroGuardado, Double salario, Double gastoMensal) throws Exception {
+        super(id, "PF", nome, telefone, endereco);
 
-        if (cpfs.containsKey(CPF) && !cpfs.get(CPF).equals(id)) {
-            throw new IllegalArgumentException("O CPF " + CPF + " da Pessoa " + id + " é repetido.");
+        for (Pessoas p : Pessoas.getPessoas().values()) {
+            if (p.getTipo().equals("PF")) {
+                PessoaFisica pf = (PessoaFisica) p;
+                String CPF = pf.getCPF();
+                if (CPF != null && CPF.equals(cpf)) {
+                    throw new IllegalArgumentException("O CPF " + cpf + " da Pessoa " + id + " é repetido.");
+                }
+            }
         }
 
-        cpfs.put(CPF.replace(" ", ""), id.replace(" ", ""));
-        
-        this.CPF = CPF;
+        this.cpf = cpf.replace(" ", "");
+        this.dinheiroGuardado = dinheiroGuardado;
+        this.salario = salario;
+        this.gastosMensais = gastoMensal;
+        this.prestador = false;
+        this.lucro = 0.0;
 
         try {
-            this.datadeNascimento = new SimpleDateFormat("dd/MM/yyyy").parse(datadeNascimento);
+            this.datadeNascimento = new SimpleDateFormat("dd/MM/yyyy").parse(datadeNascimento.replace(" ", ""));
         } catch (Exception e) {
-            throw new ParseException("Erro de formatação", 0);
+           throw new ParseException("Erro de formatação", 0);
         }
 
-        this.poupanca = poupanca;
-        this.salario = salario;
-        this.gastoMensal = gastoMensal;
-        this.juros = 0.05;
-    }
-
-    public static boolean ehIgualCpf(PessoaFisica p, String cpf) {
-        if (p.CPF.replace(" ", "").equals(cpf.replace(" ", ""))) return true;
-        else return false;
     }
 
     public void setCpf(String cpf) {
-        this.CPF = cpf;
+        this.cpf = cpf;
     }
 
     public String getCPF() {
-        return CPF;
+        return this.cpf;
     }
 
     public void setDatadeNascimento(String datadeNascimento) throws ParseException {
@@ -59,15 +55,15 @@ public class PessoaFisica extends Pessoa{
     }
 
     public Date getDatadeNascimento() {
-        return datadeNascimento;
+        return this.datadeNascimento;
     }
 
-    public void setPoupanca(Double poupanca) {
-        this.poupanca = poupanca;
+    public void setDinheiroGuardado(Double dinheiroGuardado) {
+        this.dinheiroGuardado = dinheiroGuardado;
     }
 
-    public Double getPoupanca() {
-        return poupanca;
+    public Double getDinheiroGuardado() {
+        return this.dinheiroGuardado;
     }
 
     public void setSalario(Double salario) {
@@ -75,22 +71,14 @@ public class PessoaFisica extends Pessoa{
     }
 
     public Double getSalario() {
-        return salario;
+        return this.salario;
     }
 
     public void setGastoMensal(Double gastoMensal) {
-        this.gastoMensal = gastoMensal;
+        this.gastosMensais = gastoMensal;
     }
 
     public Double getGastoMensal() {
-        return gastoMensal;
+        return this.gastosMensais;
     }
-
-    public void setJuros(Double juros) {
-        this.juros = juros;
-    }
-
-    public Double getJuros() {
-        return juros;
-    }   
 }

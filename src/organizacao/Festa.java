@@ -1,13 +1,11 @@
 package src.organizacao;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
-
-import java.text.ParseException;
-import src.auxiliares.DataFunctions;
-
+import java.util.HashMap;
 import java.text.SimpleDateFormat;
+import java.text.ParseException;
+import src.auxiliares.GerenciadorDeDatas;
 
 public class Festa {
     private String idFesta, local, hora;
@@ -16,46 +14,66 @@ public class Festa {
     private Double preco, precoParcelado;
     private int parcelasInicial;
     private int parcelasAtual;
-    protected static Map<String, String> ids = new HashMap<>();
+    private static Map<String, Festa> festas = new HashMap<>();
 
-    public Festa(String idFesta, String local, String data, String hora,
-            Double preco, int parcelas, String[] convidados) throws ParseException {
+    public Festa(String idFesta, String local, String data, String hora, Double preco, int parcelas,
+            String[] convidados) throws ParseException {
+
+        if (festas.get(idFesta) != null) {
+            throw new IllegalArgumentException("ID repetido " + idFesta + " na classe Festa.");
+        }
+
         this.idFesta = idFesta;
         this.local = local;
-        
+
         try {
             SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-            this.data = formato.parse(data);
+            this.data = formato.parse(data.replace(" ", ""));
         } catch (Exception e) {
             throw new ParseException("Erro de formatação", 0);
         }
 
         this.hora = hora;
-        this.convidados = convidados;
         this.preco = preco;
         this.parcelasInicial = parcelas;
         this.parcelasAtual = parcelas;
-        this.precoParcelado = preco/parcelasInicial;
+        this.convidados = convidados;
+        this.precoParcelado = preco / parcelas;
 
-        if (ids.get(idFesta) != null) {
-            throw new IllegalArgumentException("ID repetido " + idFesta + " na classe Festa.");
-        }
+        festas.put(idFesta, this);
     }
 
-    public static void casamentoEstaCadastrado(Map<String, Casamento> casamentos, String idCasamento, String idFesta) {
-        if (casamentos.get(idCasamento) == null) {
-            throw new IllegalArgumentException("ID(s) de Casamento " + idCasamento + " não cadastrado na Festa de ID " + idFesta + ".");
-        }
-    }
-
-    public static void setIds(String id) {
-        ids.put(id, id);
-    }
-
-    public boolean ehMesDePagamentoFesta(Date data) throws ParseException {
-        if ((DataFunctions.ehMesmoMeseAno(data, this.data) || (parcelasAtual != parcelasInicial)) && (parcelasAtual != 0)) {
+    public boolean ehMesPagamentoFesta(Date data) throws ParseException{
+        if (GerenciadorDeDatas.ehMesmoMeseAno(data, this.data) || ((this.parcelasAtual < this.parcelasInicial) && (this.parcelasAtual > 0))) {
             return true;
         }
+        return false;
+    }
+
+    public static void casamentoEstaCadastrado(String idFesta, String idCasamento) {
+        Map<String, Casamento> casamentos = Casamento.getCasamentos();
+
+        if (casamentos.get(idCasamento) == null) {
+            throw new IllegalArgumentException( "ID(s) de Casamento " + idCasamento + " não cadastrado na Festa de ID " + idFesta + ".");
+        }
+    }
+
+    public boolean casalFoiConvidado(Casal casal) {
+        int cont = 0;
+        String nome1 = casal.getConjuge1().getNome();
+        String nome2 = casal.getConjuge2().getNome();
+
+        for (String convidado : this.convidados) {
+            String nomeConvidado = convidado;
+
+            if (nome1.equals(nomeConvidado) || nome2.equals(nomeConvidado)) {
+                cont++;
+            }
+
+            if (cont == 2)
+                return true;
+        }
+
         return false;
     }
 
@@ -80,7 +98,7 @@ public class Festa {
         try {
             this.data = formato.parse(data);
         } catch (Exception e) {
-           throw new ParseException("Erro de formatação", 0);
+            throw new ParseException("Erro de formatação", 0);
         }
     }
 
@@ -131,24 +149,4 @@ public class Festa {
     public int getParcelasAtual() {
         return this.parcelasAtual;
     }
-
-    public boolean casalFoiConvidado(Casal casal) {
-        int cont = 0;
-
-        for (String convidado : this.convidados) {
-            String nome1 = casal.getConjuge1().getNome().replaceAll(" ", "");
-            String nome2 = casal.getConjuge2().getNome().replaceAll(" ", "");
-            String nomeConvidado = convidado.replaceAll(" ", "");
-
-            if (nome1.equals(nomeConvidado) || nome2.equals(nomeConvidado)) {
-                cont++;
-            }
-
-            if (cont == 2)
-                return true;
-        }
-
-        return false;
-    }
-
 }

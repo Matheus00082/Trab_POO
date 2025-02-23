@@ -1,21 +1,45 @@
 package src.organizacao;
 
-import java.util.Map;
-
-import java.text.ParseException;
-import src.pessoas.Pessoa;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.Map;
 import java.text.SimpleDateFormat;
+import java.text.ParseException;
+import java.util.HashMap;
+import src.pessoas.Pessoas;
 
 public class Casamento {
-    private String idCasamento, idConjuje1, idConjuje2;
+    private String idCasamento, idConjuge1, idConjuge2;
     private String hora, local;
     private Date data;
     private Festa festa;
-    protected static Map<String, String> ids = new HashMap<>();
+    private static Map<String, Casamento> casamentos = new HashMap<>();
 
-    public static void pessoaEstaCadastradaCasamento(Map<String, Pessoa> pessoas, String id1, String id2, String idCasamento) {
+    public Casamento(String idCasamento, String idconjuge1, String idConjuge2, String data, String hora, String local) throws ParseException {
+        
+        if (casamentos.get(idCasamento) != null) {
+            throw new IllegalArgumentException("ID repetido " + idCasamento + " na classe Casamento.");
+        }
+        
+        this.idCasamento = idCasamento;
+        this.idConjuge1 = idconjuge1;
+        this.idConjuge2 = idConjuge2;
+
+        try {
+            this.data = new SimpleDateFormat("dd/MM/yyyy").parse(data.replace(" ", ""));
+        } catch (Exception e) {
+            throw new ParseException("Erro de formatação", 0);
+        }
+
+        this.hora = hora;
+        this.local = local;
+        this.festa = null;
+
+        casamentos.put(idCasamento, this);
+    }
+
+    public static void pessoaEstaCadastradaCasamento(String idCasamento, String id1, String id2) {
+        Map<String, Pessoas> pessoas = Pessoas.getPessoas();
+
         if (pessoas.get(id1) == null && pessoas.get(id2) == null) {
             throw new IllegalArgumentException("ID(s) de Pessoa " + id1 + " " + id2 + " não cadastrado no Casamento de ID " + idCasamento + ".");
         } else if (pessoas.get(id1) == null && pessoas.get(id2) != null){
@@ -25,47 +49,8 @@ public class Casamento {
         }
     }
 
-    public Casamento(String idCasamento, String idConjuje1, String idConjuje2, String data, String hora, String local) throws Exception{
-        this.idCasamento = idCasamento;
-
-        try {
-            this.data = new SimpleDateFormat("dd/MM/yyyy").parse(data);
-        } catch (Exception e) {
-            throw new ParseException("Erro de formatação", 0);
-        }
-
-        this.hora = hora;
-        this.local = local;
-        this.festa = null;
-        this.idConjuje1 = idConjuje1;
-        this.idConjuje2 = idConjuje2;
-
-        if (ids.get(idCasamento) != null) {
-            throw new IllegalArgumentException("ID repetido " + idCasamento + " na classe Casamento.");
-        }
-    }
-
-    public static void setIds(String id) {
-        ids.put(id, id);
-    }
-
-    public static int calculaNumCasamentos(Map<String, Casamento> casamentos, Casal casal) {
-        int num = 0;
-
-        for (Casamento casamento : casamentos.values()) {
-            String idConjuge1 = casal.getConjuge1().getId().replaceAll(" ", "");
-            if (!idConjuge1.equals(casamento.idConjuje1.replaceAll(" ", "")) && !idConjuge1.equals(casamento.idConjuje2.replaceAll(" ", ""))) {
-                if (casamento.festa != null && casamento.festa.casalFoiConvidado(casal)) {
-                    num++;
-                }
-            }
-        }
-
-        return num;
-    }
-
     public boolean ehMesdePagamentoCasamento(Date data) throws ParseException {
-        if (this.festa.ehMesDePagamentoFesta(data)) {
+        if (this.festa.ehMesPagamentoFesta(data)) {
             return true;
         }
 
@@ -81,6 +66,14 @@ public class Casamento {
         }
     }
 
+    public static Map<String, Casamento> getCasamentos() {
+        return casamentos;
+    }
+
+    public static Casamento getCasamentoCadastrado(String idCasamento) {
+        return casamentos.get(idCasamento);
+    }
+
     public void setIdCasamento(String idCasamento) {
         this.idCasamento = idCasamento;
     }
@@ -89,20 +82,20 @@ public class Casamento {
         return this.idCasamento;
     }
 
-    public void setIdConjuje1(String idConjuje1) {
-        this.idConjuje1 = idConjuje1;
+    public void setIdConjuje1(String idConjuge1) {
+        this.idConjuge1 = idConjuge1;
     }
 
     public String getIdConjuje1() {
-        return this.idConjuje1;
+        return this.idConjuge1;
     }
 
-    public void setIdConjuje2(String idConjuje2) {
-        this.idConjuje2 = idConjuje2;
+    public void setIdConjuje2(String idConjuge2) {
+        this.idConjuge2 = idConjuge2;
     }
 
     public String getIdConjuje2() {
-        return this.idConjuje2;
+        return this.idConjuge2;
     }
 
     public void setHora(String hora) {

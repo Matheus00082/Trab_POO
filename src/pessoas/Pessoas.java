@@ -1,18 +1,17 @@
 package src.pessoas;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.Arrays;
+import java.util.HashMap;
 
-public class Pessoa {
-    protected String nome, endereco, telefone, id;
+public class Pessoas {
+    protected String nome, telefone, endereco, id, tipo;
     protected Double lucro;
-    protected String tipo;
-    protected boolean ehPrestador = false;
-    protected static Map<String, String> ids = new HashMap<>();
+    protected static Map<String, Pessoas> pessoas = new HashMap<>();
+    protected boolean prestador = false;
 
-    public Pessoa(String nome, String endereco, String telefone, String id, String tipo) {
+    public Pessoas(String id, String tipo, String nome, String telefone, String endereco) {
         this.nome = nome;
         this.endereco = endereco;
         this.telefone = telefone;
@@ -20,9 +19,11 @@ public class Pessoa {
         this.tipo = tipo;
         this.lucro = 0.0;
 
-        if (ids.get(id) != null) {
+        if (pessoas.get(id) != null) {
             throw new IllegalArgumentException("ID repetido " + id + " na classe Pessoa.");
         }
+    
+        pessoas.put(id, this);
     }
 
     public static int compararTipos(String tipo1, String tipo2) {
@@ -30,16 +31,12 @@ public class Pessoa {
         return Integer.compare(ordemTipos.indexOf(tipo1), ordemTipos.indexOf(tipo2));
     }
 
-    public void setEhPrestador(boolean ehPrestador) {
-        this.ehPrestador = ehPrestador;
+    public static Pessoas getPessoaCadastrada(String id) {
+        return pessoas.get(id);
     }
 
-    public boolean getEhPrestador() {
-        return ehPrestador;
-    }
-
-    public static void setIds(String id) {
-        ids.put(id, id);
+    public static Map<String, Pessoas> getPessoas() {
+        return pessoas;
     }
 
     public void setNome(String nome) {
@@ -47,7 +44,7 @@ public class Pessoa {
     }
 
     public String getNome() {
-        return nome;
+        return this.nome;
     }
 
     public void setEndereco(String endereco) {
@@ -55,7 +52,7 @@ public class Pessoa {
     }
 
     public String getEndereco() {
-        return endereco;
+        return this.endereco;
     }
 
     public void setTelefone(String telefone) {
@@ -63,7 +60,7 @@ public class Pessoa {
     }
 
     public String getTelefone() {
-        return telefone;
+        return this.telefone;
     }
 
     public void setId(String id) {
@@ -71,19 +68,31 @@ public class Pessoa {
     }
 
     public String getId() {
-        return id;
+        return this.id;
     }
 
-    public void setLucro(Double lucro) {
+    public void addLucro(Double lucro) {
         this.lucro += lucro;
     }
 
     public Double getLucro() {
-        return lucro;
+        return this.lucro;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
     public String getTipo() {
-        return tipo;
+        return this.tipo;
+    }
+
+    public void setPrestador(boolean prestador) {
+        this.prestador = prestador;
+    }
+
+    public boolean getEhPrestador() {
+        return this.prestador;
     }
 
 }

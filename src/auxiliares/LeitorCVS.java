@@ -1,263 +1,232 @@
 package src.auxiliares;
 
-import src.pessoas.*;
-import src.organizacao.*;
-
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+
+import src.organizacao.*;
+import src.pessoas.*;
 
 public class LeitorCVS {
 
     public static void criaArquivosVazios(String caminho) throws IOException {
-
         try {
             new PrintWriter(caminho + "/saida/1-planejamento.csv").close();
             new PrintWriter(caminho + "/saida/2-estatisticas-prestadores.csv").close();
             new PrintWriter(caminho + "/saida/3-estatisticas-casais.csv").close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new IOException("Erro de I/O");
         }
     }
 
-    public static Map<String, Pessoa> lerPessoas(String caminhoArquivo) throws Exception{
-        Map<String, Pessoa> pessoas = new HashMap<>();
+    // remove os espaços em branco de um array de strings
+    public static String removeEspaços(String entrada) {
+        entrada = entrada.replaceAll("\\s+", " ").trim();
+        String[] campos = entrada.split(";");
+
+        for (int i = 0; i < campos.length; i++) {
+            campos[i] = campos[i].trim();
+
+            // Verifica se o campo é uma data (formato dd/mm/aaaa)
+            if (campos[i].matches(".*\\d{1,2}\\s*/\\s*\\d{1,2}\\s*/\\s*\\d{4}.*")) {
+                campos[i] = campos[i].replaceAll("\\s*/\\s*", "/");
+            }
+            // Verifica se o campo é um valor monetário (formato 15000,00)
+            else if (campos[i].matches(".*\\d+\\s*,\\s*\\d+.*")) {
+                campos[i] = campos[i].replaceAll("\\s*,\\s*", ",");
+            }
+            // Verifica se o campo é um número com espaços (ex: "1 5")
+            else if (campos[i].matches(".*\\d+\\s+\\d+.*")) {
+                campos[i] = campos[i].replaceAll("\\s+", "");
+            }
+            // Verifica se o campo é uma hora (formato 14:30)
+            else if (campos[i].matches(".*\\d{1,2}\\s*:\\s*\\d{2}.*")) {
+                campos[i] = campos[i].replaceAll("\\s*:\\s*", ":");
+            }
+            // Garante que apenas um espaço seja permitido entre palavras
+            else {
+                campos[i] = campos[i].replaceAll("\\s+", " ");
+            }
+        }
+
+        System.out.println(String.join(";", campos));
+        return String.join(";", campos);
+    };
+
+    public static void lerPessoas(String caminho) throws Exception {
+
+        String caminhoArquivo = caminho + "/pessoas.csv";
 
         try (BufferedReader leitor = new BufferedReader(
                 new InputStreamReader(new FileInputStream(caminhoArquivo), StandardCharsets.UTF_8))) {
-
-            String linha;
+            String linha = "";
 
             while ((linha = leitor.readLine()) != null) {
-                String[] partes = linha.split(";");
-                String tipo = partes[1].replace(" ", "");
+                String entrada = removeEspaços(linha), tipo;
+                String[] campos = entrada.split(";");
+                tipo = campos[1];
+
+                @SuppressWarnings("unused")
+                Pessoas pessoa = null; // Só retorna null se o tipo for inválido
 
                 if (tipo.equals("F")) {
-
-                    pessoas.put(partes[0].replace(" ", ""),
-                            new PessoaFisica(partes[2], partes[4], partes[3], partes[0], partes[5], partes[6],
-                                    Double.parseDouble(partes[7].replace(",", ".")),
-                                    Double.parseDouble(partes[8].replace(",", ".")),
-                                    Double.parseDouble(partes[9].replace(",", "."))));
-
+                    Double dinheiroGuardado = Double.parseDouble(campos[7].replace(" ", "").replace(".", "").replace(",", "."));
+                    Double salario = Double.parseDouble(campos[8].replace(" ", "").replace(".", "").replace(",", "."));
+                    Double gastosMensais = Double.parseDouble(campos[9].replace(" ", "").replace(".", "").replace(",", "."));
+                    pessoa = new PessoaFisica(campos[0], campos[2], campos[3], campos[4], campos[5], campos[6],
+                            dinheiroGuardado, salario, gastosMensais);
                 } else if (tipo.equals("J")) {
-
-                    pessoas.put(partes[0].replace(" ", ""), new PessoaJuridica(partes[2], partes[4], partes[3], partes[0], partes[5]));
-
-                } else if (tipo.equals("L")) {
-
-                    pessoas.put(partes[0].replace(" ", ""), new Loja(partes[2], partes[4], partes[3], partes[0], partes[5]));
-
+                    pessoa = new PessoaJuridica(campos[0], campos[2], campos[3], campos[4], campos[5]);
+                } else {
+                    pessoa = new Loja(campos[0], campos[2], campos[3], campos[4], campos[5]);
                 }
-
-                Pessoa.setIds(partes[0].replace(" ", ""));
             }
         }
-        return pessoas;
-    }
+    };
 
-    public static Map<String, Lar> lerLares(String caminhoArquivo, Map<String, Pessoa> pessoas, List<Casal> casais)
-            throws IOException {
-        Map<String, Lar> lares = new HashMap<>();
+    public static void lerLares(String caminho) throws Exception {
+
+        String caminhoArquivo = caminho + "/lares.csv";
 
         try (BufferedReader leitor = new BufferedReader(
                 new InputStreamReader(new FileInputStream(caminhoArquivo), StandardCharsets.UTF_8))) {
-
-            String linha;
+            String linha = "";
 
             while ((linha = leitor.readLine()) != null) {
-                String[] partes = linha.split(";");
-                
+                String entrada = removeEspaços(linha);
+                String[] campos = entrada.split(";");
 
-                Lar.pessoaEstaCadastradaLar(pessoas, partes[1], partes[2], partes[0]);
+                Lar.pessoaEstaCadastradaLar(campos[0], campos[1], campos[2]);
 
-                PessoaFisica conjuge1 = (PessoaFisica) pessoas.get(partes[1].replace(" ", ""));
-                PessoaFisica conjuge2 = (PessoaFisica) pessoas.get(partes[2].replace(" ", ""));
-
-                if (conjuge1 == null || conjuge2 == null) {
-                    throw new IllegalArgumentException("Casal não encontrado");
-                }
+                PessoaFisica conjuge1 = (PessoaFisica) Pessoas.getPessoaCadastrada(campos[1]);
+                PessoaFisica conjuge2 = (PessoaFisica) Pessoas.getPessoaCadastrada(campos[2]);
 
                 Casal casal = new Casal(conjuge1, conjuge2);
-                Lar lar = new Lar(partes[0], partes[3], Integer.parseInt(partes[4]), partes[5]);
+                Lar lar = new Lar(campos[0], campos[3], Integer.parseInt(campos[4]), campos[5]);
                 casal.setLar(lar);
-                casais.add(casal);
-                lares.put(partes[0].replace(" ", ""), lar);
-                Lar.setIds(partes[0].replace(" ", ""));
             }
         }
-        return lares;
-    }
+    };
 
-    public static Map<String, Tarefa> lerTarefas(String caminhoArquivo, Map<String, Pessoa> pessoas,
-            Map<String, Lar> lares)
-            throws Exception {
-        Map<String, Tarefa> tarefas = new HashMap<>();
+    public static void lerTarefas(String caminho) throws Exception {
+
+        String caminhoArquivo = caminho + "/tarefas.csv";
 
         try (BufferedReader leitor = new BufferedReader(
                 new InputStreamReader(new FileInputStream(caminhoArquivo), StandardCharsets.UTF_8))) {
-
-            String linha;
+            String linha = "";
 
             while ((linha = leitor.readLine()) != null) {
-                String[] partes = linha.split(";");
+                String entrada = removeEspaços(linha);
+                String[] campos = entrada.split(";");
 
-                Pessoa trabalhador = (Pessoa) pessoas.get(partes[2].replace(" ", ""));
+                Lar lar = Lar.getLarCadastrado(campos[1]);
+                Pessoas prestador = Pessoas.getPessoaCadastrada(campos[2]);
 
-                Lar lar = lares.get(partes[1].replace(" ", ""));
+                Tarefa.tarefaTemIdDeLarValido(campos[1], campos[0]);
+                Tarefa.prestadorEstaCadastrado(campos[2], campos[0]);
 
-                Tarefa.tarefaTemIdDeLarValido(lares, partes[1], partes[0]);
-                Tarefa.prestadorEstaCadastrado(pessoas, partes[2], partes[0]);
-
-                if (trabalhador instanceof PessoaFisica) {
-                    trabalhador.setEhPrestador(true);
+                if (prestador instanceof PessoaFisica) {
+                    prestador.setPrestador(true);
                 }
 
-                Tarefa t = new Tarefa(partes[0], partes[3], Integer.parseInt(partes[4]), Integer.parseInt(partes[6]),
-                        Double.parseDouble((partes[5].replace(".", "")).replace(",", ".")), trabalhador);
+                int prazoDias = Integer.parseInt(campos[4].replace(" ", ""));
+                Double valor = Double.parseDouble(campos[5].replace(" ", "").replace(".", "").replace(",", "."));
+                int parcelas = Integer.parseInt(campos[6].replace(" ", ""));
 
-                lar.getTarefas().put(partes[0].replace(" ", ""), t);
-                tarefas.put(partes[0].replace(" ", ""), t);
+                Tarefa tarefa = new Tarefa(campos[0], prestador, campos[3], prazoDias, valor, parcelas);
+                lar.addTarefa(campos[0], tarefa);
             }
         }
+    };
 
-        return tarefas;
-    }
+    public static void lerCasamentos(String caminho) throws Exception {
 
-    public static Map<String, Casamento> lerCasamentos(String caminhoArquivo, Map<String, Pessoa> pessoas,
-            List<Casal> casais) throws Exception {
-        Map<String, Casamento> casamentos = new HashMap<>();
+        String caminhoArquivo = caminho + "/casamentos.csv";
 
         try (BufferedReader leitor = new BufferedReader(
                 new InputStreamReader(new FileInputStream(caminhoArquivo), StandardCharsets.UTF_8))) {
-
-            String linha;
+            String linha = "";
 
             while ((linha = leitor.readLine()) != null) {
-                String[] partes = linha.split(";");
+                String entrada = removeEspaços(linha);
+                String[] campos = entrada.split(";");
 
-                Casamento casamento = new Casamento(partes[0], partes[1], partes[2], partes[3], partes[4], partes[5]);
+                Casamento.pessoaEstaCadastradaCasamento(campos[0], campos[1], campos[2]);
 
-                String idConjuge1 = partes[1].replace(" ", "");
-                String idConjuge2 = partes[2].replace(" ", "");
+                Casamento casamento = new Casamento(campos[0], campos[1], campos[2], campos[3], campos[4], campos[5]);
+                PessoaFisica conjuge1 = (PessoaFisica) Pessoas.getPessoaCadastrada(campos[1]);
+                PessoaFisica conjuge2 = (PessoaFisica) Pessoas.getPessoaCadastrada(campos[2]);
+                Casal casal = Casal.getCasalCadastrado(conjuge1.getCPF(), conjuge2.getCPF());
 
-                Casamento.pessoaEstaCadastradaCasamento(pessoas, idConjuge1, idConjuge2, partes[0]);
-
-                boolean casalEncontrado = false;
-
-                for (Casal casal : casais) {
-                    String casalConjuge1 = casal.getConjuge1().getId().replace(" ", "");
-                    String casalConjuge2 = casal.getConjuge2().getId().replace(" ", "");
-
-                    if ((idConjuge1.equals(casalConjuge1) && idConjuge2.equals(casalConjuge2)) ||
-                            (idConjuge1.equals(casalConjuge2) && idConjuge2.equals(casalConjuge1))) {
-
-                        casal.setCasamento(casamento);
-                        casamentos.put(partes[0].replace(" ", ""), casamento);
-                        casalEncontrado = true;
-                        break;
-                    }
+                if (casal == null) {
+                    casal = new Casal(conjuge1, conjuge2);
                 }
 
-                if (!casalEncontrado) {
-                    PessoaFisica conjuge1 = (PessoaFisica) pessoas.get(idConjuge1);
-                    PessoaFisica conjuge2 = (PessoaFisica) pessoas.get(idConjuge2);
-
-                    if (conjuge1 == null || conjuge2 == null) {
-                        throw new IllegalArgumentException("Casal não encontrado");
-                    }
-
-                    Casal novoCasal = new Casal(conjuge1, conjuge2);
-                    novoCasal.setCasamento(casamento);
-                    casais.add(novoCasal);
-                    casamentos.put(partes[0].replace(" ", ""), casamento);
-                }
-
-                Casamento.setIds(partes[0].replace(" ", ""));
+                casal.setCasamento(casamento);
             }
+
         }
+    };
 
-        return casamentos;
-    }
+    public static void lerFestas(String caminho) throws Exception {
 
-    public static void lerFestas(String caminhoArquivo, Map<String, Casamento> casamentos) throws Exception {
+        String caminhoArquivo = caminho + "/festas.csv";
 
         try (BufferedReader leitor = new BufferedReader(
                 new InputStreamReader(new FileInputStream(caminhoArquivo), StandardCharsets.UTF_8))) {
-
-            String linha;
+            String linha = "";
 
             while ((linha = leitor.readLine()) != null) {
+                String entrada = removeEspaços(linha);
+                String[] campos = entrada.split(";"), convidados;
 
-                String[] partes = linha.split(";");
+                Festa.casamentoEstaCadastrado(campos[0], campos[1]);
 
-                Casamento casamento = casamentos.get(partes[1].replace(" ", ""));
+                Casamento casamento = Casamento.getCasamentoCadastrado(campos[1]);
+                int numeroConvidados = Integer.parseInt(campos[7].replace(" ", ""));
+                convidados = new String[numeroConvidados];
 
-                Festa.casamentoEstaCadastrado(casamentos, partes[1], partes[0]);
-
-                int numConvidados = Integer.parseInt(partes[7]);
-                String[] convidados = new String[numConvidados];
-
-                for (int i = 0; i < numConvidados; i++) {
-                    convidados[i] = partes[8 + i];
+                for (int i = 0; i < numeroConvidados; i++) {
+                    convidados[i] = campos[8 + i];
                 }
 
-                casamento.setFesta(new Festa(partes[0], partes[2], partes[3], partes[4],
-                        Double.parseDouble((partes[5].replace(".", "")).replace(",", ".")),
-                        Integer.parseInt(partes[6]), convidados));
+                int parcelas = Integer.parseInt(campos[6].replace(" ", ""));
+                Double preco = Double.parseDouble(campos[5].replace(" ", "").replace(".", "").replace(",", "."));
 
-                Festa.setIds(partes[0].replace(" ", ""));
+                casamento.setFesta(new Festa(campos[0], campos[2], campos[3], campos[4], preco, parcelas,
+                        convidados));
             }
         }
-    }
+    };
 
-    public static void lerCompras(String caminhoArquivo, Map<String, Lar> lares, Map<String, Pessoa> pessoas,
-            Map<String, Tarefa> t)
-            throws IOException {
+    public static void lerCompras(String caminho) throws Exception {
+
+        String caminhoArquivo = caminho + "/compras.csv";
 
         try (BufferedReader leitor = new BufferedReader(
                 new InputStreamReader(new FileInputStream(caminhoArquivo), StandardCharsets.UTF_8))) {
-
-            String linha;
+            String linha = "";
 
             while ((linha = leitor.readLine()) != null) {
+                String entrada = removeEspaços(linha);
+                String[] campos = entrada.split(";");
+                
+                Compra.compraTemIdValidoDeTarefa(campos[0], campos[1]);
+                Compra.compraTemIdValidoDeLoja(campos[0], campos[2]);
+                Compra.verificaSeEhPessoaJuridica(campos[0], campos[2]);
 
-                String[] partes = linha.split(";");
+                Tarefa tarefa = Tarefa.getTarefaCadastrada(campos[1]);
+                Loja loja = (Loja) Pessoas.getPessoaCadastrada(campos[2]);
+                int qtd = Integer.parseInt(campos[4].replace(" ", ""));
+                Double preco = Double.parseDouble(campos[5].replace(" ", "").replace(".", "").replace(",", "."));
+                int parcelas = Integer.parseInt(campos[6].replace(" ", ""));
 
-                for (Lar lar : lares.values()) {
-
-                    Map<String, Tarefa> tarefas = lar.getTarefas();
-
-                    if (tarefas.size() > 0) {
-                        Tarefa tarefa = tarefas.get(partes[1].replace(" ", ""));
-                        Loja loja = null;
-
-                        Compra.compraTemIdValidoDeTarefa(t, partes[1], partes[0]);
-                        Compra.compraTemIdValidoDeLoja(pessoas, partes[2], partes[0]);
-                        Compra.verificaSeEhPessoaJuridica(pessoas, partes[2], partes[0]);
-
-                        Pessoa p = pessoas.get(partes[2].replace(" ", ""));
-                        if (p instanceof Loja) {
-                            loja = (Loja) p;
-                        }
-
-                        if (tarefa != null && loja != null) { // possível erro de leitura
-                            tarefa.addCompras(
-                                    new Compra(partes[0], partes[3], loja,
-                                            Integer.parseInt(partes[4]),
-                                            Integer.parseInt(partes[6]),
-                                            Double.parseDouble(
-                                                    (partes[5].replace(".", "")).replace(",", "."))));
-                        }
-                    }
-                }
+                tarefa.addCompra(new Compra(campos[0], loja, campos[6], qtd, preco, parcelas));
             }
         }
-    }
+    };
 }

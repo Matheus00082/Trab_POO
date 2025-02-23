@@ -1,30 +1,33 @@
 package src.pessoas;
 
-import java.util.HashMap;
-import java.util.Map;
 
-public class PessoaJuridica extends Pessoa{
-    protected String CNPJ;
-    protected static Map<String, String> cnpjs = new HashMap<>();
+public class PessoaJuridica extends Pessoas {
+    protected String cnpj;
 
-    public PessoaJuridica(String nome, String endereco, String telefone, String id, String CNPJ) {
-        super(nome, endereco, telefone, id, "PJ");
-
-        if (cnpjs.containsKey(CNPJ) && !cnpjs.get(CNPJ).equals(id)) {
-            throw new IllegalArgumentException("O CNPJ " + CNPJ + " da Pessoa " + id + " é repetido.");
+    public PessoaJuridica(String id, String nome, String telefone, String endereco, String CNPJ) {
+        super(id, "PJ", nome, telefone, endereco);
+        
+        for (Pessoas p : Pessoas.getPessoas().values()) {
+            if (p.getTipo().equals("PJ")) {
+                PessoaJuridica pj = (PessoaJuridica) p;
+                String cnpj = pj.getCNPJ();
+                if (cnpj != null && cnpj.equals(CNPJ)) {
+                    throw new IllegalArgumentException("O CNPJ " + CNPJ + " da Pessoa " + id + " é repetido.");
+                }
+            }
         }
 
-        cnpjs.put(CNPJ.replace(" ", ""), id.replace(" ", ""));
-
-        this.CNPJ = CNPJ;
-        this.setEhPrestador(true);
+        this.cnpj = CNPJ;
+        this.lucro = 0.0;
+        this.prestador = true;
     }
 
     public void setCnpj(String cnpj) {
-        this.CNPJ = cnpj;
+        this.cnpj = cnpj;
     }
 
     public String getCNPJ() {
-        return CNPJ;
+        return this.cnpj;
     }
+
 }
