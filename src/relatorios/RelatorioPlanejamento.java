@@ -74,13 +74,11 @@ public class RelatorioPlanejamento {
 
         while ((scanner.hasNextLine())) {
             String line = scanner.nextLine();
-            String[] cpfPair = line.split(",\\s*");
-
-            for (String string : cpfPair) {
-                string.trim().replaceAll(" ", "");
-            }
+            String[] cpfPair = line.split(",");
             
             if (cpfPair.length == 2) {
+                cpfPair[0] = cpfPair[0].trim();
+                cpfPair[1] = cpfPair[1].trim();
                 Casal casal = Casal.getCasalCadastrado(cpfPair[0], cpfPair[1]);
                 imprimeRelatorioPlanejamento(caminho, casal, cpfPair[0], cpfPair[1]);
             }

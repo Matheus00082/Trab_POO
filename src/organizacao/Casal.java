@@ -79,6 +79,10 @@ public class Casal {
         }
     }
 
+    public void printaCPFCasal() {
+        System.out.println("|" + this.conjuge1.getCPF() + "/" + this.conjuge2.getCPF() + "|");
+    }
+
     public int calculaNumMeses(Date dataInicial) throws ParseException {
         /*
          * Date dataFinalFesta = null;

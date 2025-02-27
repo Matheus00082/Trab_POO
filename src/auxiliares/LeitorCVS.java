@@ -22,38 +22,66 @@ public class LeitorCVS {
         }
     }
 
-    // remove os espaços em branco de um array de strings
-    public static String removeEspaços(String entrada) {
-        entrada = entrada.replaceAll("\\s+", " ").trim();
-        String[] campos = entrada.split(";");
+    public static String[] tiraEspacos(String linha, char tipo) {
+        String[] partes = linha.split(";");
 
-        for (int i = 0; i < campos.length; i++) {
-            campos[i] = campos[i].trim();
+        partes[0] = partes[0].replace(" ", "");
 
-            // Verifica se o campo é uma data (formato dd/mm/aaaa)
-            if (campos[i].matches(".*\\d{1,2}\\s*/\\s*\\d{1,2}\\s*/\\s*\\d{4}.*")) {
-                campos[i] = campos[i].replaceAll("\\s*/\\s*", "/");
+        if (tipo == 'P') {
+            partes[1] = partes[1].replace(" ", "");
+            partes[2] = partes[2].trim();
+            partes[3] = partes[3].trim();
+            partes[4] = partes[4].trim();
+            partes[5] = partes[5].replace(" ", "");
+
+            if (partes[1] == "F") {
+                partes[6] = partes[6].replace(" ", "");
+                partes[7] = partes[7].replace(" ", "");
+                partes[8] = partes[8].replace(" ", "");
+                partes[9] = partes[9].replace(" ", "");
+            } 
+        } else if (tipo == 'L') {
+            partes[1] = partes[1].replace(" ", "");
+            partes[2] = partes[2].replace(" ", "");
+            partes[3] = partes[3].trim();
+            partes[4] = partes[4].trim();
+            partes[5] = partes[5].replace(" ", "");
+        } else if (tipo == 'C') {
+            partes[1] = partes[1].replace(" ", "");
+            partes[2] = partes[2].replace(" ", "");
+            partes[3] = partes[3].replace(" ", "");
+            partes[4] = partes[4].replace(" ", "");
+            partes[5] = partes[5].trim();
+        } else if (tipo == 'T') {
+            partes[1] = partes[1].replace(" ", "");
+            partes[2] = partes[2].replace(" ", "");
+            partes[3] = partes[3].replace(" ", "");
+            partes[4] = partes[4].replace(" ", "");
+            partes[5] = partes[5].replace(" ", "");
+            partes[6] = partes[6].replace(" ", "");
+        } else if (tipo == 'F') {
+            partes[1] = partes[1].replace(" ", "");
+            partes[2] = partes[2].trim();
+            partes[3] = partes[3].replace(" ", "");
+            partes[4] = partes[4].replace(" ", "");
+            partes[5] = partes[5].replace(" ", "");
+            partes[6] = partes[6].replace(" ", "");
+            partes[7] = partes[7].replace(" ", "");
+
+            for (int i = 8; i < partes.length; i++) {
+                partes[i] = partes[i].replaceAll(" ", "");
             }
-            // Verifica se o campo é um valor monetário (formato 15000,00)
-            else if (campos[i].matches(".*\\d+\\s*,\\s*\\d+.*")) {
-                campos[i] = campos[i].replaceAll("\\s*,\\s*", ",");
-            }
-            // Verifica se o campo é um número com espaços (ex: "1 5")
-            else if (campos[i].matches(".*\\d+\\s+\\d+.*")) {
-                campos[i] = campos[i].replaceAll("\\s+", "");
-            }
-            // Verifica se o campo é uma hora (formato 14:30)
-            else if (campos[i].matches(".*\\d{1,2}\\s*:\\s*\\d{2}.*")) {
-                campos[i] = campos[i].replaceAll("\\s*:\\s*", ":");
-            }
-            // Garante que apenas um espaço seja permitido entre palavras
-            else {
-                campos[i] = campos[i].replaceAll("\\s+", " ");
-            }
+
+        } else {
+            partes[1] = partes[1].replace(" ", "");
+            partes[2] = partes[2].replace(" ", "");
+            partes[3] = partes[3].trim();
+            partes[4] = partes[4].replace(" ", "");
+            partes[5] = partes[5].replace(" ", "");
+            partes[6] = partes[6].replace(" ", "");
         }
 
-        System.out.println(String.join(";", campos));
-        return String.join(";", campos);
+        return partes;
     };
 
     public static void lerPessoas(String caminho) throws Exception {
@@ -65,20 +93,18 @@ public class LeitorCVS {
             String linha = "";
 
             while ((linha = leitor.readLine()) != null) {
-                String entrada = removeEspaços(linha), tipo;
-                String[] campos = entrada.split(";");
-                tipo = campos[1];
+                String[] campos = tiraEspacos(linha, 'P');
 
                 @SuppressWarnings("unused")
                 Pessoas pessoa = null; // Só retorna null se o tipo for inválido
 
-                if (tipo.equals("F")) {
+                if (campos[1].equals("F")) {
                     Double dinheiroGuardado = Double.parseDouble(campos[7].replace(" ", "").replace(".", "").replace(",", "."));
                     Double salario = Double.parseDouble(campos[8].replace(" ", "").replace(".", "").replace(",", "."));
                     Double gastosMensais = Double.parseDouble(campos[9].replace(" ", "").replace(".", "").replace(",", "."));
                     pessoa = new PessoaFisica(campos[0], campos[2], campos[3], campos[4], campos[5], campos[6],
                             dinheiroGuardado, salario, gastosMensais);
-                } else if (tipo.equals("J")) {
+                } else if (campos[1].equals("J")) {
                     pessoa = new PessoaJuridica(campos[0], campos[2], campos[3], campos[4], campos[5]);
                 } else {
                     pessoa = new Loja(campos[0], campos[2], campos[3], campos[4], campos[5]);
@@ -96,8 +122,7 @@ public class LeitorCVS {
             String linha = "";
 
             while ((linha = leitor.readLine()) != null) {
-                String entrada = removeEspaços(linha);
-                String[] campos = entrada.split(";");
+                String[] campos = tiraEspacos(linha, 'L');
 
                 Lar.pessoaEstaCadastradaLar(campos[0], campos[1], campos[2]);
 
@@ -120,8 +145,7 @@ public class LeitorCVS {
             String linha = "";
 
             while ((linha = leitor.readLine()) != null) {
-                String entrada = removeEspaços(linha);
-                String[] campos = entrada.split(";");
+                String[] campos = tiraEspacos(linha, 'T');
 
                 Lar lar = Lar.getLarCadastrado(campos[1]);
                 Pessoas prestador = Pessoas.getPessoaCadastrada(campos[2]);
@@ -152,8 +176,7 @@ public class LeitorCVS {
             String linha = "";
 
             while ((linha = leitor.readLine()) != null) {
-                String entrada = removeEspaços(linha);
-                String[] campos = entrada.split(";");
+                String[] campos = tiraEspacos(linha, 'C');
 
                 Casamento.pessoaEstaCadastradaCasamento(campos[0], campos[1], campos[2]);
 
@@ -181,8 +204,7 @@ public class LeitorCVS {
             String linha = "";
 
             while ((linha = leitor.readLine()) != null) {
-                String entrada = removeEspaços(linha);
-                String[] campos = entrada.split(";"), convidados;
+                String[] campos = tiraEspacos(linha, 'F'), convidados;
 
                 Festa.casamentoEstaCadastrado(campos[0], campos[1]);
 
@@ -212,8 +234,7 @@ public class LeitorCVS {
             String linha = "";
 
             while ((linha = leitor.readLine()) != null) {
-                String entrada = removeEspaços(linha);
-                String[] campos = entrada.split(";");
+                String[] campos = tiraEspacos(linha, 'C');
                 
                 Compra.compraTemIdValidoDeTarefa(campos[0], campos[1]);
                 Compra.compraTemIdValidoDeLoja(campos[0], campos[2]);

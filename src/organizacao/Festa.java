@@ -60,13 +60,12 @@ public class Festa {
 
     public boolean casalFoiConvidado(Casal casal) {
         int cont = 0;
-        String nome1 = casal.getConjuge1().getNome();
-        String nome2 = casal.getConjuge2().getNome();
+        String nome1 = casal.getConjuge1().getNome().replace(" ", "");
+        String nome2 = casal.getConjuge2().getNome().replace(" ", "");
 
         for (String convidado : this.convidados) {
-            String nomeConvidado = convidado;
 
-            if (nome1.equals(nomeConvidado) || nome2.equals(nomeConvidado)) {
+            if (nome1.equals(convidado) || nome2.equals(convidado)) {
                 cont++;
             }
 
