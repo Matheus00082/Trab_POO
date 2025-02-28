@@ -53,7 +53,12 @@ public class Casal {
 
     public void calculaSaldosCasal() throws ParseException {
         Date dataAtual = this.calculaDataInicial();
-        int numMeses = this.calculaNumMeses(dataAtual);
+        int numMeses = 0;
+
+        if (dataAtual != null) {
+            numMeses = this.calculaNumMeses(dataAtual);
+        }
+
         this.duracaoParcelas = numMeses;
 
         for (int i = 1; i <= numMeses; i++) {
@@ -84,98 +89,46 @@ public class Casal {
     }
 
     public int calculaNumMeses(Date dataInicial) throws ParseException {
-        /*
-         * Date dataFinalFesta = null;
-         * Date dataFinalTarefas = null;
-         * Map<String, Tarefa> tarefas = this.lar.getTarefas();
-         * int num = 0;
-         * 
-         * // Obtem datas finais de pagamento da festa, tarefas e compras
-         * if (this.casamento != null && this.casamento.getFesta() != null) {
-         * Date dataInicialFesta = this.casamento.getFesta().getData();
-         * int numMeses = this.casamento.getFesta().getParcelasInicial();
-         * dataFinalFesta = GerenciadorDeDatas.incrementaMeses(dataInicialFesta,
-         * numMeses);
-         * }
-         * 
-         * // Obtem datas finais de pagamento das tarefas
-         * if (this.lar != null && this.lar.getTarefas() != null) {
-         * for (Tarefa tarefa : tarefas.values()) {
-         * Date dataInicialTarefa = tarefa.getDataInicio();
-         * int numMeses = tarefa.getParcelasInicial();
-         * Date dataFinal = GerenciadorDeDatas.incrementaMeses(dataInicialTarefa,
-         * numMeses);
-         * 
-         * if (dataFinalTarefas == null || dataFinalTarefas.compareTo(dataFinal) <= 0) {
-         * dataFinalTarefas = dataFinal;
-         * }
-         * 
-         * for (Compra compra : tarefa.getCompras()) {
-         * int numParcelas = compra.getParcelas();
-         * Date dataFinalCompra = GerenciadorDeDatas.incrementaMeses(dataInicialTarefa,
-         * numParcelas);
-         * 
-         * if (dataFinalTarefas == null || dataFinalTarefas.compareTo(dataFinalCompra)
-         * <= 0) {
-         * dataFinalTarefas = dataFinalCompra;
-         * }
-         * }
-         * }
-         * }
-         * 
-         * // Calcula numero de meses entre a ultima data de pagamento e a data inicial
-         * if (dataFinalFesta != null && dataFinalTarefas != null) {
-         * if (GerenciadorDeDatas.comparaDatas(dataFinalFesta, dataFinalTarefas) < 0) {
-         * num = GerenciadorDeDatas.mesesEntreDatas(dataInicial, dataFinalTarefas);
-         * } else if (GerenciadorDeDatas.comparaDatas(dataFinalFesta, dataFinalTarefas)
-         * >= 0) {
-         * num = GerenciadorDeDatas.mesesEntreDatas(dataInicial, dataFinalFesta);
-         * }
-         * } else if (dataFinalFesta == null && dataFinalTarefas != null) {
-         * num = GerenciadorDeDatas.mesesEntreDatas(dataInicial, dataFinalTarefas);
-         * } else if (dataFinalTarefas == null && dataFinalFesta != null) {
-         * num = GerenciadorDeDatas.mesesEntreDatas(dataInicial, dataFinalFesta);
-         * }
-         */
-
         int numMeses = 0;
-        boolean limiteEstaEmTaredas = false;
+
+        // Calcula último mês de pagamentos
+
+        Date dataFinal = null;
 
         if (this.casamento != null && this.casamento.getFesta() != null) {
-            numMeses = this.casamento.getFesta().getParcelasInicial();
-        }
+            Date dataInicialFesta = this.casamento.getFesta().getData();
+            int parcelasFesta = this.casamento.getFesta().getParcelasInicial();
+            dataFinal = GerenciadorDeDatas.incrementaMeses(dataInicialFesta, parcelasFesta);
+        } 
 
-        if (this.lar != null && this.lar.getTarefas().size() > 0) {
-            Date data = new Date();
-
-            int parcelas = 0;
+        if (this.lar != null && this.lar.getTarefas() != null) {
             for (Tarefa tarefa : this.lar.getTarefas().values()) {
-                if (tarefa.getParcelasInicial() > parcelas) {
-                    parcelas = tarefa.getParcelasInicial();
+                Date dataInicialTarefa = tarefa.getDataInicio();
+                int parcelasTarefa = tarefa.getParcelasInicial();
+                Date dataFinalTarefa = GerenciadorDeDatas.incrementaMeses(dataInicialTarefa, parcelasTarefa);
+
+                if (dataFinal == null || (GerenciadorDeDatas.comparaDatas(dataFinalTarefa, dataFinal) > 0)) {
+                    dataFinal = dataFinalTarefa;
                 }
 
-                for (Compra compra : tarefa.getCompras()) {
-                    if (compra.getParcelas() > parcelas) {
-                        parcelas = compra.getParcelas();
+                if (tarefa.getCompras() != null) {
+                    for (Compra compra : tarefa.getCompras()) {
+                        int parcelasCompra = compra.getParcelas();
+                        Date dataFinalCompra = GerenciadorDeDatas.incrementaMeses(dataInicialTarefa, parcelasCompra);
+    
+                        if (dataFinal == null || (GerenciadorDeDatas.comparaDatas(dataFinalCompra, dataFinal) > 0)) {
+                            dataFinal = dataFinalCompra;
+                        }
                     }
                 }
             }
-
-            int mesesEntreDatas = GerenciadorDeDatas.mesesEntreDatas(dataInicial, data);
-
-            if (parcelas + mesesEntreDatas > numMeses) {
-                numMeses = parcelas + mesesEntreDatas;
-                limiteEstaEmTaredas = true;
-            }
         }
 
-        if (!limiteEstaEmTaredas) {
-            if (this.casamento != null && this.casamento.getFesta() != null) {
-                numMeses += GerenciadorDeDatas.mesesEntreDatas(dataInicial, this.casamento.getFesta().getData());
-            }
-        }
+        // Calcula num de meses entre as datas final e inicial
 
-        return numMeses;
+        numMeses = GerenciadorDeDatas.mesesEntreDatas(dataInicial, dataFinal);
+
+        return  numMeses;
     }
 
     public Date calculaDataInicial() {
