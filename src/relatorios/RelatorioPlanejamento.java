@@ -23,9 +23,8 @@ public class RelatorioPlanejamento {
                 return;
             }
 
-            Date dataInicial = casal.calculaDataInicial();
-            Date dataAtual = dataInicial;
-            int numMeses = casal.calculaNumMeses(dataInicial);
+            Date dataAtual = casal.calculaDataInicial();
+            int numMeses = casal.getDuracaoParcelas();
 
             if (numMeses == 0) {
                 writer.write("Casal com CPFs " + cpf1 + " e " + cpf2 + " não possui gastos cadastrados.\n");

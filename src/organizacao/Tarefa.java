@@ -19,14 +19,15 @@ public class Tarefa {
     private Double valorParcelado, valorTotal;
     private static Map<String, Tarefa> tarefas = new HashMap<>();
 
-    public Tarefa(String idTarefa, Pessoas trabalhador, String dataInicio, int prazoDias, Double valor, int parcelas) throws ParseException{
-        
+    public Tarefa(String idTarefa, Pessoas trabalhador, String dataInicio, int prazoDias, Double valor, int parcelas)
+            throws ParseException {
+
         if (tarefas.get(idTarefa) != null) {
             throw new IllegalArgumentException("ID repetido " + idTarefa + " na classe Tarefa.");
-        }     
-        
+        }
+
         tarefas.put(idTarefa, this);
-        
+
         try {
             this.dataInicio = new SimpleDateFormat("dd/MM/yyyy").parse(dataInicio.replace(" ", ""));
         } catch (Exception e) {
@@ -39,28 +40,45 @@ public class Tarefa {
         this.parcelasInicial = parcelas;
         this.parcelasAtual = parcelas;
         this.valorTotal = valor;
-        this.valorParcelado = valor/parcelas;
+        this.valorParcelado = valor / parcelas;
         this.compras = new ArrayList<>();
+    }
+
+    public static void pagaPessoaFisica(Casal casal, Date data) throws ParseException {
+        String idConjuge1 = casal.getConjuge1().getId(), idConjuge2 = casal.getConjuge2().getId(), prestador = null;
+
+        for (Tarefa tarefa : tarefas.values()) {
+            prestador = tarefa.getTrabalhador().getId();
+            boolean ehMes = tarefa.ehMesPagamentoTarefa(data);
+            if (ehMes) {
+                if (prestador.equals(idConjuge1) || prestador.equals(idConjuge2)) {
+                    casal.addSaldoAtual(tarefa.valorParcelado);
+                }
+            }
+        }
     }
 
     public static void prestadorEstaCadastrado(String idPrestador, String idTarefa) {
         Map<String, Pessoas> pessoas = Pessoas.getPessoas();
 
         if (pessoas.get(idPrestador) == null) {
-            throw new IllegalArgumentException("ID(s) de Prestador de Serviço " + idPrestador + " não cadastrado na Tarefa de ID " + idTarefa + ".");
+            throw new IllegalArgumentException("ID(s) de Prestador de Serviço " + idPrestador
+                    + " não cadastrado na Tarefa de ID " + idTarefa + ".");
         }
     }
 
     public static void tarefaTemIdDeLarValido(String idLar, String idTarefa) {
         Map<String, Lar> lares = Lar.getLares();
-        
+
         if (lares.get(idLar) == null) {
-            throw new IllegalArgumentException("ID(s) de Lar " + idLar + " não cadastrado na Tarefa de ID " + idTarefa + ".");
+            throw new IllegalArgumentException(
+                    "ID(s) de Lar " + idLar + " não cadastrado na Tarefa de ID " + idTarefa + ".");
         }
     }
 
-    public boolean ehMesPagamentoTarefa(Date data) throws ParseException{
-        if (GerenciadorDeDatas.ehMesmoMeseAno(data, this.dataInicio) || ((this.parcelasAtual < this.parcelasInicial) && (this.parcelasAtual > 0))) {
+    public boolean ehMesPagamentoTarefa(Date data) throws ParseException {
+        if (GerenciadorDeDatas.ehMesmoMeseAno(data, this.dataInicio)
+                || ((this.parcelasAtual < this.parcelasInicial) && (this.parcelasAtual > 0))) {
             return true;
         }
         return false;
@@ -75,15 +93,15 @@ public class Tarefa {
 
         if (GerenciadorDeDatas.comparaDatas(this.dataInicio, data) < 0) {
             for (Compra compra : this.compras) {
-                compra.pagaCompra(casal); 
+                compra.pagaCompra(casal);
             }
-        }  
+        }
     }
 
     public Double obtemValorTotalCompras(List<Compra> compras) {
         Double total = 0.0;
         for (Compra compra : compras) {
-            total += (compra.getPreco()*compra.getQuantidade());
+            total += (compra.getPreco() * compra.getQuantidade());
         }
 
         return total;
@@ -97,7 +115,7 @@ public class Tarefa {
         return (valorTotal + this.valorTotal);
     }
 
-    public void calculaLucroPrestadores() { 
+    public void calculaLucroPrestadores() {
         if (this.trabalhador.getTipo().equals("PJ") || this.trabalhador.getTipo().equals("PF")) {
             this.trabalhador.addLucro(this.valorTotal);
         }

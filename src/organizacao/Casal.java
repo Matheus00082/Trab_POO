@@ -14,9 +14,8 @@ public class Casal {
     private PessoaFisica conjuge1, conjuge2;
     private Lar lar;
     private Casamento casamento;
-    private Double totalGasto;
-    private int numCasamentos;
-    private Double saldoAtual;
+    private Double totalGasto, saldoAtual;
+    private int numCasamentos, duracaoParcelas;
     private Vector<Double> saldos;
     private static Map<String, Casal> casais = new HashMap<>();
 
@@ -55,6 +54,7 @@ public class Casal {
     public void calculaSaldosCasal() throws ParseException {
         Date dataAtual = this.calculaDataInicial();
         int numMeses = this.calculaNumMeses(dataAtual);
+        this.duracaoParcelas = numMeses;
 
         for (int i = 1; i <= numMeses; i++) {
             this.saldoAtual *= (1.005);
@@ -73,14 +73,14 @@ public class Casal {
 
             this.saldoAtual += this.salarioTotal();
 
+            if (this.conjuge1.getEhPrestador() || this.conjuge2.getEhPrestador()) {
+                Tarefa.pagaPessoaFisica(this, dataAtual);
+            }
+
             // Adiciona novo saldo no vetor
             this.saldos.add(this.saldoAtual);
             dataAtual = GerenciadorDeDatas.incrementaMeses(dataAtual, 1);
         }
-    }
-
-    public void printaCPFCasal() {
-        System.out.println("|" + this.conjuge1.getCPF() + "/" + this.conjuge2.getCPF() + "|");
     }
 
     public int calculaNumMeses(Date dataInicial) throws ParseException {
@@ -194,6 +194,10 @@ public class Casal {
         }
 
         return data;
+    }
+
+    public int getDuracaoParcelas() {
+        return this.duracaoParcelas;
     }
 
     public Vector<Double> getSaldos() {
