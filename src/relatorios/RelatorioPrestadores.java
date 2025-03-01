@@ -27,6 +27,7 @@ public class RelatorioPrestadores {
         }
     }
 
+    // ordena a lista de prestadores de acordo com o tipo, lucro e nome
     private static void ordenaPrestadores(List<Pessoas> prestadores) {
         prestadores.sort((p1, p2) -> {
             if (p1.getTipo().equals(p2.getTipo())) {
@@ -51,10 +52,12 @@ public class RelatorioPrestadores {
 
     public static void geraRelatorioPrestadores(String caminho) throws IOException {
         Map<String, Tarefa> tarefas = Tarefa.getTarefas();
+        // calcula o lucro de cada prestador
         for (Tarefa tarefa : tarefas.values()) {
             tarefa.calculaLucroPrestadores();
         }
 
+        // cria lista de prestadores, ordena e imprime o relatório
         List<Pessoas> prestadores = new ArrayList<>();
         criaListaPrestadores(prestadores);
         ordenaPrestadores(prestadores);

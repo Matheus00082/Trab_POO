@@ -99,9 +99,9 @@ public class LeitorCVS {
                 Pessoas pessoa = null; // Só retorna null se o tipo for inválido
 
                 if (campos[1].equals("F")) {
-                    Double dinheiroGuardado = Double.parseDouble(campos[7].replace(" ", "").replace(".", "").replace(",", "."));
-                    Double salario = Double.parseDouble(campos[8].replace(" ", "").replace(".", "").replace(",", "."));
-                    Double gastosMensais = Double.parseDouble(campos[9].replace(" ", "").replace(".", "").replace(",", "."));
+                    Double dinheiroGuardado = Double.parseDouble(campos[7].replace(".", "").replace(",", "."));
+                    Double salario = Double.parseDouble(campos[8].replace(".", "").replace(",", "."));
+                    Double gastosMensais = Double.parseDouble(campos[9].replace(".", "").replace(",", "."));
                     pessoa = new PessoaFisica(campos[0], campos[2], campos[3], campos[4], campos[5], campos[6],
                             dinheiroGuardado, salario, gastosMensais);
                 } else if (campos[1].equals("J")) {
@@ -157,9 +157,9 @@ public class LeitorCVS {
                     prestador.setPrestador(true);
                 }
 
-                int prazoDias = Integer.parseInt(campos[4].replace(" ", ""));
-                Double valor = Double.parseDouble(campos[5].replace(" ", "").replace(".", "").replace(",", "."));
-                int parcelas = Integer.parseInt(campos[6].replace(" ", ""));
+                int prazoDias = Integer.parseInt(campos[4]);
+                Double valor = Double.parseDouble(campos[5].replace(".", "").replace(",", "."));
+                int parcelas = Integer.parseInt(campos[6]);
 
                 Tarefa tarefa = new Tarefa(campos[0], prestador, campos[3], prazoDias, valor, parcelas);
                 lar.addTarefa(campos[0], tarefa);
@@ -209,15 +209,15 @@ public class LeitorCVS {
                 Festa.casamentoEstaCadastrado(campos[0], campos[1]);
 
                 Casamento casamento = Casamento.getCasamentoCadastrado(campos[1]);
-                int numeroConvidados = Integer.parseInt(campos[7].replace(" ", ""));
+                int numeroConvidados = Integer.parseInt(campos[7]);
                 convidados = new String[numeroConvidados];
 
                 for (int i = 0; i < numeroConvidados; i++) {
                     convidados[i] = campos[8 + i];
                 }
 
-                int parcelas = Integer.parseInt(campos[6].replace(" ", ""));
-                Double preco = Double.parseDouble(campos[5].replace(" ", "").replace(".", "").replace(",", "."));
+                int parcelas = Integer.parseInt(campos[6]);
+                Double preco = Double.parseDouble(campos[5].replace(".", "").replace(",", "."));
 
                 casamento.setFesta(new Festa(campos[0], campos[2], campos[3], campos[4], preco, parcelas,
                         convidados));
@@ -242,9 +242,9 @@ public class LeitorCVS {
 
                 Tarefa tarefa = Tarefa.getTarefaCadastrada(campos[1]);
                 Loja loja = (Loja) Pessoas.getPessoaCadastrada(campos[2]);
-                int qtd = Integer.parseInt(campos[4].replace(" ", ""));
-                Double preco = Double.parseDouble(campos[5].replace(" ", "").replace(".", "").replace(",", "."));
-                int parcelas = Integer.parseInt(campos[6].replace(" ", ""));
+                int qtd = Integer.parseInt(campos[4]);
+                Double preco = Double.parseDouble(campos[5].replace(".", "").replace(",", "."));
+                int parcelas = Integer.parseInt(campos[6]);
 
                 tarefa.addCompra(new Compra(campos[0], loja, campos[6], qtd, preco, parcelas));
             }

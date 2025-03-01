@@ -22,10 +22,12 @@ public class Tarefa {
     public Tarefa(String idTarefa, Pessoas trabalhador, String dataInicio, int prazoDias, Double valor, int parcelas)
             throws ParseException {
 
+        // Verifica se o ID da tarefa já foi cadastrado
         if (tarefas.get(idTarefa) != null) {
             throw new IllegalArgumentException("ID repetido " + idTarefa + " na classe Tarefa.");
         }
 
+        // Adiciona a tarefa ao Map de tarefas
         tarefas.put(idTarefa, this);
 
         try {
@@ -44,6 +46,7 @@ public class Tarefa {
         this.compras = new ArrayList<>();
     }
 
+    // Paga a pessoa física de acordo com o mês de pagamento da tarefa na qual ela trabalhou
     public static void pagaPessoaFisica(Casal casal, Date data) throws ParseException {
         String idConjuge1 = casal.getConjuge1().getId(), idConjuge2 = casal.getConjuge2().getId(), prestador = null;
 
@@ -58,6 +61,7 @@ public class Tarefa {
         }
     }
 
+    // Verifica se o prestador está cadastrado na tarefa
     public static void prestadorEstaCadastrado(String idPrestador, String idTarefa) {
         Map<String, Pessoas> pessoas = Pessoas.getPessoas();
 
@@ -67,6 +71,7 @@ public class Tarefa {
         }
     }
 
+    // Verifica se o lar está cadastrado na tarefa
     public static void tarefaTemIdDeLarValido(String idLar, String idTarefa) {
         Map<String, Lar> lares = Lar.getLares();
 
@@ -76,6 +81,10 @@ public class Tarefa {
         }
     }
 
+    /*Verifica se é o mês de pagamento da tarefa.
+     * Se a tarefa ainda não foi paga completamente, ou
+     * se o mês atual é a primeira parcela de pagamento
+    */
     public boolean ehMesPagamentoTarefa(Date data) throws ParseException {
         if (GerenciadorDeDatas.ehMesmoMeseAno(data, this.dataInicio)
                 || ((this.parcelasAtual < this.parcelasInicial) && (this.parcelasAtual > 0))) {
@@ -84,6 +93,7 @@ public class Tarefa {
         return false;
     }
 
+    // Verifica se é o mês de pagamento da tarefa e paga a tarefa e suas respectivas compras
     public void pagaTarefa(Casal casal, Date data) throws ParseException {
         boolean ehMes = ehMesPagamentoTarefa(data);
         if (ehMes) {
@@ -115,6 +125,7 @@ public class Tarefa {
         return (valorTotal + this.valorTotal);
     }
 
+    // Calcula o lucro do prestador e da loja de acordo com o tipo de prestador
     public void calculaLucroPrestadores() {
         if (this.trabalhador.getTipo().equals("PJ") || this.trabalhador.getTipo().equals("PF")) {
             this.trabalhador.addLucro(this.valorTotal);

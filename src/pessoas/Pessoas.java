@@ -26,6 +26,7 @@ public class Pessoas {
         pessoas.put(id, this);
     }
 
+    // Compara os tipos de pessoa para ordenar em ordem alfabética
     public static int compararTipos(String tipo1, String tipo2) {
         List<String> ordemTipos = Arrays.asList("PF", "PJ", "Loja");
         return Integer.compare(ordemTipos.indexOf(tipo1), ordemTipos.indexOf(tipo2));
@@ -35,6 +36,7 @@ public class Pessoas {
         return pessoas.get(id);
     }
 
+    // Retorna a lista de pessoas cadastradas
     public static Map<String, Pessoas> getPessoas() {
         return pessoas;
     }

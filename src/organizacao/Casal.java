@@ -22,7 +22,6 @@ public class Casal {
     public Casal(PessoaFisica p1, PessoaFisica p2) {
 
         // Ordena os conjuges em ordem alfabética
-
         if (p1.getNome().compareTo(p2.getNome()) <= 0) {
             this.conjuge1 = p1;
             this.conjuge2 = p2;
@@ -59,12 +58,14 @@ public class Casal {
             numMeses = this.calculaNumMeses(dataAtual);
         }
 
+        // registra a quantidade de meses que o casal terá saldos
         this.duracaoParcelas = numMeses;
 
         for (int i = 1; i <= numMeses; i++) {
-            this.saldoAtual *= (1.005);
+            this.saldoAtual *= (1.005); // Rendimento de 0.5% ao mês
             this.saldoAtual -= this.despesasMensais();
 
+            // Paga festa de casamento e tarefas caso existam
             if (this.casamento != null) {
                 this.casamento.pagaFestaCasamento(dataAtual, this);
             }
@@ -72,12 +73,15 @@ public class Casal {
                 this.lar.pagaTarefas(dataAtual, this);
             }
 
+            // Paga o décimo terceiro salário no mês 12
             if (GerenciadorDeDatas.getMes(dataAtual) == 12) {
                 this.saldoAtual += this.salarioTotal();
             }
 
+            // Paga o salário regularmente
             this.saldoAtual += this.salarioTotal();
 
+            // Paga a pessoa física se for prestador de serviço
             if (this.conjuge1.getEhPrestador() || this.conjuge2.getEhPrestador()) {
                 Tarefa.pagaPessoaFisica(this, dataAtual);
             }
@@ -88,34 +92,38 @@ public class Casal {
         }
     }
 
+    // Calcula o número de meses entre a data inicial e a data final dos pagamentos
     public int calculaNumMeses(Date dataInicial) throws ParseException {
         int numMeses = 0;
 
-        // Calcula último mês de pagamentos
-
         Date dataFinal = null;
 
+        // Verifica se a festa existe e inicializa a data final com a data final da festa
         if (this.casamento != null && this.casamento.getFesta() != null) {
             Date dataInicialFesta = this.casamento.getFesta().getData();
             int parcelasFesta = this.casamento.getFesta().getParcelasInicial();
             dataFinal = GerenciadorDeDatas.incrementaMeses(dataInicialFesta, parcelasFesta);
         } 
 
+        // Verifica se as tarefas existem e compara a data final acumulada com a data final das tarefas
         if (this.lar != null && this.lar.getTarefas() != null) {
             for (Tarefa tarefa : this.lar.getTarefas().values()) {
                 Date dataInicialTarefa = tarefa.getDataInicio();
                 int parcelasTarefa = tarefa.getParcelasInicial();
                 Date dataFinalTarefa = GerenciadorDeDatas.incrementaMeses(dataInicialTarefa, parcelasTarefa);
 
+                // Atualiza a data final se a data final da tarefa for maior ou se não há festa
                 if (dataFinal == null || (GerenciadorDeDatas.comparaDatas(dataFinalTarefa, dataFinal) > 0)) {
                     dataFinal = dataFinalTarefa;
                 }
 
+                // Verifica se existem compras e compara a data final acumulada com a data final das compras
                 if (tarefa.getCompras() != null) {
                     for (Compra compra : tarefa.getCompras()) {
                         int parcelasCompra = compra.getParcelas();
                         Date dataFinalCompra = GerenciadorDeDatas.incrementaMeses(dataInicialTarefa, parcelasCompra);
     
+                        // Atualiza a data final se a data final da compra for maior
                         if (dataFinal == null || (GerenciadorDeDatas.comparaDatas(dataFinalCompra, dataFinal) > 0)) {
                             dataFinal = dataFinalCompra;
                         }
@@ -124,13 +132,11 @@ public class Casal {
             }
         }
 
-        // Calcula num de meses entre as datas final e inicial
-
         numMeses = GerenciadorDeDatas.mesesEntreDatas(dataInicial, dataFinal);
-
         return  numMeses;
     }
 
+    // Retorna a data inicial do casal (a "menor" data entre festa e tarefas)
     public Date calculaDataInicial() {
         Date data = null;
 
@@ -157,17 +163,19 @@ public class Casal {
         return this.saldos;
     }
 
+    // Retorna o casal cadastrado com a chave p1 + p2
     public static Casal getCasalCadastrado(String p1, String p2) {
         return casais.get(p1 + p2);
     }
 
+    // Retorna todos os casais cadastrados
     public static Map<String, Casal> getCasais() {
         return casais;
     }
 
+    // Calcula numero de casamentos que ambos foram convidados
     public void calculaNumCasamentos(Map<String, Casamento> casamentos) {
         int num = 0;
-        // Calcula numero de casamentos que ambos foram convidados
         for (Casamento c : casamentos.values()) {
             if (this.casamento != null) {
                 // Verifica se o casal não é dono da festa
@@ -175,6 +183,7 @@ public class Casal {
                     continue;
                 }
             }
+            // Verifica se a festa existe e se o casal foi convidado
             if (c.getFesta() != null && c.getFesta().casalFoiConvidado(this)) {
                 num++;
             }
@@ -182,9 +191,9 @@ public class Casal {
         this.numCasamentos = num;
     }
 
+    // Calcula o total gasto pelo casal com festa, tarefas e compras caso existam
     public void calculaTotalGasto() {
         Double totalGasto = 0.0;
-        // Calcula o total gasto pelo casal com festa, tarefas e compras
         if (this.casamento != null && this.casamento.getFesta() != null) {
             totalGasto += this.casamento.getFesta().getPreco();
         }

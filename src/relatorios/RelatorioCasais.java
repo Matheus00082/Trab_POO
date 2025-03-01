@@ -30,6 +30,11 @@ public class RelatorioCasais {
         }
     }
 
+    /*
+     * Ordena a lista de casais de acordo com o total gasto, em ordem decrescente.
+     * Em caso de empate, ordena por ordem alfabética do nome do primeiro cônjuge.
+     * Pois a ordem alfabética do nome dos cônjuges já foi garantida na criação dos casais.
+     */
     private static void ordenaCasais(List<Casal> casais) {
         casais.sort((Casal c1, Casal c2) -> {
             if (c1.getTotalGasto().equals(c2.getTotalGasto())) {

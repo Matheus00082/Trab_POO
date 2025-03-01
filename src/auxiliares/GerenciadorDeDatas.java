@@ -15,6 +15,7 @@ public class GerenciadorDeDatas {
         return cal.getTime();
     }
 
+    // Retorna true se a data1 for anterior a data2
     public static int comparaDatas(Date data1, Date data2) throws ParseException {
         int anoInicio = getAno(data1);
         int anoAtual = getAno(data2);
@@ -30,6 +31,7 @@ public class GerenciadorDeDatas {
         return 0;
     }
 
+    // Retorna a quantidade de meses entre duas datas se a data1 for menor que a data2
     public static int mesesEntreDatas(Date data1, Date data2) throws ParseException {
 
         if (comparaDatas(data1, data2) >= 0) {
@@ -64,11 +66,7 @@ public class GerenciadorDeDatas {
             throw new ParseException("Erro de formatação", 0);
         }
 
-        if (mesAno1.equals(mesAno2)) {
-            return true;
-        }
-
-        return false;
+        return mesAno1.equals(mesAno2);
     }
 
     public static int getAno(Date data) throws ParseException {

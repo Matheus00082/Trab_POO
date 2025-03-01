@@ -16,6 +16,7 @@ public class Casamento {
 
     public Casamento(String idCasamento, String idconjuge1, String idConjuge2, String data, String hora, String local) throws ParseException {
         
+        // Verifica se o ID do casamento já foi cadastrado
         if (casamentos.get(idCasamento) != null) {
             throw new IllegalArgumentException("ID repetido " + idCasamento + " na classe Casamento.");
         }
@@ -25,7 +26,7 @@ public class Casamento {
         this.idConjuge2 = idConjuge2;
 
         try {
-            this.data = new SimpleDateFormat("dd/MM/yyyy").parse(data.replace(" ", ""));
+            this.data = new SimpleDateFormat("dd/MM/yyyy").parse(data);
         } catch (Exception e) {
             throw new ParseException("Erro de formatação", 0);
         }
@@ -34,9 +35,11 @@ public class Casamento {
         this.local = local;
         this.festa = null;
 
+        // Adiciona o casamento ao Map de casamentos
         casamentos.put(idCasamento, this);
     }
 
+    // Verifica se o conjuge está cadastrada no casamento
     public static void pessoaEstaCadastradaCasamento(String idCasamento, String id1, String id2) {
         Map<String, Pessoas> pessoas = Pessoas.getPessoas();
 
@@ -49,6 +52,7 @@ public class Casamento {
         }
     }
 
+    // Verifica se é o mês de pagamento da festa de casamento
     public boolean ehMesdePagamentoCasamento(Date data) throws ParseException {
         if (this.festa.ehMesPagamentoFesta(data)) {
             return true;
@@ -57,6 +61,7 @@ public class Casamento {
         return false;
     }
 
+    // Se for o mês de pagamento, paga a festa de casamento
     public void pagaFestaCasamento(Date data, Casal casal) throws ParseException {
         if (this.festa != null) {
             if (ehMesdePagamentoCasamento(data)) {

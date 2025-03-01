@@ -13,6 +13,7 @@ public class PessoaFisica extends Pessoas {
             Double dinheiroGuardado, Double salario, Double gastoMensal) throws Exception {
         super(id, "PF", nome, telefone, endereco);
 
+        // Verifica se o CPF é repetido
         for (Pessoas p : Pessoas.getPessoas().values()) {
             if (p.getTipo().equals("PF")) {
                 PessoaFisica pf = (PessoaFisica) p;
@@ -23,7 +24,7 @@ public class PessoaFisica extends Pessoas {
             }
         }
 
-        this.cpf = cpf.replace(" ", "");
+        this.cpf = cpf;
         this.dinheiroGuardado = dinheiroGuardado;
         this.salario = salario;
         this.gastosMensais = gastoMensal;
@@ -31,7 +32,7 @@ public class PessoaFisica extends Pessoas {
         this.lucro = 0.0;
 
         try {
-            this.datadeNascimento = new SimpleDateFormat("dd/MM/yyyy").parse(datadeNascimento.replace(" ", ""));
+            this.datadeNascimento = new SimpleDateFormat("dd/MM/yyyy").parse(datadeNascimento);
         } catch (Exception e) {
            throw new ParseException("Erro de formatação", 0);
         }

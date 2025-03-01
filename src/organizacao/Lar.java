@@ -16,6 +16,7 @@ public class Lar {
 
     public Lar(String idLar, String rua, int numero, String complemento) {
 
+        // Verifica se o ID já foi cadastrado
         if (lares.get(idLar) != null) {
             throw new IllegalArgumentException("ID repetido " + idLar + " na classe Lar.");
         }
@@ -29,6 +30,7 @@ public class Lar {
         this.tarefas = new HashMap<>();
     }
 
+    // Verifica se a pessoa está cadastrada naquele lar
     public static void pessoaEstaCadastradaLar(String idLar, String id1, String id2) {
         Map<String, Pessoas> pessoas = Pessoas.getPessoas();
 
@@ -41,6 +43,7 @@ public class Lar {
         }
     }
 
+    // Paga as tarefas de um lar se a data for a data de pagamento
     public void pagaTarefas(Date data, Casal casal) throws ParseException {
         for (Tarefa tarefa : this.tarefas.values()) {
             tarefa.pagaTarefa(casal, data);

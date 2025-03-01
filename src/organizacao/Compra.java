@@ -15,6 +15,7 @@ public class Compra {
 
     public Compra(String idCompra, Loja loja, String nomeProduto, int qtd, Double preco, int parcelas) {
 
+        // verifica se o id da compra é válido
         if (compras.get(idCompra) != null) {
             throw new IllegalArgumentException("ID repetido " + idCompra + " na classe Compra.");
             
@@ -29,9 +30,11 @@ public class Compra {
         this.parcelasAtual = parcelas;
         this.precoParcelado = (preco * qtd) / parcelas;
 
+        // adiciona a compra ao mapa de compras
         compras.put(idCompra, this);
     }
     
+    // verifica se a compra tem id válido de uma loja e não de uma pessoa jurídica
     public static void verificaSeEhPessoaJuridica(String idCompra, String idLoja) {
         Pessoas pessoa = Pessoas.getPessoaCadastrada(idLoja);
 
@@ -40,12 +43,14 @@ public class Compra {
         }
     }
     
+    // verifica se a compra tem id válido de tarefa
     public static void compraTemIdValidoDeTarefa(String idCompra, String idTarefa) {
         if (Tarefa.getTarefaCadastrada(idTarefa) == null) {
             throw new IllegalArgumentException("ID(s) de Tarefa " + idTarefa + " não cadastrado na " + "Compra de ID " + idCompra + ".");
         }
     }
 
+    // verifica se a compra tem id válido de loja
     public static void compraTemIdValidoDeLoja(String idCompra, String idLoja) {
         if (Pessoas.getPessoaCadastrada(idLoja) == null) {
            throw new IllegalArgumentException("ID(s) de Loja " + idLoja + " não cadastrado na " + "Compra de ID " + idCompra + ".");

@@ -7,6 +7,7 @@ public class PessoaJuridica extends Pessoas {
     public PessoaJuridica(String id, String nome, String telefone, String endereco, String CNPJ) {
         super(id, "PJ", nome, telefone, endereco);
         
+        // verifica se o CNPJ é repetido
         for (Pessoas p : Pessoas.getPessoas().values()) {
             if (p.getTipo().equals("PJ")) {
                 PessoaJuridica pj = (PessoaJuridica) p;

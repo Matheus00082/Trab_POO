@@ -13,6 +13,7 @@ import java.io.IOException;
 
 public class RelatorioPlanejamento {
 
+    // Método auxiliar para imprimir o relatório de planejamento de um casal
     private static void imprimeRelatorioPlanejamento(String caminho, Casal casal, String cpf1, String cpf2) throws Exception {
         
         String arquivo = caminho + "/saida/1-planejamento.csv";
@@ -76,8 +77,8 @@ public class RelatorioPlanejamento {
             String[] cpfPair = line.split(",");
             
             if (cpfPair.length == 2) {
-                cpfPair[0] = cpfPair[0].trim();
-                cpfPair[1] = cpfPair[1].trim();
+                cpfPair[0] = cpfPair[0].replace(" ", "");
+                cpfPair[1] = cpfPair[1].replace(" ", "");
                 Casal casal = Casal.getCasalCadastrado(cpfPair[0], cpfPair[1]);
                 imprimeRelatorioPlanejamento(caminho, casal, cpfPair[0], cpfPair[1]);
             }
