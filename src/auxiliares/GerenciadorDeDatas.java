@@ -15,7 +15,7 @@ public class GerenciadorDeDatas {
         return cal.getTime();
     }
 
-    // Retorna true se a data1 for anterior a data2
+    // Retorna 1 se a data2 for anterior a data1
     public static int comparaDatas(Date data1, Date data2) throws ParseException {
         int anoInicio = getAno(data1);
         int anoAtual = getAno(data2);
